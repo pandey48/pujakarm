@@ -1,36 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PujaPath
 
-## Getting Started
+A responsive puja discovery and Pandit enquiry platform built with Next.js App Router, TypeScript and Lucide React.
 
-First, run the development server:
+## Run locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000. Create a production build with `npm run build`, and serve it with `npm run start`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Routes
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `/` Home, puja search, categories, Pandit directory, mantras and FAQs
+- `/pujas` Searchable puja directory
+- `/pujas/[slug]` Puja details and booking enquiry
+- `/cities` and `/cities/[city]` Location enquiry guides
+- `/booking` Booking enquiry form
+- `/admin` Private admin sign-in
+- `/admin/enquiries` Private enquiry dashboard
+- `/pandit/join` Pandit registration enquiry
+- `/about`, `/contact`, `/faq`, `/privacy`, `/terms`
+- `/sitemap.xml`, `/robots.txt`
 
-## Learn More
+## Enquiry storage and admin
 
-To learn more about Next.js, take a look at the following resources:
+Puja booking enquiries are submitted to `/api/enquiries` and stored in a JSON file at `.data/enquiries.json`. Each record keeps `createdAt`, `pujaDate` and `preferredTime` separate. The admin API uses a signed, HTTP-only session.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+To enable the dashboard, copy `.env.example` to `.env.local`, set a strong `PUJAPATH_ADMIN_PASSWORD`, replace `PUJAPATH_SESSION_SECRET` with a random value of at least 32 characters, and restart the server. Then open `/admin`. Admin access stays disabled when these values are missing.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The JSON store is a starter persistence adapter for a single long-running Node server. It is not shared across serverless instances and is not a substitute for managed database storage or backups. Set `PUJAPATH_DATA_DIR` to a persistent private directory or replace `lib/enquiry-store.ts` with a database adapter before deploying to an ephemeral/serverless host.
 
-## Deploy on Vercel
+Pandit directory cards are labeled sample profiles, not real Pandits or live availability. Mantra bookmarks are saved only in the visitor's browser; audio controls stay disabled until recordings are supplied. City and puja entries are enquiry options and do not promise availability until the team confirms.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Replace the canonical site URL, social links and placeholder contact information before launch. Review the privacy and terms copy with qualified counsel. Configure persistent storage, backups, monitoring and access controls before handling real customer enquiries in production.
