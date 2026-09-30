@@ -1,69 +1,50 @@
 import Image from "next/image";
+import Link from "next/link";
+import type { Metadata } from "next";
+import { ArrowRight, BadgeCheck, CalendarCheck, Heart, ShieldCheck, UsersRound } from "lucide-react";
+import { OrganizationSchema, WebsiteSchema } from "@/app/schema";
+import { HeroDiscovery } from "@/components/hero-discovery";
+import { MantraRotator } from "@/components/mantra-rotator";
+import { HomeCatalog } from "@/components/home-catalog";
+import { MantraCard } from "@/components/mantra-card";
+import { SamagriGuide } from "@/components/samagri-guide";
+import { CityCard, FAQList, HowItWorks } from "@/components/shared";
+import { cities } from "@/data/cities";
+import { faqs } from "@/data/faqs";
+import { featuredMantras } from "@/data/mantras";
+import { pujas } from "@/data/pujas";
+import { whatsappUrl } from "@/lib/constants";
 
-export default function Home() {
-  return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+export const metadata: Metadata = { title: "Online Puja & Pandit Booking", description: "Book experienced Pandits online for Hindu puja, havan, Griha Pravesh, Satyanarayan Puja and other Vedic rituals.", alternates: { canonical: "/" }, openGraph: { title: "Online Puja & Pandit Booking | PujaPath", description: "Book experienced Pandits online for Hindu puja and Vedic rituals.", siteName: "PujaPath", type: "website", url: "/", images: ["/opengraph-image"] } };
+
+export default function HomePage() {
+  return <>
+    <OrganizationSchema />
+    <WebsiteSchema />
+    <section className="pp-search-hero" aria-labelledby="hero-title">
+      <div className="pp-search-hero-frame">
+        <video className="pp-search-hero-video" autoPlay muted loop playsInline preload="metadata" poster="https://images.unsplash.com/photo-1700765020008-7fd77c847f8a?auto=format&fit=crop&w=1800&q=85" aria-hidden="true"><source src="/video/herobg.mp4" type="video/mp4" /></video>
+        <div className="pp-search-hero-content"><div className="pp-hero-topline"><span className="pp-hero-badge">Authentic Vedic Rituals <i /> Pandit Enquiries</span></div><h1 id="hero-title">Book a Puja with<br /><em>Trusted Pandits</em></h1><p>Find the right puja, experienced Pandit and suitable time for your family — at home or online.</p><HeroDiscovery /><div className="pp-hero-assurance"><span><BadgeCheck size={14} /> Share ritual preferences</span><span><BadgeCheck size={14} /> Ask about samagri</span><span><BadgeCheck size={14} /> Confirm availability first</span></div></div>
+        <MantraRotator />
+      </div>
+    </section>
+
+    <section className="pp-stats" aria-label="PujaPath offerings"><div><strong>{pujas.length}</strong><span>Puja listings</span></div><div><strong>At Home</strong><span>Available on selected rituals</span></div><div><strong>Online</strong><span>Available on selected rituals</span></div><div><strong>Pandit enquiry</strong><span>Share your preferences</span></div></section>
+
+    <HomeCatalog items={pujas} />
+
+    <SamagriGuide items={pujas.slice(0, 12)} />
+
+    <section className="pp-how" id="how-it-works"><div className="pp-wrap"><div className="pp-section-heading"><div><span className="pp-kicker">Clear and personal</span><h2>Book Your Puja in 4 Simple Steps</h2><p>Share what you need and our team will help confirm the details.</p></div></div><HowItWorks /></div></section>
+
+    <section className="pp-city-section"><div className="pp-wrap"><div className="pp-section-heading"><div><span className="pp-kicker">Locality and format</span><h2>Book a Pandit Near You</h2><p>Choose a city to send an enquiry. Service availability is confirmed individually before booking.</p></div><Link className="pp-view" href="/cities">View location guides <ArrowRight size={16} /></Link></div><div className="pp-city-grid">{cities.slice(0, 8).map((city) => <CityCard city={city} key={city.id} />)}<Link href="/pujas?type=online" className="pp-online-city"><span>Online Puja</span><small>Ask about joining a ritual online</small><ArrowRight size={16} /></Link></div><p className="pp-demo-note">Location cards are enquiry options, not a live availability calendar.</p></div></section>
+
+    <section className="pp-mantras" id="mantras"><div className="pp-wrap"><div className="pp-section-heading"><div><span className="pp-kicker">Read and understand</span><h2>Vedic Mantras</h2><p>Listen, read and understand ancient Sanskrit chants.</p></div></div><div className="pp-mantra-grid">{featuredMantras.map((mantra) => <MantraCard mantra={mantra} key={mantra.name} />)}</div><p className="pp-audio-caption">Audio recitations are not included yet; we’ll add them when recordings are available.</p></div></section>
+
+    <section className="pp-why"><div className="pp-wrap pp-why-inner"><div className="pp-why-copy"><span className="pp-kicker">A clearer way to enquire</span><h2>Traditional Rituals.<br />Simple Booking.</h2><p>Know what details to share before you request a puja.</p></div><div className="pp-benefits"><article><span><UsersRound size={21} /></span><div><strong>Pandit preferences</strong><small>Share experience, language and ritual needs</small></div></article><article><span><CalendarCheck size={21} /></span><div><strong>Clear process</strong><small>Request a date and get availability confirmed</small></div></article><article><span><ShieldCheck size={21} /></span><div><strong>Home or online</strong><small>Choose the format that suits your family</small></div></article><article><span><BadgeCheck size={21} /></span><div><strong>Personal guidance</strong><small>Ask us which ritual may fit your occasion</small></div></article></div><div className="pp-why-image"><Image src="https://images.unsplash.com/photo-1604881991720-f91add269bed?auto=format&fit=crop&w=800&q=85" alt="Traditional puja offerings with flowers and a brass kalash" fill sizes="(max-width: 720px) 90vw, 28vw" className="cover-image" /></div></div></section>
+
+    <section className="pp-faq"><div className="pp-wrap pp-faq-inner"><div><span className="pp-kicker">Need a little clarity?</span><h2>Frequently Asked Questions</h2><p>Learn what to expect when you send a puja enquiry.</p><Link className="pp-view" href="/faq">More FAQs <ArrowRight size={16} /></Link></div><FAQList items={faqs.slice(0, 7)} /></div></section>
+
+    <section className="pp-final-cta"><div className="pp-wrap pp-cta-inner"><span className="pp-kicker">Need help choosing?</span><h2>Not Sure Which Puja You Need?</h2><p>Tell us your occasion and our team can help you find a suitable ritual.</p><div><a className="pp-cta-primary" href={whatsappUrl("Namaste, I need help choosing a puja.")} target="_blank" rel="noreferrer"><Heart size={16} /> Talk to Us</a><Link className="pp-cta-secondary" href="/pujas">Explore Pujas</Link></div></div></section>
+  </>;
 }

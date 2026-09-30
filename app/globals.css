@@ -24,3 +24,10 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.form-error {
+  margin: 0;
+  color: #a33024;
+  font-size: 12px;
+  text-align: center;
+}
