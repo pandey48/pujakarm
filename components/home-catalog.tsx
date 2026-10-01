@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { PujaGrid } from "@/components/shared";
 import type { Puja } from "@/lib/types";
+import { popularPujaIds } from "@/data/pujas";
 
 const categoryGroups: Record<string, string[]> = {
   "Deity Pujas": ["Deity Pujas"],
@@ -16,12 +17,10 @@ const categoryGroups: Record<string, string[]> = {
   "Homam & Havan": ["Homam & Havan"],
 };
 
-const popularSlugs = ["ganesh", "griha-pravesh", "satyanarayan", "lakshmi", "rudrabhishek", "navgraha", "durga", "hanuman"];
-
 export function HomeCatalog({ items }: { items: Puja[] }) {
   const [active, setActive] = useState("Popular");
   const visibleItems = useMemo(() => {
-    if (active === "Popular") return popularSlugs.flatMap((slug) => { const match = items.find((puja) => puja.id === slug); return match ? [match] : []; });
+    if (active === "Popular") return items.filter((puja) => popularPujaIds.includes(puja.id));
     return items.filter((puja) => categoryGroups[active]?.includes(puja.category));
   }, [active, items]);
   const tabs = ["Popular", ...Object.keys(categoryGroups)];

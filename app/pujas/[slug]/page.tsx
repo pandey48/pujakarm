@@ -5,6 +5,7 @@ import { Check, Clock3, House, Languages, ShieldCheck, Users, Video } from "luci
 import { Breadcrumbs, FAQList, PujaGrid, SectionHeading, WhatsAppButton } from "@/components/shared";
 import { pujas } from "@/data/pujas";
 import { BookingForm } from "@/components/booking-form";
+import { PujaQuestionForm } from "@/components/interactions";
 import { BreadcrumbSchema, ServiceSchema } from "@/app/schema";
 
 export function generateStaticParams() { return pujas.map((puja) => ({ slug: puja.slug })); }
@@ -32,10 +33,10 @@ export default async function PujaDetailPage({ params }: PageProps<"/pujas/[slug
     <section className="detail-section"><h2>About this puja</h2><p>{puja.description} Before confirming, we’ll discuss your preferred tradition, language, ceremony date and family customs.</p></section>
     <section className="detail-section"><h2>What is included</h2><p>The Pandit’s ritual service and preparation guidance are discussed for your specific puja. Samagri, travel and other arrangements can vary by location; the team will confirm details before you decide.</p></section>
     <section className="detail-section"><h2>How the puja happens</h2><ol className="detail-steps"><li>Share your preferred date, city and family tradition.</li><li>Ask about the ritual sequence, language and preparation.</li><li>The team checks Pandit and format availability with you.</li><li>After you confirm, the ceremony is performed at home or online where available.</li></ol></section>
-    <section className="detail-section"><h2>Who can enquire</h2><p>Families planning this ritual can send an enquiry with a preferred date and location. A booking is confirmed only after the team checks availability and agrees the ceremony details with you.</p></section>
+    <section className="detail-section"><h2>Who is this puja for?</h2><p>{puja.shortDescription} Families can share their occasion and preferences so the Pandit can confirm the suitable ritual details.</p><ul className="check-list">{puja.benefits.map((benefit) => <li key={benefit}><Check size={16} />{benefit}</li>)}</ul></section>
     <section className="detail-section"><h2>Samagri & preparation</h2><p>These are common items to discuss with the Pandit. The final list depends on your family tradition and what is arranged for your location.</p><ul className="check-list">{puja.samagri.map((item) => <li key={item}><Check size={16} />{item}</li>)}</ul></section>
     <section className="detail-section"><h2>Location and availability</h2><p>Share your city and locality in the enquiry. City choices are request options, not live service coverage; the team confirms availability individually.</p><p className="detail-city-list">{puja.cities.join(" · ")}</p></section>
     <section className="detail-section"><h2>Common questions</h2><FAQList items={puja.faqs} /></section>
-    </article><aside className="detail-aside"><h2>Enquire about this puja</h2><p>Share a preferred date and city. Your request is not a confirmed booking.</p><BookingForm presetPuja={puja.slug} /><WhatsAppButton message={message} label="Ask on WhatsApp" className="detail-whatsapp" /><div className="detail-aside-note"><ShieldCheck size={16} />Availability and arrangements are confirmed with you before booking.</div></aside></div>
+    </article><aside className="detail-aside"><h2>Enquire about this puja</h2><p>Share a preferred date and city. Your request is not a confirmed booking.</p><BookingForm presetPuja={puja.slug} /><WhatsAppButton message={message} label="Ask on WhatsApp" className="detail-whatsapp" /><details className="puja-question-disclosure"><summary>Ask a question or contact Pandit Ji</summary><p>Questions are saved to your enquiry list; our team can coordinate a Pandit Ji response.</p><PujaQuestionForm pujaName={puja.name} /></details><div className="detail-aside-note"><ShieldCheck size={16} />Availability and arrangements are confirmed with you before booking.</div></aside></div>
     <div className="section-tight"><SectionHeading eyebrow="Continue exploring" title="Related pujas" link={{ label: "All pujas", href: "/pujas" }} /><PujaGrid items={relatedPujas} /></div></div></section></>;
 }

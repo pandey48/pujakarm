@@ -382,3 +382,20 @@ body{background:#fbf7ef;color:#3c2a23}
   .pp-search-hero-content>p,.pp-search-hero .pp-search-wrap{margin-left:0}
 }
 .city-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,.46fr);align-items:center;gap:38px;margin-top:14px}.city-hero-stat{display:grid;gap:7px;padding:20px 22px;border:1px solid #e7d8c7;border-radius:14px;background:rgba(255,253,248,.78);box-shadow:0 8px 24px rgba(71,49,32,.045)}.city-hero-stat strong{color:#482d24;font-size:13px;line-height:1.35}.city-hero-stat span{color:#79695e;font-size:11px;line-height:1.55}.explorer-category-chips{scrollbar-width:none}.explorer-category-chips::-webkit-scrollbar{display:none}@media(max-width:820px){.city-hero{grid-template-columns:1fr;gap:17px;margin-top:12px}.city-hero-stat{max-width:520px;padding:16px 18px}}@media(max-width:640px){.city-hero{gap:13px;margin-top:10px}.city-hero-stat{gap:5px;padding:13px 15px;border-radius:12px}.city-hero-stat strong{font-size:12px}.city-hero-stat span{font-size:10px}}
+
+.pp-live-puja-videos{padding-top:34px;margin-top:38px;border-top:1px solid #e8ddcf}
+.pp-live-puja-heading{margin-bottom:17px}
+.pp-live-puja-heading h3{margin:5px 0;color:#482d24;font:600 25px/1.2 var(--serif)}
+.pp-live-puja-heading p{margin:0;color:#79695e;font-size:12px;line-height:1.6}
+.pp-live-puja-grid{display:grid;grid-template-columns:repeat(2,minmax(0,224px));justify-content:center;gap:20px}
+.pp-live-puja-card{display:grid;justify-items:center;align-content:start;padding:10px;margin:0;border:1px solid #e3d3c1;border-radius:14px;background:#fffdf8;box-shadow:0 10px 25px rgba(71,49,32,.075);overflow:hidden}
+.pp-live-puja-card video{display:block;width:auto;height:270px;max-width:100%;aspect-ratio:478/850;border-radius:9px;background:#211d19;object-fit:cover}
+.pp-live-puja-card figcaption{padding-top:9px;color:#79695e;font-size:10px;font-weight:650}
+@media(max-width:640px){.pp-live-puja-videos{padding-top:26px;margin-top:28px}.pp-live-puja-heading h3{font-size:22px}.pp-live-puja-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.pp-live-puja-card{padding:7px;border-radius:12px}.pp-live-puja-card video{height:clamp(190px,58vw,270px);max-width:100%;border-radius:8px}.pp-live-puja-card figcaption{font-size:9px}}
+
+@media(min-width:1101px){.admin-stat-grid{grid-template-columns:repeat(7,minmax(0,1fr))}}
+.puja-question-disclosure{padding-top:14px;margin-top:14px;border-top:1px solid #e9ddce}
+.puja-question-disclosure summary{color:#a84b1c;font-size:12px;font-weight:700;cursor:pointer}
+.puja-question-disclosure>p{color:#79695e;font-size:10px;line-height:1.55}
+.puja-question-form{margin-top:12px}
+.puja-question-form .form-note{font-size:9px}

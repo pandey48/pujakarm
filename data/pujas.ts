@@ -24,6 +24,9 @@ const corePujas: Puja[] = [
   { id: "durga", slug: "durga-puja", name: "Durga Puja", shortDescription: "A devotional ceremony honoring Maa Durga.", description: "Invite a Pandit to guide your Durga puja with traditional mantras, offerings and aarti at home or online.", category: "Devi Puja", duration: "2–3 hours", panditCount: "1 Pandit", type: "Home & Online", benefits: ["Traditional Devi invocation", "Festival and family occasion formats", "Guided offerings and aarti"], samagri: ["Red flowers and cloth", "Fruits and sweets", "Kumkum and diya", "Puja essentials"], cities, image: "https://images.unsplash.com/photo-1764304589223-30bfbfdaa9ef?auto=format&fit=crop&w=900&q=85", faqs: ritualFaqs },
 ];
 
+// Curated popular services already featured in the homepage catalogue.
+export const popularPujaIds = ["ganesh", "griha-pravesh", "satyanarayan", "lakshmi", "rudrabhishek", "navgraha", "durga", "hanuman"];
+
 const categoryBySlug: Record<string, string> = {
   "griha-pravesh-puja": "Home Pujas",
   "satyanarayan-puja": "Deity Pujas",
@@ -103,7 +106,7 @@ const catalogPujas: Puja[] = pujaCatalog.flatMap(({ name, category }) => {
 export const pujas: Puja[] = [
   ...corePujas.map((puja) => {
     const category = categoryBySlug[puja.slug] || puja.category;
-    return { ...puja, category, image: imageForPuja(puja.name, category) };
+    return { ...puja, category, image: imageForPuja(puja.name, category), isPopular: popularPujaIds.includes(puja.id) };
   }),
   ...catalogPujas,
 ];

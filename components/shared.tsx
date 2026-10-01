@@ -20,7 +20,19 @@ export function PujaCard({ puja }: { puja: Puja }) {
   const hasHome = puja.type === "Home" || puja.type === "Home & Online";
   const hasOnline = puja.type === "Online" || puja.type === "Home & Online";
   const dakshinaMessage = `Namaste PujaPath, please share the dakshina details for ${puja.name}.`;
-  return <article className="puja-card"><Link href={`/pujas/${puja.slug}`} className="puja-image-link" aria-label={`View details for ${puja.name}`}><Image src={puja.image} alt={`${puja.name} ceremony`} fill sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 25vw" className="cover-image" /><span className="image-tag">{puja.category}</span></Link><div className="puja-card-content"><h3><Link href={`/pujas/${puja.slug}`}>{puja.name}</Link></h3><p>{puja.shortDescription}</p><div className="puja-card-facts"><span><Clock3 size={13} />Duration: {puja.duration}</span><span className="puja-card-formats">{hasHome && <span><House size={13} />At Home</span>}{hasOnline && <span><Video size={13} />Online</span>}</span></div><div className="puja-card-actions"><a href={whatsappUrl(dakshinaMessage)} target="_blank" rel="noreferrer" className="button button-card button-dakshina"><span aria-hidden="true">◉</span> Dakshina on WhatsApp</a><Link href={`/booking?puja=${puja.slug}`} className="button button-card button-book-puja">Book Puja</Link></div></div></article>;
+  return <article className="puja-card">
+    <Link href={`/pujas/${puja.slug}`} className="puja-image-link" aria-label={`View details for ${puja.name}`}>
+      <Image src={puja.image} alt={`${puja.name} puja ceremony`} fill sizes="(max-width: 640px) 92vw, (max-width: 1024px) 46vw, 31vw" className="cover-image" />
+      <span className="puja-card-badges">{puja.isPopular && <span className="puja-popular-badge"><span aria-hidden="true">★</span> Popular</span>}<span className="image-tag">{puja.category}</span></span>
+    </Link>
+    <div className="puja-card-content">
+      <h3><Link href={`/pujas/${puja.slug}`}>{puja.name}</Link></h3>
+      <p>{puja.shortDescription}</p>
+      <div className="puja-card-facts"><span><Clock3 size={15} />{puja.duration}</span><span className="puja-card-formats">{hasHome && <span><House size={15} />Home Puja</span>}{hasOnline && <span><Video size={15} />Online</span>}</span></div>
+      <div className="puja-card-actions"><Link href={`/booking?puja=${puja.slug}`} className="button button-card button-book-puja">Book Now <ArrowRight size={15} /></Link></div>
+      <a href={whatsappUrl(dakshinaMessage)} target="_blank" rel="noreferrer" className="puja-card-dakshina">Dakshina on WhatsApp <ArrowUpRight size={14} aria-hidden="true" /></a>
+    </div>
+  </article>;
 }
 
 export function PujaGrid({ items }: { items: Puja[] }) {

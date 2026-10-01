@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
 import { Breadcrumbs, SectionHeading } from "@/components/shared";
 import { PujaExplorer } from "@/components/interactions";
 import { BreadcrumbSchema } from "@/app/schema";
+import { createPageMetadata } from "@/lib/page-metadata";
 
-export const metadata: Metadata = { title: "Explore Pujas", description: "Explore home and online pujas and find a ritual for your family's occasion.", alternates: { canonical: "/pujas" } };
+export const metadata = createPageMetadata({ title: "Explore Pujas", description: "Explore home and online pujas and find a ritual for your family's occasion.", path: "/pujas" });
 
 export default async function PujasPage({ searchParams }: PageProps<"/pujas">) {
   const params = await searchParams;
@@ -11,5 +11,6 @@ export default async function PujasPage({ searchParams }: PageProps<"/pujas">) {
   const category = typeof params.category === "string" ? params.category : "";
   const type = typeof params.type === "string" ? params.type : "";
   const city = typeof params.city === "string" ? params.city : "";
-  return <><BreadcrumbSchema items={[{ label: "Home", href: "/" }, { label: "Pujas", href: "/pujas" }]} /><section className="page-intro"><div className="content-wrap"><Breadcrumbs items={[{ label: "Pujas" }]} /><span className="eyebrow">Explore the ritual library</span><h1>Find a puja for your occasion</h1><p>Browse home and online pujas, compare ceremony details, and share the date and city that work for you.</p></div></section><section className="section"><div className="content-wrap"><SectionHeading title="All pujas" text="Search by name, category, format or service city." /><PujaExplorer initialQuery={query} initialCategory={category} initialType={type} initialCity={city} /></div></section></>;
+  const popular = params.popular === "1";
+  return <><BreadcrumbSchema items={[{ label: "Home", href: "/" }, { label: "Puja Services", href: "/pujas" }]} /><section className="page-intro"><div className="content-wrap"><Breadcrumbs items={[{ label: "Puja Services" }]} /><span className="eyebrow">Rituals, with care</span><h1>Explore Puja Services</h1><p>Choose a Puja for your home, family, festival or special occasion.</p></div></section><section className="section"><div className="content-wrap"><SectionHeading title="Find the right puja" text="Search by puja name, category, format or service location." /><PujaExplorer initialQuery={query} initialCategory={category} initialType={type} initialCity={city} initialPopular={popular} /></div></section></>;
 }

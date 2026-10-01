@@ -14,7 +14,7 @@ export async function notifyWhatsAppOfEnquiry(enquiry: PujaEnquiry): Promise<Not
     `Enquiry: ${enquiry.id}`,
     `Name: ${enquiry.name}`,
     `Mobile: ${enquiry.phone}`,
-    `Email: ${enquiry.email || "Not provided"}`,
+    `WhatsApp: ${enquiry.whatsapp || "Not provided"}`,
     `Puja: ${enquiry.puja}`,
     `Date: ${enquiry.pujaDate}`,
     `Time: ${enquiry.preferredTime || "Any suitable time"}`,

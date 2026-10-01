@@ -7,6 +7,7 @@ export interface Puja {
   shortDescription: string;
   description: string;
   category: string;
+  isPopular?: boolean;
   duration: string;
   panditCount: string;
   type: PujaType;

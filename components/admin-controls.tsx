@@ -2,9 +2,8 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import type { EnquiryStatus } from "@/lib/enquiry-store";
+import { ENQUIRY_STATUSES, type EnquiryStatus } from "@/lib/enquiry-types";
 
-const statuses: EnquiryStatus[] = ["New", "Contacted", "Quoted", "Confirmed", "Completed", "Cancelled"];
 
 export function AdminLogout() {
   const router = useRouter();
@@ -43,5 +42,5 @@ export function AdminEnquiryActions({ id, initialStatus }: { id: string; initial
     }
   }
 
-  return <form className="admin-actions-form" onSubmit={save}><label htmlFor="enquiry-status">Status</label><select id="enquiry-status" value={status} onChange={(event) => setStatus(event.target.value as EnquiryStatus)}>{statuses.map((item) => <option key={item}>{item}</option>)}</select><label htmlFor="enquiry-note">Add a note</label><textarea id="enquiry-note" value={note} onChange={(event) => setNote(event.target.value)} rows={4} maxLength={2000} placeholder="Internal follow-up note" /><button className="button" disabled={pending}>{pending ? "Saving…" : "Save update"}</button>{message && <p role="status">{message}</p>}</form>;
+  return <form className="admin-actions-form" onSubmit={save}><label htmlFor="enquiry-status">Status</label><select id="enquiry-status" value={status} onChange={(event) => setStatus(event.target.value as EnquiryStatus)}>{ENQUIRY_STATUSES.map((item) => <option key={item}>{item}</option>)}</select><label htmlFor="enquiry-note">Add a note</label><textarea id="enquiry-note" value={note} onChange={(event) => setNote(event.target.value)} rows={4} maxLength={2000} placeholder="Internal follow-up note" /><button className="button" disabled={pending}>{pending ? "Saving…" : "Save update"}</button>{message && <p role="status">{message}</p>}</form>;
 }

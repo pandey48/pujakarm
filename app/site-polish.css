@@ -532,3 +532,99 @@ body {
     animation-iteration-count: 1 !important;
   }
 }
+
+/* Service card and puja directory refresh */
+.puja-grid{grid-template-columns:repeat(3,minmax(0,1fr));align-items:stretch;gap:clamp(16px,2vw,24px)}
+.puja-card{overflow:hidden;border-radius:17px;background:#fffdf8}
+.puja-image-link{height:clamp(185px,19vw,235px);flex:0 0 auto}
+.puja-card-badges{position:absolute;inset:12px 12px auto;display:flex;align-items:flex-start;justify-content:space-between;gap:8px;pointer-events:none}
+.puja-card-badges .image-tag{position:static;display:inline-flex;max-width:72%;padding:6px 10px;border:1px solid rgba(255,255,255,.48);border-radius:999px;background:rgba(57,39,31,.76);font-size:11px;line-height:1.3;backdrop-filter:blur(7px)}
+.puja-popular-badge{display:inline-flex;align-items:center;gap:5px;padding:6px 10px;border:1px solid #f2dcb2;border-radius:999px;background:#fff8e9;color:#774418;font-size:11px;font-weight:700;line-height:1.3;box-shadow:0 3px 12px rgba(39,26,17,.13)}
+.puja-card-content{gap:0;padding:17px 17px 14px}
+.puja-card h3{min-height:0;margin:0 0 8px;font-size:22px;line-height:1.24}
+.puja-card h3 a:hover{color:#a84b1c}
+.puja-card p{flex:1 0 auto;min-height:0;margin:0 0 14px;color:#716256;font-size:13px;line-height:1.55;-webkit-line-clamp:3}
+.puja-card-facts{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:9px 12px;padding:11px 0;border-top:1px solid #eee5da;border-bottom:1px solid #eee5da}
+.puja-card-facts>span,.puja-card-facts .puja-card-formats>span{display:inline-flex;align-items:center;gap:6px;color:#66594f;font-size:12px;line-height:1.4}
+.puja-card-facts svg{flex:0 0 auto;color:#a84b1c}
+.puja-card-facts .puja-card-formats{display:flex;flex-wrap:wrap;gap:8px 12px}
+.puja-card-actions{display:grid;grid-template-columns:minmax(0,1fr);gap:9px;padding:14px 0 0;margin:0;border:0}
+.puja-card-actions .button-book-puja{display:flex;min-height:44px;align-items:center;justify-content:center;gap:6px;padding:8px 12px;border:1px solid #c96b3c;border-radius:10px;font-size:13px;font-weight:700;line-height:1.2;text-align:center;text-decoration:none;transition:background .18s ease,color .18s ease,transform .18s ease}
+.puja-card-actions .button-book-puja{background:#b84e24;color:#fff;box-shadow:0 4px 12px rgba(139,61,27,.18)}
+.puja-card-actions .button-book-puja:hover{transform:translateY(-1px);background:#963c19}
+.puja-card-dakshina{display:inline-flex;align-self:flex-start;align-items:center;gap:5px;min-height:30px;padding:4px 0;margin-top:5px;color:#32754a;font-size:12px;font-weight:650;text-decoration:none;transition:color .18s ease}
+.puja-card-dakshina:hover{color:#145a32;text-decoration:underline;text-underline-offset:3px}
+.pp-service-card{position:relative;display:flex;min-height:248px;flex-direction:column;padding:20px;border:1px solid #eee5da;border-radius:16px;box-shadow:0 7px 22px rgba(63,43,28,.055);transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
+.pp-service-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.pp-service-grid{gap:15px}
+.pp-service-card:hover{transform:translateY(-4px);border-color:#edc2a7;box-shadow:0 14px 30px rgba(63,43,28,.1)}
+.pp-service-card-top{display:flex;align-items:center;justify-content:space-between;gap:9px;margin-bottom:17px}
+.pp-service-card .pp-service-icon{width:52px;height:52px;margin:0;border-radius:15px;background:#fff2e8;color:#c84a18}
+.pp-service-type{padding:5px 9px;border:1px solid #efe6dc;border-radius:999px;color:#78695c;font-size:9px;font-weight:650;line-height:1.2}
+.pp-service-card strong{color:#203149;font-size:15px;line-height:1.35}
+.pp-service-card p{flex:1;margin:7px 0 16px;color:#687688;font-size:11px;line-height:1.65}
+.pp-service-action{display:flex;min-height:39px;align-items:center;align-self:stretch;justify-content:space-between;gap:8px;padding:0 12px;border:1px solid #f0d3c3;border-radius:9px;background:#fff8f3;color:#a8421c;font-size:10px;font-weight:700;transition:background .18s,color .18s,border-color .18s}
+.pp-service-action:hover{border-color:#e94b16;background:#e94b16;color:#fff}
+.pp-sample-reviews{padding-top:34px;margin-top:36px;border-top:1px solid #e8ddcf}
+.pp-sample-reviews-heading{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:16px}
+.pp-sample-reviews-heading h3{margin:5px 0 0;color:#10223b;font:600 24px/1.2 var(--serif)}
+.pp-sample-reviews-heading>p{margin:0;color:#79695e;font-size:10px;line-height:1.5}
+.pp-review-marquee{overflow:hidden;direction:ltr}
+.pp-review-track,.pp-review-group{display:flex;width:max-content;gap:13px}
+.pp-review-track{gap:0;animation:pp-review-scroll 58s linear infinite}
+.pp-review-group{padding-right:13px}
+.pp-review-marquee:hover .pp-review-track{animation-play-state:paused}
+.pp-sample-review-card{display:flex;width:286px;min-height:190px;flex:0 0 286px;flex-direction:column;padding:17px;border:1px solid #e9ddce;border-radius:13px;background:#fffdf8;box-shadow:0 7px 20px rgba(71,49,32,.055)}
+.pp-sample-review-label{color:#a35b32;font-size:9px;font-weight:750;text-transform:uppercase}
+.pp-sample-review-card blockquote{margin:13px 0 auto;color:#482d24;font:500 15px/1.5 var(--serif)}
+.pp-sample-review-byline{display:grid;gap:3px;margin:14px 0 0;color:#79695e;font-size:10px;line-height:1.4}
+.pp-sample-review-byline strong{color:#352920;font-size:11px}
+@keyframes pp-review-scroll{to{transform:translateX(-50%)}}
+.fixed-booking-bar{width:min(600px,calc(100% - 32px));grid-template-columns:minmax(0,1.18fr) minmax(100px,.72fr) minmax(0,1.1fr);gap:8px;padding:8px;border:1px solid #e6ddd1;border-radius:18px;background:rgba(255,253,250,.98);box-shadow:0 12px 34px rgba(30,38,47,.2);backdrop-filter:blur(14px)}
+.fixed-booking-primary,.fixed-booking-call,.fixed-booking-whatsapp{min-width:0;min-height:52px;gap:8px;padding:0 12px;border-radius:12px;font-size:12px;font-weight:700;transition:background .18s ease,transform .18s ease}
+.fixed-booking-primary{background:#e94b16;color:#fff}
+.fixed-booking-primary:hover{transform:translateY(-1px);background:#c93c10}
+.fixed-booking-call{background:#f1eee8;color:#34465c}
+.fixed-booking-call:hover{background:#e7e0d6}
+.fixed-booking-whatsapp{background:#eaf5ec;color:#1b6935}
+.fixed-booking-whatsapp:hover{background:#d9eddd}
+.fixed-booking-whatsapp small{font-size:9px}
+.samagri-service-detail{max-width:760px;padding:clamp(22px,4vw,40px);border:1px solid var(--line);border-radius:16px;background:var(--surface);box-shadow:0 7px 24px rgba(63,43,28,.055)}
+.samagri-service-detail h2{margin:13px 0 8px;color:var(--ink);font:600 clamp(24px,3vw,32px)/1.2 var(--serif)}
+.samagri-service-detail>p{max-width:66ch;margin:0;color:var(--muted);font-size:14px;line-height:1.8}
+.samagri-service-detail .check-list{display:grid;gap:10px;margin:20px 0 24px}
+.samagri-service-detail .button{width:fit-content}
+@media(max-width:1000px){.pp-service-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){.pp-service-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.pp-service-card{min-height:248px;padding:14px}.pp-service-card-top{margin-bottom:14px}.pp-service-card .pp-service-icon{width:44px;height:44px;border-radius:13px}.pp-service-type{padding:4px 7px;font-size:8px}.pp-service-card strong{font-size:13px}.pp-service-card p{font-size:10px}.pp-service-action{min-height:37px;padding:0 10px;font-size:9px}.samagri-service-detail{padding:20px}.samagri-service-detail .button{width:100%}}
+@media(max-width:640px){.pp-sample-reviews{padding-top:26px;margin-top:28px}.pp-sample-reviews-heading{align-items:flex-start;flex-direction:column;gap:5px}.pp-sample-reviews-heading h3{font-size:21px}.pp-sample-review-card{width:min(78vw,286px);flex-basis:min(78vw,286px);min-height:180px;padding:14px}.pp-sample-review-card blockquote{font-size:14px}}
+@media(prefers-reduced-motion:reduce){.pp-review-marquee{overflow-x:auto;scrollbar-width:thin}.pp-review-track{animation:none}.pp-review-group[aria-hidden="true"]{display:none}}
+@media(max-width:640px){.fixed-booking-bar{bottom:calc(env(safe-area-inset-bottom,0px) + 10px);width:calc(100% - 24px);grid-template-columns:minmax(0,1.1fr) minmax(0,.65fr) minmax(0,1.15fr);gap:6px;padding:6px;border-radius:16px}.fixed-booking-primary,.fixed-booking-call,.fixed-booking-whatsapp{min-height:48px;gap:5px;padding:0 8px;font-size:10px}.fixed-booking-whatsapp small{display:none}}
+@media(max-width:360px){.fixed-booking-bar{width:calc(100% - 20px);gap:5px;padding:6px}.fixed-booking-primary,.fixed-booking-call,.fixed-booking-whatsapp{min-height:48px;padding:0 6px;font-size:10px}}
+.explorer-category-chips{flex-wrap:wrap;overflow:visible;margin-bottom:14px}
+.explorer-category-chips button{min-height:40px;padding-inline:15px;font-size:13px}
+.explorer-toolbar{grid-template-columns:minmax(220px,1.5fr) repeat(2,minmax(160px,1fr));gap:10px}
+.explorer-search,.filter-select{height:48px;border-radius:10px}
+.explorer-search input,.filter-select select{font-size:13px}
+@media(max-width:900px){.puja-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.puja-image-link{height:clamp(175px,25vw,220px)}}
+@media(max-width:640px){
+  .puja-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .puja-image-link{height:clamp(112px,34vw,150px)}
+  .puja-card-content{padding:10px 9px 8px}
+  .puja-card h3{margin-bottom:6px;font-size:15px;line-height:1.22}
+  .puja-card p{margin-bottom:8px;font-size:10px;line-height:1.45;-webkit-line-clamp:2}
+  .puja-card-facts{align-items:flex-start;flex-direction:column;gap:6px;padding:8px 0}
+  .puja-card-facts>span,.puja-card-facts .puja-card-formats>span{font-size:10px}
+  .puja-card-facts .puja-card-formats{gap:5px 9px}
+  .puja-card-actions{grid-template-columns:1fr;gap:5px;padding-top:8px}
+  .puja-card-actions .puja-view-details,.puja-card-actions .button-book-puja{min-height:37px;padding:7px 6px;font-size:11px}
+  .puja-card-dakshina{min-height:29px;margin-top:3px;font-size:10px;line-height:1.25}
+  .pp-catalog .pp-section-heading{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:8px;margin-bottom:15px}
+  .pp-catalog .pp-section-heading>div{min-width:0}
+  .pp-catalog .pp-section-heading .pp-view{align-self:end;padding:8px 10px;border:1px solid #ecd6c7;border-radius:10px;background:#fff8f1;font-size:10px}
+  .explorer-category-chips{flex-wrap:wrap;gap:7px;padding:0 0 5px;overflow:visible}
+  .explorer-category-chips button{min-height:38px;padding-inline:12px;font-size:12px}
+  .explorer-toolbar{grid-template-columns:1fr 1fr;gap:8px}
+  .explorer-search{grid-column:1/-1}
+  .explorer-search,.filter-select{height:46px;padding-inline:11px}
+  .explorer-search input,.filter-select select{font-size:12px}
+}

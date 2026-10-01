@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/shared";
+import { createPageMetadata } from "@/lib/page-metadata";
 
-export const metadata: Metadata = { title: "Privacy notice", description: "How PujaPath enquiry details are handled.", alternates: { canonical: "/privacy" } };
+export const metadata = createPageMetadata({ title: "Privacy Notice", description: "How PujaPath enquiry details are handled.", path: "/privacy" });
 
 export default function PrivacyPage() {
   return <><section className="page-intro"><div className="content-wrap"><Breadcrumbs items={[{ label: "Privacy notice" }]} /><span className="eyebrow">Privacy & data</span><h1>Privacy notice</h1><p>Here is how enquiry details are handled when you contact PujaPath.</p></div></section><section className="section"><div className="content-wrap"><div className="info-panel"><h2>Puja enquiries</h2><p>When you submit the booking form, your enquiry details are saved so the PujaPath team can follow up. If WhatsApp Cloud API notifications are configured, an enquiry summary is automatically sent to the configured PujaPath WhatsApp recipient. Otherwise, the enquiry remains available in the admin dashboard.</p><h2>WhatsApp and other contact methods</h2><p>WhatsApp notifications are handled by Meta when enabled. Contact and Pandit registration forms prepare a WhatsApp message that you can review and send yourself. Do not include information you do not want to share.</p><h2>Browser storage</h2><p>Mantra bookmarks, when used, are kept in your browser. They are not sent to PujaPath.</p><h2>Contact</h2><p>For questions about an enquiry, contact the PujaPath team using the WhatsApp link on this site. This notice should be reviewed against the final business privacy policy before launch.</p><div className="legal-note">An enquiry is not a confirmed booking. PujaPath must confirm availability and ceremony details with you directly.</div></div></div></section></>;

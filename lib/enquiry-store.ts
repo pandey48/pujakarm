@@ -1,23 +1,30 @@
+import { createHash } from "node:crypto";
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-
-export type EnquiryStatus = "New" | "Contacted" | "Quoted" | "Confirmed" | "Completed" | "Cancelled";
+import { ENQUIRY_STATUSES, type EnquiryStatus } from "@/lib/enquiry-types";
+export { ENQUIRY_STATUSES } from "@/lib/enquiry-types";
+export type { EnquiryStatus } from "@/lib/enquiry-types";
 
 export type PujaEnquiry = {
   id: string;
+  requestId?: string;
   name: string;
   phone: string;
-  email: string;
+  whatsapp: string;
   puja: string;
+  panditName: string;
   pujaDate: string;
   preferredTime: string;
   city: string;
   location: string;
-  bookingType: "At Home" | "Online";
+  bookingType: "At Home" | "Online" | "";
   languagePreference: string;
   traditionPreference: string;
   gotra: string;
   additionalRequirement: string;
+  enquiryType: string;
+  message: string;
+  source: string;
   status: EnquiryStatus;
   notes: string[];
   createdAt: string;
@@ -28,11 +35,31 @@ const dataDirectory = process.env.PUJAPATH_DATA_DIR || join(process.cwd(), ".dat
 const enquiriesFile = join(dataDirectory, "enquiries.json");
 let writeQueue: Promise<unknown> = Promise.resolve();
 
+function normalizeStatus(status: unknown): EnquiryStatus {
+  if (ENQUIRY_STATUSES.includes(status as EnquiryStatus)) return status as EnquiryStatus;
+  if (status === "Quoted" || status === "Confirmed") return status === "Confirmed" ? "Booked" : "Follow-up";
+  if (status === "Cancelled") return "Not Interested";
+  return "New";
+}
+
 async function readAll(): Promise<PujaEnquiry[]> {
   try {
     const raw = await readFile(enquiriesFile, "utf8");
     const parsed: unknown = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed as PujaEnquiry[] : [];
+    return Array.isArray(parsed) ? parsed.map((value) => {
+      const item = value as Record<string, unknown>;
+      const text = (key: string) => typeof item[key] === "string" ? item[key] as string : "";
+      return {
+        id: text("id"), requestId: text("requestId") || undefined, name: text("name"), phone: text("phone"), whatsapp: text("whatsapp"),
+        puja: text("puja"), panditName: text("panditName"), pujaDate: text("pujaDate"), preferredTime: text("preferredTime"), city: text("city"),
+        location: text("location"), bookingType: ["At Home", "Online"].includes(text("bookingType")) ? text("bookingType") as "At Home" | "Online" : "",
+        languagePreference: text("languagePreference"), traditionPreference: text("traditionPreference"), gotra: text("gotra"),
+        additionalRequirement: text("additionalRequirement"), enquiryType: text("enquiryType") || "Book Puja",
+        message: text("message") || text("additionalRequirement"), source: text("source") || "Website", status: normalizeStatus(item.status),
+        notes: Array.isArray(item.notes) ? item.notes.filter((note): note is string => typeof note === "string") : [],
+        createdAt: text("createdAt"), updatedAt: text("updatedAt"),
+      } satisfies PujaEnquiry;
+    }) : [];
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === "ENOENT") return [];
     throw error;
@@ -60,18 +87,21 @@ export async function getEnquiry(id: string) {
   return (await readAll()).find((item) => item.id === id) ?? null;
 }
 
-export type NewEnquiry = Omit<PujaEnquiry, "id" | "status" | "notes" | "createdAt" | "updatedAt">;
+export type NewEnquiry = Omit<PujaEnquiry, "id" | "status" | "notes" | "createdAt" | "updatedAt" | "requestId">;
 
-export async function createEnquiry(input: NewEnquiry) {
+export function buildEnquiry(input: NewEnquiry, requestId: string): PujaEnquiry {
+  const createdAt = new Date().toISOString();
+  const suffix = createHash("sha256").update(requestId).digest("hex").slice(0, 16).toUpperCase();
+  return { ...input, id: `PUJA-${suffix}`, requestId, status: "New", notes: [], createdAt, updatedAt: createdAt };
+}
+
+export async function saveEnquiry(enquiry: PujaEnquiry): Promise<{ enquiry: PujaEnquiry; duplicate: boolean }> {
   return serializeWrite(async () => {
     const all = await readAll();
-    const createdAt = new Date().toISOString();
-    const dateStamp = createdAt.slice(0, 10).replaceAll("-", "");
-    const prefix = `PUJA-${dateStamp}-`;
-    const lastNumber = all.reduce((max, item) => item.id.startsWith(prefix) ? Math.max(max, Number(item.id.slice(prefix.length)) || 0) : max, 0);
-    const enquiry: PujaEnquiry = { ...input, id: `${prefix}${String(lastNumber + 1).padStart(3, "0")}`, status: "New", notes: [], createdAt, updatedAt: createdAt };
+    const existing = all.find((item) => item.id === enquiry.id || (item.requestId && item.requestId === enquiry.requestId));
+    if (existing) return { enquiry: existing, duplicate: true };
     await writeAll([...all, enquiry]);
-    return enquiry;
+    return { enquiry, duplicate: false };
   });
 }
 
