@@ -91,7 +91,7 @@ export function PanditJoinForm() {
 
   return <form className="form-grid" onSubmit={submit}>
     <div className="form-field"><label htmlFor="pandit-name">Full name *</label><input id="pandit-name" name="name" autoComplete="name" maxLength={120} required /></div>
-    <div className="form-field"><label htmlFor="pandit-phone">Phone number *</label><input id="pandit-phone" name="phone" type="tel" autoComplete="tel" pattern="[0-9+() -]{8,24}" maxLength={24} required /></div>
+    <div className="form-field"><label htmlFor="pandit-phone">Phone number *</label><input id="pandit-phone" name="phone" type="tel" autoComplete="tel" pattern="(?:[0-9+]|\(|\)| |-){8,24}" maxLength={24} required /></div>
     <div className="form-field"><label htmlFor="pandit-whatsapp">WhatsApp number</label><input id="pandit-whatsapp" name="whatsapp" type="tel" autoComplete="tel" maxLength={24} /></div>
     <div className="form-field"><label htmlFor="pandit-city">City *</label><input id="pandit-city" name="city" autoComplete="address-level2" maxLength={120} required /></div>
     <div className="form-field"><label htmlFor="pandit-state">State *</label><select id="pandit-state" name="state" defaultValue="" required><option value="" disabled>Select a state</option>{states.map((state) => <option key={state}>{state}</option>)}</select></div>

@@ -1,13 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowRight, BadgeCheck, CalendarCheck, Heart, ShieldCheck, UsersRound } from "lucide-react";
+import { ArrowDown, ArrowRight, BadgeCheck, CalendarCheck, Heart, ShieldCheck, UsersRound } from "lucide-react";
 import { OrganizationSchema, WebsiteSchema } from "@/app/schema";
 import { HeroDiscovery } from "@/components/hero-discovery";
+import { DeferredHeroVideo } from "@/components/deferred-hero-video";
 import { MantraRotator } from "@/components/mantra-rotator";
 import { HomeCatalog } from "@/components/home-catalog";
 import { MantraCard } from "@/components/mantra-card";
 import { SampleReviews } from "@/components/sample-reviews";
+import { AstrologersAcharyas } from "@/components/astrologers-acharyas";
 import { SamagriGuide } from "@/components/samagri-guide";
 import { ServicesSection } from "@/components/services-section";
 import { CityCard, FAQList, HowItWorks } from "@/components/shared";
@@ -25,8 +27,8 @@ export default function HomePage() {
     <WebsiteSchema />
     <section className="pp-search-hero" aria-labelledby="hero-title">
       <div className="pp-search-hero-frame">
-        <video className="pp-search-hero-video" autoPlay muted loop playsInline preload="metadata" poster="https://images.unsplash.com/photo-1700765020008-7fd77c847f8a?auto=format&fit=crop&w=1800&q=85" aria-hidden="true"><source src="/video/herobg.mp4" type="video/mp4" /></video>
-        <div className="pp-search-hero-content"><div className="pp-hero-topline"><span className="pp-hero-badge">Authentic Vedic Rituals <i /> Pandit Enquiries</span></div><h1 id="hero-title">Book a Puja with<br /><em>Trusted Pandits</em></h1><p>Find the right puja, experienced Pandit and suitable time for your family — at home or online.</p><HeroDiscovery /><div className="pp-hero-assurance"><span><BadgeCheck size={14} /> Share ritual preferences</span><span><BadgeCheck size={14} /> Ask about samagri</span><span><BadgeCheck size={14} /> Confirm availability first</span></div></div>
+        <DeferredHeroVideo src="/video/herobg.mp4" poster="https://images.unsplash.com/photo-1700765020008-7fd77c847f8a?auto=format&fit=crop&w=1800&q=85" />
+        <div className="pp-search-hero-content"><div className="pp-hero-topline"><span className="pp-hero-badge">Authentic Vedic Rituals <i /> Pandit Enquiries</span></div><h1 id="hero-title">Book a Puja with<br /><em>Trusted Pandits</em></h1><p>Find the right puja, experienced Pandit and suitable time for your family — at home or online.</p><HeroDiscovery /><div className="pp-hero-assurance"><span><BadgeCheck size={14} /> Share ritual preferences</span><span><BadgeCheck size={14} /> Ask about samagri</span><span><BadgeCheck size={14} /> Confirm availability first</span></div><Link className="pp-hero-consultation" href="#astrologers-acharyas"><span>Click Me - Get Free Puja Consultation</span><ArrowDown size={15} aria-hidden="true" /></Link></div>
         <MantraRotator />
       </div>
     </section>
@@ -42,6 +44,8 @@ export default function HomePage() {
     <section className="pp-how" id="how-it-works"><div className="pp-wrap"><div className="pp-section-heading"><div><span className="pp-kicker">Clear and personal</span><h2>Book Your Puja in 4 Simple Steps</h2><p>Share what you need and our team will help confirm the details.</p></div></div><HowItWorks /></div></section>
 
     <section className="pp-city-section"><div className="pp-wrap"><div className="pp-section-heading"><div><span className="pp-kicker">Locality and format</span><h2>Book a Pandit Near You</h2><p>Choose a city to send an enquiry. Service availability is confirmed individually before booking.</p></div><Link className="pp-view" href="/cities">View location guides <ArrowRight size={16} /></Link></div><div className="pp-city-grid">{cities.slice(0, 8).map((city) => <CityCard city={city} key={city.id} />)}<Link href="/pujas?type=online" className="pp-online-city"><span>Online Puja</span><small>Ask about joining a ritual online</small><ArrowRight size={16} /></Link></div><p className="pp-demo-note">Location cards are enquiry options, not a live availability calendar.</p></div></section>
+
+    <AstrologersAcharyas />
 
     <section className="pp-mantras" id="mantras"><div className="pp-wrap"><div className="pp-section-heading"><div><span className="pp-kicker">Read and understand</span><h2>Vedic Mantras</h2><p>Listen, read and understand ancient Sanskrit chants.</p></div></div><div className="pp-mantra-grid">{featuredMantras.map((mantra) => <MantraCard mantra={mantra} key={mantra.name} />)}</div><div className="pp-live-puja-videos"><div className="pp-live-puja-heading"><span className="pp-kicker">Puja in practice</span><h3>Live Puja Videos</h3><p>Watch moments from puja ceremonies and see traditional rituals in practice.</p></div><div className="pp-live-puja-grid"><figure className="pp-live-puja-card"><video controls playsInline preload="none" width="478" height="850" aria-label="Watch live puja ceremony video 1"><source src="/video/live-puja-1.mp4" type="video/mp4" />Your browser does not support video playback.</video><figcaption>Puja ceremony · 01</figcaption></figure><figure className="pp-live-puja-card"><video controls playsInline preload="none" width="478" height="850" aria-label="Watch live puja ceremony video 2"><source src="/video/live-puja-2.mp4" type="video/mp4" />Your browser does not support video playback.</video><figcaption>Puja ceremony · 02</figcaption></figure></div></div><SampleReviews /></div></section>
 

@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { PujaGrid } from "@/components/shared";
 import type { Puja } from "@/lib/types";
 import { popularPujaIds } from "@/data/pujas";
@@ -30,6 +31,7 @@ export function HomeCatalog({ items }: { items: Puja[] }) {
       <div className="pp-section-heading"><div><span className="pp-kicker">Browse ceremonies</span><h2>{active === "Popular" ? "Popular Pujas" : active}</h2><p>{active === "Popular" ? "Traditional rituals for important moments in life." : `Browse ${active.toLowerCase()} by name and open any puja for details.`}</p></div><Link className="pp-view" href="/pujas">View All Pujas <span aria-hidden="true">→</span></Link></div>
       <div className="pp-catalog-tabs" aria-label="Filter pujas by category">{tabs.map((category) => <button type="button" key={category} aria-pressed={active === category} className={active === category ? "is-active" : ""} onClick={() => setActive(category)}>{category}</button>)}</div>
       <PujaGrid items={visibleItems} />
+      <Link className="pp-catalog-bottom-link" href="/pujas">View All Pujas <ArrowRight size={16} aria-hidden="true" /></Link>
       <p className="pp-availability-note">Home and online labels show listed formats. The team confirms availability for each enquiry.</p>
     </div>
   </section>;

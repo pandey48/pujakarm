@@ -74,30 +74,35 @@ export async function POST(request: Request) {
     languagePreference: "", traditionPreference: "", gotra: "", additionalRequirement: enquiryDetails.additionalRequirement,
     enquiryType: enquiryDetails.enquiryType, message: enquiryDetails.message, source: enquiryDetails.source,
   }, requestId);
-  const existing = await getEnquiry(enquiry.id).catch(() => null);
-  if (existing) return Response.json({ id: existing.id, createdAt: existing.createdAt, duplicate: true }, { headers: { "Cache-Control": "no-store" } });
+  let savedEnquiry = await getEnquiry(enquiry.id).catch(() => null);
+  const isNewEnquiry = !savedEnquiry;
+  if (!savedEnquiry) {
+    try {
+      const saved = await saveEnquiry(enquiry);
+      savedEnquiry = saved.enquiry;
+    } catch (error) {
+      console.error("Enquiry backup storage failed:", error instanceof Error ? error.message : "Unknown error");
+      return Response.json({ error: "We could not save your registration right now. Please try again." }, { status: 503, headers: { "Cache-Control": "no-store" } });
+    }
+  }
 
+  let sheetsSynced = true;
   try {
     await submitToGoogleAppsScript(payload);
   } catch (error) {
     console.error("Google Apps Script submission failed:", error instanceof Error ? error.message : "Unknown error");
-    return Response.json({ error: "We could not submit your details right now. Please try again." }, { status: 502 });
+    sheetsSynced = false;
   }
 
-  try {
-    await saveEnquiry(enquiry);
-  } catch (error) {
-    console.error("Enquiry backup storage failed:", error instanceof Error ? error.message : "Unknown error");
-  }
-
-  {
-    const notification = await notifyWhatsAppOfEnquiry(enquiry);
+  if (isNewEnquiry) {
+    const notification = await notifyWhatsAppOfEnquiry(savedEnquiry);
     if (notification !== "sent") console.warn("WhatsApp enquiry notification status:", notification);
   }
 
   return Response.json({
-    id: enquiry.id,
-    createdAt: enquiry.createdAt,
+    id: savedEnquiry.id,
+    createdAt: savedEnquiry.createdAt,
+    sheetsSynced,
     message: payload.type === "lead"
       ? "Thank you! Your enquiry has been submitted successfully. We will contact you soon."
       : "Thank you! Your registration has been submitted successfully. We will review your details and contact you soon.",

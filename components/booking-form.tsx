@@ -9,6 +9,9 @@ import { whatsappUrl } from "@/lib/constants";
 
 export function BookingForm({ presetPuja = "", presetRequirement = "" }: { presetPuja?: string; presetRequirement?: string }) {
   const selectedPuja = pujas.find((puja) => puja.slug === presetPuja);
+  const initialPuja = selectedPuja?.name || (presetPuja === "online-astrologer" ? "Online Astrologer Consultant" : "");
+  const [pujaChoice, setPujaChoice] = useState(initialPuja);
+  const [otherPuja, setOtherPuja] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const submitLock = useRef(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -20,8 +23,10 @@ export function BookingForm({ presetPuja = "", presetRequirement = "" }: { prese
     if (submitLock.current) return;
     const formElement = event.currentTarget;
     const form = new FormData(formElement);
-    const slug = String(form.get("puja") || "");
-    const pujaName = pujas.find((puja) => puja.slug === slug)?.name || (slug === "online-astrologer" ? "Online Astrologer Consultant" : slug);
+    const selectedPujaName = String(form.get("puja") || "").trim();
+    const pujaName = selectedPujaName.toLowerCase() === "other"
+      ? String(form.get("otherPuja") || "").trim()
+      : selectedPujaName;
     const phone = String(form.get("phone") || "");
     const message = String(form.get("message") || "");
     submitLock.current = true;
@@ -39,6 +44,8 @@ export function BookingForm({ presetPuja = "", presetRequirement = "" }: { prese
         message,
       });
       formElement.reset();
+      setPujaChoice("");
+      setOtherPuja("");
       setSubmittedWhatsAppMessage(`Namaste PujaPath, I have submitted an enquiry for ${pujaName}. My phone number is ${phone}. ${message}`);
       setSubmitted(true);
     } catch (error) {
@@ -61,9 +68,9 @@ export function BookingForm({ presetPuja = "", presetRequirement = "" }: { prese
 
   return <form className="form-grid" onSubmit={submit}>
     <div className="form-field"><label htmlFor="booking-name">Full name *</label><input id="booking-name" name="name" autoComplete="name" placeholder="Your name" maxLength={120} required /></div>
-    <div className="form-field"><label htmlFor="booking-phone">Mobile number *</label><input id="booking-phone" name="phone" type="tel" autoComplete="tel" pattern="[0-9+() -]{8,18}" placeholder="+91 98765 43210" required /></div>
+    <div className="form-field"><label htmlFor="booking-phone">Mobile number *</label><input id="booking-phone" name="phone" type="tel" autoComplete="tel" pattern="(?:[0-9+]|\(|\)| |-){8,18}" placeholder="+91 98765 43210" required /></div>
     <div className="form-field"><label htmlFor="booking-whatsapp">WhatsApp number</label><input id="booking-whatsapp" name="whatsapp" type="tel" autoComplete="tel" placeholder="If different from your phone" /></div>
-    <div className="form-field"><label htmlFor="booking-puja">Puja or service *</label><select id="booking-puja" name="puja" defaultValue={selectedPuja?.slug || (presetPuja === "online-astrologer" ? presetPuja : "")} required><option value="" disabled>Choose a puja or service</option>{pujas.map((puja) => <option key={puja.id} value={puja.slug}>{puja.name}</option>)}{presetPuja === "online-astrologer" && <option value="online-astrologer">Online Astrologer Consultant</option>}</select></div>
+    <div className="form-field"><label htmlFor="booking-puja">Search or choose a puja/service *</label><input id="booking-puja" name="puja" list="booking-puja-options" value={pujaChoice} onChange={(event) => setPujaChoice(event.target.value)} autoComplete="off" placeholder="Type to search pujas or services" maxLength={120} required /><datalist id="booking-puja-options">{pujas.map((puja) => <option key={puja.id} value={puja.name} />)}{presetPuja === "online-astrologer" && <option value="Online Astrologer Consultant" />}<option value="Other" /></datalist>{pujaChoice.trim().toLowerCase() === "other" && <div className="form-field"><label htmlFor="booking-other-puja">Please specify *</label><input id="booking-other-puja" name="otherPuja" value={otherPuja} onChange={(event) => setOtherPuja(event.target.value)} maxLength={120} required /></div>}</div>
     <div className="form-field"><label htmlFor="booking-location">Location *</label><input id="booking-location" name="location" autoComplete="address-level2" placeholder="Area, city or locality" required /></div>
     <div className="form-field"><label htmlFor="booking-date">Preferred date</label><input id="booking-date" name="preferredDate" type="date" /></div>
     <div className="form-field form-span"><label htmlFor="booking-message">Message</label><textarea id="booking-message" name="message" rows={4} maxLength={2000} defaultValue={presetRequirement} placeholder="Share any details that will help us assist you" /></div>

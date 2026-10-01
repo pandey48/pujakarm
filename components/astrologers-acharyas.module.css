@@ -1,0 +1,243 @@
+.section {
+  padding: 63px 0;
+  background: #fffaf3;
+  scroll-margin-top: 86px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 20px 20px;
+  border: 1px solid #e9ddce;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 8px 25px rgba(71, 49, 32, .055);
+  text-align: center;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.compactCard {
+  display: grid;
+  grid-template-columns: 108px minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  text-align: left;
+}
+
+.acharyaCard {
+  border-color: #d9c69f;
+  border-top: 3px solid #b18a4d;
+  box-shadow: 0 9px 28px rgba(90, 65, 30, .09);
+}
+
+.compactCard .content {
+  width: auto;
+  min-width: 0;
+  flex: initial;
+  align-items: flex-start;
+}
+
+.compactCard .designation {
+  margin-top: 0;
+}
+
+.acharyaCard .designation {
+  padding: 5px 11px;
+  border: 1px solid #eadab9;
+  border-radius: 999px;
+  background: #fff8e9;
+  color: #795824;
+}
+
+.compactCard .photo,
+.compactCard .photoImage {
+  width: 108px;
+  height: 108px;
+}
+
+.acharyaCard .photo,
+.acharyaCard .photoImage {
+  border: 3px solid #e4d2a9;
+  box-shadow: 0 0 0 4px #faf5e9;
+}
+
+.compactCard .content h3 {
+  margin: 8px 0 4px;
+  font-size: 19px;
+}
+
+.compactCard .content p {
+  min-height: 0;
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+.compactCard .askButton {
+  min-height: 40px;
+  margin-top: 0;
+  padding: 0 12px;
+}
+
+.kartikPhoto {
+  object-position: center 35%;
+}
+
+.photo {
+  display: flex;
+  width: 148px;
+  aspect-ratio: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  overflow: hidden;
+  border: 1px solid #ead8c3;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 30%, #fff8ee, #ead8c3);
+  color: #a35028;
+}
+
+.photoImage {
+  width: 148px;
+  height: 148px;
+  flex: 0 0 auto;
+  border: 1px solid #ead8c3;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.photoInitials {
+  font: 600 32px/1 var(--serif);
+}
+
+.photoNote {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #79695e;
+  font-size: 9px;
+}
+
+.content {
+  display: flex;
+  width: 100%;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+}
+
+.designation {
+  margin-top: 16px;
+  color: #a84b1c;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.content h3 {
+  margin: 6px 0 4px;
+  color: #482d24;
+  font: 600 21px/1.25 var(--serif);
+}
+
+.content p {
+  min-height: 36px;
+  margin: 0 0 18px;
+  color: #79695e;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.askButton {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: auto;
+  padding: 0 10px;
+  border-radius: 10px;
+  background: #bd581f;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background .18s ease, transform .18s ease;
+}
+
+.askButton:hover {
+  transform: translateY(-1px);
+  background: #964117;
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .card:last-child:nth-child(odd) {
+    width: calc((100% - 18px) / 2);
+    grid-column: 1 / -1;
+    justify-self: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .section {
+    padding: 43px 0;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .card {
+    padding: 20px 16px 17px;
+  }
+
+  .compactCard {
+    grid-template-columns: 88px minmax(0, 1fr);
+    gap: 12px;
+    padding: 14px 12px;
+  }
+
+  .card:last-child:nth-child(odd) {
+    width: 100%;
+    grid-column: auto;
+  }
+
+  .photo {
+    width: 132px;
+  }
+
+  .photoImage {
+    width: 132px;
+    height: 132px;
+  }
+
+  .compactCard .photo,
+  .compactCard .photoImage {
+    width: 88px;
+    height: 88px;
+  }
+
+  .content h3 {
+    font-size: 19px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .askButton {
+    transition: none;
+  }
+}
