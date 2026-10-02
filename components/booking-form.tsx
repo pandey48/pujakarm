@@ -38,7 +38,7 @@ export function BookingForm({ presetPuja = "", presetRequirement = "" }: { prese
         type: "lead",
         name,
         phone,
-        whatsapp: String(form.get("whatsapp") || ""),
+        whatsapp: phone,
         puja: pujaName,
         location: String(form.get("location") || ""),
         preferredDate: String(form.get("preferredDate") || ""),
@@ -70,7 +70,6 @@ export function BookingForm({ presetPuja = "", presetRequirement = "" }: { prese
   return <form className="form-grid" onSubmit={submit}>
     <div className="form-field"><label htmlFor="booking-name">Full name *</label><input id="booking-name" name="name" autoComplete="name" placeholder="Your name" maxLength={120} required /></div>
     <div className="form-field"><label htmlFor="booking-phone">Mobile number *</label><input id="booking-phone" name="phone" type="tel" autoComplete="tel" pattern="(?:[0-9+]|\(|\)| |-){8,18}" placeholder="+91 98765 43210" required /></div>
-    <div className="form-field"><label htmlFor="booking-whatsapp">WhatsApp number</label><input id="booking-whatsapp" name="whatsapp" type="tel" autoComplete="tel" placeholder="If different from your phone" /></div>
     <div className="form-field"><label htmlFor="booking-puja">Search or choose a puja/service *</label><input id="booking-puja" name="puja" list="booking-puja-options" value={pujaChoice} onChange={(event) => setPujaChoice(event.target.value)} autoComplete="off" placeholder="Type to search pujas or services" maxLength={120} required /><datalist id="booking-puja-options">{pujas.map((puja) => <option key={puja.id} value={puja.name} />)}{presetPuja === "online-astrologer" && <option value="Online Astrologer Consultant" />}<option value="Other" /></datalist>{pujaChoice.trim().toLowerCase() === "other" && <div className="form-field"><label htmlFor="booking-other-puja">Please specify *</label><input id="booking-other-puja" name="otherPuja" value={otherPuja} onChange={(event) => setOtherPuja(event.target.value)} maxLength={120} required /></div>}</div>
     <div className="form-field"><label htmlFor="booking-location">Location *</label><input id="booking-location" name="location" autoComplete="address-level2" placeholder="Area, city or locality" required /></div>
     <div className="form-field"><label htmlFor="booking-date">Preferred date</label><input id="booking-date" name="preferredDate" type="date" /></div>

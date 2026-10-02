@@ -43,6 +43,8 @@ export function PanditJoinForm() {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
   const [savedMessage, setSavedMessage] = useState("");
+  const [cityChoice, setCityChoice] = useState("");
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const submitLock = useRef(false);
   const languages = ["Hindi", "Sanskrit", "English", "Telugu", "Tamil", "Kannada", "Malayalam", "Marathi", "Gujarati", "Bengali", "Punjabi", "Odia", "Assamese", "Other"];
   const services = ["Ganesh Puja", "Satyanarayan Puja", "Griha Pravesh Puja", "Rudrabhishek", "Havan", "Wedding / Vivah Puja", "Navgraha Shanti", "Shraddha / Pitru Puja", "Vastu Puja", "Other"];
@@ -54,20 +56,25 @@ export function PanditJoinForm() {
     const values = new FormData(event.currentTarget);
     const formElement = event.currentTarget;
     const language = values.getAll("language").map(String).join(", ");
-    const selectedServices = values.getAll("services").map(String).join(", ");
+    const serviceNames = values.getAll("services").map(String).join(", ");
+    const cityValue = String(values.get("city") || "").trim();
+    const city = cityValue === "Other" ? String(values.get("otherCity") || "").trim() : cityValue;
     const name = String(values.get("name") || "").trim();
     const phone = String(values.get("phone") || "").trim();
-    const whatsapp = String(values.get("whatsapp") || "").trim();
     if (!name) {
       setError("Enter your name.");
       return;
     }
-    if (!language || !selectedServices) {
+    if (!language || !serviceNames) {
       setError("Select at least one language and one puja or service.");
       return;
     }
-    if (![phone, whatsapp].every((value) => /^(?:\+?91[ -]?)?[6-9]\d{9}$/.test(value))) {
-      setError("Enter valid 10-digit Indian mobile and WhatsApp numbers.");
+    if (!city) {
+      setError("Select or enter your city.");
+      return;
+    }
+    if (!/^(?:\+?91[\- ]?)?[6-9]\d{9}$/.test(phone)) {
+      setError("Enter a valid 10-digit Indian mobile number.");
       return;
     }
     submitLock.current = true;
@@ -78,14 +85,16 @@ export function PanditJoinForm() {
         type: "pandit",
         name,
         phone,
-        whatsapp,
-        city: String(values.get("city") || ""),
+        whatsapp: phone,
+        city,
         state: String(values.get("state") || ""),
         experience: String(values.get("experience") || ""),
         language,
-        services: selectedServices,
+        services: serviceNames,
       });
       formElement.reset();
+      setCityChoice("");
+      setSelectedServices([]);
       setSavedMessage("Thank you! Your registration has been submitted successfully. We will review your details and contact you soon.");
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "We could not submit your enquiry. Please try again.");
@@ -95,17 +104,17 @@ export function PanditJoinForm() {
     }
   }
 
-  if (savedMessage) return <div className="inline-success" role="status"><strong>{savedMessage}</strong></div>;
+  if (savedMessage) return <div className="inline-success" role="status"><strong>Jai Shree Ram 🙏</strong><span>{savedMessage}</span></div>;
 
   return <form className="form-grid pandit-registration-form" onSubmit={submit}>
     <div className="form-field"><label htmlFor="pandit-name">Pandit Name *</label><input id="pandit-name" name="name" autoComplete="name" maxLength={120} required /></div>
-    <div className="form-field"><label htmlFor="pandit-phone">Mobile Number *</label><input id="pandit-phone" name="phone" type="tel" autoComplete="tel" inputMode="tel" pattern="(?:\+?91[\- ]?)?[6-9][0-9]{9}" maxLength={16} placeholder="+91 9876543210" required /></div>
-    <div className="form-field"><label htmlFor="pandit-whatsapp">WhatsApp Number *</label><input id="pandit-whatsapp" name="whatsapp" type="tel" autoComplete="tel" inputMode="tel" pattern="(?:\+?91[\- ]?)?[6-9][0-9]{9}" maxLength={16} placeholder="+91 9876543210" required /></div>
-    <div className="form-field"><label htmlFor="pandit-city">City *</label><input id="pandit-city" name="city" autoComplete="address-level2" maxLength={120} required /></div>
+    <div className="form-field"><label htmlFor="pandit-phone">Mobile / WhatsApp Number *</label><input id="pandit-phone" name="phone" type="tel" autoComplete="tel" inputMode="tel" pattern="(?:\+?91[\- ]?)?[6-9][0-9]{9}" maxLength={16} placeholder="+91 9876543210" required /></div>
+    <div className="form-field"><label htmlFor="pandit-city">City *</label><select id="pandit-city" name="city" value={cityChoice} onChange={(event) => setCityChoice(event.target.value)} required><option value="" disabled>Select your city</option>{cities.map((city) => <option key={city.id} value={city.name}>{city.name}</option>)}<option value="Other">Other</option></select></div>
+    {cityChoice === "Other" && <div className="form-field"><label htmlFor="pandit-other-city">Enter your city *</label><input id="pandit-other-city" name="otherCity" autoComplete="address-level2" maxLength={120} required /></div>}
     <div className="form-field"><label htmlFor="pandit-state">State *</label><select id="pandit-state" name="state" defaultValue="" required><option value="" disabled>Select a state</option>{states.map((state) => <option key={state}>{state}</option>)}</select></div>
     <div className="form-field"><label htmlFor="pandit-experience">Experience (years) *</label><input id="pandit-experience" name="experience" type="number" min="0" max="80" step="0.5" required /></div>
-    <fieldset className="form-field form-span registration-choice-group"><legend>Language * <span>Select all that apply</span></legend><div className="registration-check-grid">{languages.map((language) => <label key={language}><input type="checkbox" name="language" value={language} /><span>{language}</span></label>)}</div></fieldset>
-    <fieldset className="form-field form-span registration-choice-group"><legend>Puja/Services * <span>Select all that apply</span></legend><div className="registration-check-grid">{services.map((service) => <label key={service}><input type="checkbox" name="services" value={service} /><span>{service}</span></label>)}</div></fieldset>
+    <fieldset className="form-field form-span registration-choice-group"><legend>Language * <span>Select all that apply</span></legend><details className="registration-dropdown"><summary>Choose languages</summary><div className="registration-dropdown-options">{languages.map((language) => <label key={language}><input type="checkbox" name="language" value={language} /><span>{language}</span></label>)}</div></details></fieldset>
+    <fieldset className="form-field form-span registration-choice-group"><legend>Puja / Services * <span>Select all that apply</span></legend><details className="registration-dropdown"><summary><span>{selectedServices.length ? `${selectedServices.length} selected` : "Choose pujas or services"}</span></summary><div className="registration-dropdown-options">{services.map((service) => <label key={service}><input type="checkbox" name="services" value={service} checked={selectedServices.includes(service)} onChange={(event) => setSelectedServices((current) => event.target.checked ? [...current, service] : current.filter((item) => item !== service))} /><span>{service}</span></label>)}</div></details></fieldset>
     <button className="button form-span" type="submit" disabled={pending}>{pending ? "Submitting Registration..." : "Submit registration"}</button>
     {error && <p className="form-error form-span" role="alert">{error}</p>}
   </form>;
