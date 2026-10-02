@@ -1,7 +1,8 @@
 import Image from "next/image";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Check, Clock3, House, Languages, ShieldCheck, Users, Video } from "lucide-react";
+import { ArrowLeft, Check, Clock3, House, Languages, ShieldCheck, Users, Video } from "lucide-react";
 import { Breadcrumbs, FAQList, PujaGrid, SectionHeading, WhatsAppButton } from "@/components/shared";
 import { pujas } from "@/data/pujas";
 import { BookingForm } from "@/components/booking-form";
@@ -27,7 +28,7 @@ export default async function PujaDetailPage({ params }: PageProps<"/pujas/[slug
   const hasOnline = puja.type === "Online" || puja.type === "Home & Online";
   const message = `Namaste PujaPath, I would like to enquire about ${puja.name}.\nCity: \nPreferred date: \nPreferred time: `;
 
-  return <><ServiceSchema puja={puja} /><BreadcrumbSchema items={[{ label: "Home", href: "/" }, { label: "Pujas", href: "/pujas" }, { label: puja.name, href: `/pujas/${puja.slug}` }]} /><section className="section"><div className="content-wrap"><Breadcrumbs items={[{ label: "Pujas", href: "/pujas" }, { label: puja.name }]} /><div className="detail-layout"><article className="detail-main">
+  return <><ServiceSchema puja={puja} /><BreadcrumbSchema items={[{ label: "Home", href: "/" }, { label: "Pujas", href: "/pujas" }, { label: puja.name, href: `/pujas/${puja.slug}` }]} /><section className="section"><div className="content-wrap"><Link className="detail-back-link" href="/pujas"><ArrowLeft size={16} aria-hidden="true" />Back to all Pujas</Link><Breadcrumbs items={[{ label: "Pujas", href: "/pujas" }, { label: puja.name }]} /><div className="detail-layout"><article className="detail-main">
     <div className="detail-hero-image"><Image src={puja.image} alt={`${puja.name} ritual`} fill priority sizes="(max-width: 800px) 100vw, 65vw" className="cover-image" /></div><span className="eyebrow" style={{ marginTop: 23 }}>{puja.category}</span><h1>{puja.name}</h1><p className="detail-summary">{puja.description}</p>
     <div className="detail-facts"><span><Clock3 size={15} />{puja.duration}</span><span><Users size={15} />{puja.panditCount}</span><span><Languages size={15} />Language by request</span></div><div className="puja-formats detail-formats">{hasHome && <span><House size={13} />At Home</span>}{hasOnline && <span><Video size={13} />Online</span>}</div>
     <section className="detail-section"><h2>About this puja</h2><p>{puja.description} Before confirming, we’ll discuss your preferred tradition, language, ceremony date and family customs.</p></section>

@@ -280,6 +280,31 @@ body {
   font-size: 12px;
 }
 
+.detail-back-link {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  margin: 0 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--surface);
+  color: #43536a;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.detail-back-link:hover {
+  border-color: #e8b499;
+  color: #b84e24;
+}
+
+.detail-back-link:focus-visible {
+  outline: 3px solid rgba(189, 88, 31, .24);
+  outline-offset: 2px;
+}
+
 .detail-layout {
   grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
   gap: clamp(24px, 3vw, 36px);
@@ -644,17 +669,7 @@ body {
 .pandit-registration-form .button:disabled{opacity:.7;cursor:wait}
 @media(max-width:640px){.registration-check-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.registration-check-grid label{min-height:42px;padding:8px;font-size:11px}}
 .pandit-registration-section{padding:clamp(30px,5vw,58px) 0 72px;background:#f6f5f1}
-.pandit-registration-layout{display:grid;grid-template-columns:minmax(230px,.72fr) minmax(0,1.28fr);align-items:start;gap:clamp(26px,5vw,68px)}
-.pandit-registration-aside{position:sticky;top:105px;padding:18px 0}
-.pandit-registration-kicker{color:#d64c1b;font-size:10px;font-weight:800;letter-spacing:1.4px}
-.pandit-registration-aside h2{max-width:340px;margin:12px 0;color:#14263d;font:600 34px/1.12 var(--serif)}
-.pandit-registration-aside>p{max-width:360px;margin:0;color:#687688;font-size:13px;line-height:1.75}
-.pandit-registration-points{display:grid;gap:18px;margin-top:31px}
-.pandit-registration-points p{display:flex;align-items:center;gap:13px;margin:0}
-.pandit-registration-points p>span:first-child{display:grid;width:34px;height:34px;flex:0 0 34px;place-items:center;border:1px solid #e6d8c9;border-radius:50%;color:#bd581f;font-size:10px;font-weight:700}
-.pandit-registration-points strong,.pandit-registration-points small{display:block}
-.pandit-registration-points strong{color:#25374d;font-size:12px}
-.pandit-registration-points small{margin-top:2px;color:#778292;font-size:10px}
+.pandit-registration-layout{display:grid;grid-template-columns:minmax(0,920px);justify-content:center}
 .pandit-registration-section .form-shell{max-width:none;border:1px solid #ece7df;border-radius:14px;background:#fff;box-shadow:0 16px 40px #1b27340c}
 .registration-dropdown{border:1px solid #e2d8cb;border-radius:10px;background:#fffefa}
 .registration-dropdown>summary{display:flex;min-height:48px;align-items:center;justify-content:space-between;gap:12px;padding:0 13px;color:#43536a;font-size:13px;cursor:pointer;list-style:none}
@@ -666,5 +681,4 @@ body {
 .registration-dropdown-options label:has(input:checked){border-color:#e8b499;background:#fff5ed;color:#763c22}
 .registration-dropdown-options input{width:16px;height:16px;flex:0 0 16px;margin:0;accent-color:#e94b16}
 .registration-dropdown-options span{line-height:1.35}
-@media(max-width:820px){.pandit-registration-layout{grid-template-columns:1fr;gap:22px}.pandit-registration-aside{position:static;padding:0}.pandit-registration-aside h2{max-width:600px;font-size:30px}.pandit-registration-points{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:20px}}
-@media(max-width:640px){.pandit-registration-section{padding-top:25px}.pandit-registration-layout{gap:18px}.pandit-registration-aside h2{font-size:27px}.pandit-registration-aside>p{font-size:12px}.pandit-registration-points{grid-template-columns:1fr;gap:10px;margin-top:16px}.pandit-registration-points p>span:first-child{width:30px;height:30px;flex-basis:30px}.registration-dropdown-options{grid-template-columns:1fr}}
+@media(max-width:640px){.pandit-registration-section{padding-top:25px}.registration-dropdown-options{grid-template-columns:1fr}}

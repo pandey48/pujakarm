@@ -86,7 +86,10 @@ export async function POST(request: Request) {
     languagePreference: "", traditionPreference: "", gotra: "", additionalRequirement: enquiryDetails.additionalRequirement,
     enquiryType: enquiryDetails.enquiryType, message: enquiryDetails.message, source: enquiryDetails.source,
   }, requestId);
-  let savedEnquiry = await getEnquiry(enquiry.id).catch(() => null);
+  let savedEnquiry = await getEnquiry(enquiry.id).catch((error) => {
+    console.warn("Enquiry backup lookup failed:", error instanceof Error ? error.message : "Unknown error");
+    return null;
+  });
   const isNewEnquiry = !savedEnquiry;
   if (!savedEnquiry) {
     try {
@@ -94,7 +97,6 @@ export async function POST(request: Request) {
       savedEnquiry = saved.enquiry;
     } catch (error) {
       console.error("Enquiry backup storage failed:", error instanceof Error ? error.message : "Unknown error");
-      return Response.json({ error: "We could not save your registration right now. Please try again." }, { status: 503, headers: { "Cache-Control": "no-store" } });
     }
   }
 
@@ -106,14 +108,17 @@ export async function POST(request: Request) {
     sheetsSynced = false;
   }
 
+  if (!savedEnquiry && !sheetsSynced) {
+    return Response.json({ error: "We could not save your enquiry right now. Please try again." }, { status: 503, headers: { "Cache-Control": "no-store" } });
+  }
+
   if (isNewEnquiry) {
-    const notification = await notifyWhatsAppOfEnquiry(savedEnquiry);
+    const notification = await notifyWhatsAppOfEnquiry(savedEnquiry || enquiry);
     if (notification !== "sent") console.warn("WhatsApp enquiry notification status:", notification);
   }
 
   return Response.json({
-    id: savedEnquiry.id,
-    createdAt: savedEnquiry.createdAt,
+    ...(savedEnquiry ? { id: savedEnquiry.id, createdAt: savedEnquiry.createdAt } : {}),
     sheetsSynced,
     message: payload.type === "lead"
       ? "Thank you! Your enquiry has been submitted successfully. We will contact you soon."
