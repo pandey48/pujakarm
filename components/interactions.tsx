@@ -44,15 +44,25 @@ export function PanditJoinForm() {
   const [error, setError] = useState("");
   const [savedMessage, setSavedMessage] = useState("");
   const submitLock = useRef(false);
+  const languages = ["Hindi", "Sanskrit", "English", "Telugu", "Tamil", "Kannada", "Malayalam", "Marathi", "Gujarati", "Bengali", "Punjabi", "Odia", "Assamese", "Other"];
+  const services = ["Ganesh Puja", "Satyanarayan Puja", "Griha Pravesh Puja", "Rudrabhishek", "Havan", "Wedding / Vivah Puja", "Navgraha Shanti", "Shraddha / Pitru Puja", "Vastu Puja", "Other"];
+  const states = ["Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal"];
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (submitLock.current) return;
     const values = new FormData(event.currentTarget);
     const formElement = event.currentTarget;
-    const specialization = values.getAll("specialization").join(", ");
-    if (!specialization) {
-      setError("Select at least one specialization or puja type.");
+    const language = values.getAll("language").map(String).join(", ");
+    const selectedServices = values.getAll("services").map(String).join(", ");
+    const phone = String(values.get("phone") || "").trim();
+    const whatsapp = String(values.get("whatsapp") || "").trim();
+    if (!language || !selectedServices) {
+      setError("Select at least one language and one puja or service.");
+      return;
+    }
+    if (![phone, whatsapp].every((value) => /^(?:\+?91[ -]?)?[6-9]\d{9}$/.test(value))) {
+      setError("Enter valid 10-digit Indian mobile and WhatsApp numbers.");
       return;
     }
     submitLock.current = true;
@@ -62,17 +72,13 @@ export function PanditJoinForm() {
       await submitWebsiteEnquiry("pandit-registration", {
         type: "pandit",
         name: String(values.get("name") || ""),
-        phone: String(values.get("phone") || ""),
-        whatsapp: String(values.get("whatsapp") || ""),
+        phone,
+        whatsapp,
         city: String(values.get("city") || ""),
         state: String(values.get("state") || ""),
         experience: String(values.get("experience") || ""),
-        specialization,
-        languages: String(values.get("languages") || ""),
-        availability: String(values.get("availability") || ""),
-        address: String(values.get("address") || ""),
-        idProofType: "",
-        idProofNumber: "",
+        language,
+        services: selectedServices,
       });
       formElement.reset();
       setSavedMessage("Thank you! Your registration has been submitted successfully. We will review your details and contact you soon.");
@@ -86,20 +92,15 @@ export function PanditJoinForm() {
 
   if (savedMessage) return <div className="inline-success" role="status"><strong>{savedMessage}</strong></div>;
 
-  const specializations = ["Ganesh Puja", "Satyanarayan Puja", "Griha Pravesh", "Havan", "Wedding Puja", "Navgraha Puja", "Shraddha", "Vastu Puja", "Other"];
-  const states = ["Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal"];
-
-  return <form className="form-grid" onSubmit={submit}>
-    <div className="form-field"><label htmlFor="pandit-name">Full name *</label><input id="pandit-name" name="name" autoComplete="name" maxLength={120} required /></div>
-    <div className="form-field"><label htmlFor="pandit-phone">Phone number *</label><input id="pandit-phone" name="phone" type="tel" autoComplete="tel" pattern="(?:[0-9+]|\(|\)| |-){8,24}" maxLength={24} required /></div>
-    <div className="form-field"><label htmlFor="pandit-whatsapp">WhatsApp number</label><input id="pandit-whatsapp" name="whatsapp" type="tel" autoComplete="tel" maxLength={24} /></div>
+  return <form className="form-grid pandit-registration-form" onSubmit={submit}>
+    <div className="form-field"><label htmlFor="pandit-name">Pandit Name *</label><input id="pandit-name" name="name" autoComplete="name" maxLength={120} required /></div>
+    <div className="form-field"><label htmlFor="pandit-phone">Mobile Number *</label><input id="pandit-phone" name="phone" type="tel" autoComplete="tel" inputMode="tel" pattern="(?:\+?91[ -]?)?[6-9][0-9]{9}" maxLength={16} placeholder="+91 9876543210" required /></div>
+    <div className="form-field"><label htmlFor="pandit-whatsapp">WhatsApp Number *</label><input id="pandit-whatsapp" name="whatsapp" type="tel" autoComplete="tel" inputMode="tel" pattern="(?:\+?91[ -]?)?[6-9][0-9]{9}" maxLength={16} placeholder="+91 9876543210" required /></div>
     <div className="form-field"><label htmlFor="pandit-city">City *</label><input id="pandit-city" name="city" autoComplete="address-level2" maxLength={120} required /></div>
     <div className="form-field"><label htmlFor="pandit-state">State *</label><select id="pandit-state" name="state" defaultValue="" required><option value="" disabled>Select a state</option>{states.map((state) => <option key={state}>{state}</option>)}</select></div>
-    <div className="form-field"><label htmlFor="pandit-experience">Experience in years</label><input id="pandit-experience" name="experience" type="number" min="0" step="0.5" /></div>
-    <fieldset className="form-field form-span"><legend>Specialization / Puja types *</legend><div className="choice-row">{specializations.map((item) => <label key={item}><input type="checkbox" name="specialization" value={item} /> {item}</label>)}</div></fieldset>
-    <div className="form-field"><label htmlFor="pandit-languages">Languages known</label><input id="pandit-languages" name="languages" placeholder="Hindi, Sanskrit, Telugu" /></div>
-    <div className="form-field"><label htmlFor="pandit-availability">Availability</label><select id="pandit-availability" name="availability" defaultValue=""><option value="">Select availability</option><option>Weekdays</option><option>Weekends</option><option>Flexible</option></select></div>
-    <div className="form-field form-span"><label htmlFor="pandit-address">Full address</label><textarea id="pandit-address" name="address" rows={3} maxLength={1000} autoComplete="street-address" /></div>
+    <div className="form-field"><label htmlFor="pandit-experience">Experience (years) *</label><input id="pandit-experience" name="experience" type="number" min="0" max="80" step="0.5" required /></div>
+    <fieldset className="form-field form-span registration-choice-group"><legend>Language * <span>Select all that apply</span></legend><div className="registration-check-grid">{languages.map((language) => <label key={language}><input type="checkbox" name="language" value={language} /><span>{language}</span></label>)}</div></fieldset>
+    <fieldset className="form-field form-span registration-choice-group"><legend>Puja/Services * <span>Select all that apply</span></legend><div className="registration-check-grid">{services.map((service) => <label key={service}><input type="checkbox" name="services" value={service} /><span>{service}</span></label>)}</div></fieldset>
     <button className="button form-span" type="submit" disabled={pending}>{pending ? "Submitting Registration..." : "Submit registration"}</button>
     {error && <p className="form-error form-span" role="alert">{error}</p>}
   </form>;

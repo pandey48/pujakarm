@@ -19,13 +19,9 @@ export type PanditRegistrationSubmission = {
 	whatsapp: string;
 	city: string;
 	state: string;
+	language: string;
+	services: string;
 	experience: string;
-	specialization: string;
-	languages: string;
-	availability: string;
-	address: string;
-	idProofType: string;
-	idProofNumber: string;
 };
 
 export type EnquirySubmission = LeadSubmission | PanditRegistrationSubmission;

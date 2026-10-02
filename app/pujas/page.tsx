@@ -3,7 +3,7 @@ import { PujaExplorer } from "@/components/interactions";
 import { BreadcrumbSchema } from "@/app/schema";
 import { createPageMetadata } from "@/lib/page-metadata";
 
-export const metadata = createPageMetadata({ title: "Explore Pujas", description: "Explore home and online pujas and find a ritual for your family's occasion.", path: "/pujas" });
+export const metadata = createPageMetadata({ title: "Book Online Pujas & Rituals", description: "Explore Hindu puja services for home or online rituals. Search by occasion, city, or puja type, then request details and availability from PujaPath.", path: "/pujas" });
 
 export default async function PujasPage({ searchParams }: PageProps<"/pujas">) {
   const params = await searchParams;

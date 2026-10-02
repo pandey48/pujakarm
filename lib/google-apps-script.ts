@@ -1,7 +1,7 @@
 import "server-only";
 import type { EnquirySubmission } from "@/lib/enquiry-types";
 
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzgWM7r0QHx0ImZ0BtAGcLfuIlXdx9ROE94tXIM1WTx4BU9XgU_4PZcMi33O0XgY199zw/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwGI08ctHoiSYF0Yd7G2T6rhQ8Pcw5JIh6qld6v0fddMxc-vWqzsh5o3hrlEQz6FQJBeA/exec";
 
 export async function submitToGoogleAppsScript(payload: EnquirySubmission) {
   const response = await fetch(APPS_SCRIPT_URL, {
@@ -23,8 +23,13 @@ export async function submitToGoogleAppsScript(payload: EnquirySubmission) {
       if (data.success === false || data.status === "error" || typeof data.error === "string") {
         throw new Error("Google Apps Script did not accept the submission.");
       }
+      if (payload.type === "pandit" && data.success !== true) {
+        throw new Error("Google Apps Script did not confirm the registration.");
+      }
+    } else if (payload.type === "pandit") {
+      throw new Error("Google Apps Script did not confirm the registration.");
     }
   } catch (error) {
-    if (error instanceof Error && error.message === "Google Apps Script did not accept the submission.") throw error;
+    if (payload.type === "pandit" || (error instanceof Error && error.message === "Google Apps Script did not accept the submission.")) throw error;
   }
 }

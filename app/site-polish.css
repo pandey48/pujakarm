@@ -633,3 +633,13 @@ body {
   .explorer-search,.filter-select{height:46px;padding-inline:11px}
   .explorer-search input,.filter-select select{font-size:12px}
 }
+
+.pandit-registration-form .registration-choice-group legend{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px;margin-bottom:9px;color:#26384d;font-size:13px;font-weight:700}
+.registration-choice-group legend span{color:#788292;font-size:11px;font-weight:400}
+.registration-check-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.registration-check-grid label{display:flex;min-width:0;min-height:44px;align-items:center;gap:9px;padding:9px 11px;border:1px solid #e9e1d8;border-radius:8px;background:#fff;color:#415064;font-size:12px;font-weight:550;cursor:pointer;transition:border-color .16s ease,background .16s ease}
+.registration-check-grid label:has(input:checked){border-color:#d89570;background:#fff5ed;color:#763c22}
+.registration-check-grid input{width:16px;height:16px;flex:0 0 16px;margin:0;accent-color:#b84e24}
+.registration-check-grid span{min-width:0;line-height:1.35}
+.pandit-registration-form .button:disabled{opacity:.7;cursor:wait}
+@media(max-width:640px){.registration-check-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.registration-check-grid label{min-height:42px;padding:8px;font-size:11px}}

@@ -18,6 +18,35 @@ export async function POST(request: Request) {
     return Response.json({ error: "Please check the enquiry details and try again." }, { status: 400 });
   }
 
+  if (body.type === "pandit") {
+    const name = asText(body.name);
+    const phone = asText(body.phone);
+    const whatsapp = asText(body.whatsapp);
+    const city = asText(body.city);
+    const state = asText(body.state);
+    const language = asText(body.language);
+    const services = asText(body.services);
+    const experience = asText(body.experience);
+    const isValidMobile = (value: string) => /^(?:\+?91[ -]?)?[6-9]\d{9}$/.test(value);
+    const experienceYears = Number(experience);
+
+    if (!name || name.length > 120 || !isValidMobile(phone) || !isValidMobile(whatsapp) || !city || !state || !language || !services || !experience) {
+      return Response.json({ error: "Please complete all required fields and enter valid Indian mobile numbers." }, { status: 400 });
+    }
+    if (city.length > 120 || state.length > 80 || language.length > 500 || services.length > 1000 || !/^\d+(?:\.\d{1,2})?$/.test(experience) || !Number.isFinite(experienceYears) || experienceYears > 80) {
+      return Response.json({ error: "Please check the registration details and try again." }, { status: 400 });
+    }
+
+    try {
+      await submitToGoogleAppsScript({ type: "pandit", name, phone, whatsapp, city, state, language, services, experience });
+    } catch (error) {
+      console.error("Google Apps Script Pandit registration failed:", error instanceof Error ? error.message : "Unknown error");
+      return Response.json({ error: "We could not save your registration right now. Please try again shortly." }, { status: 503, headers: { "Cache-Control": "no-store" } });
+    }
+
+    return Response.json({ message: "Thank you! Your registration has been submitted successfully. We will review your details and contact you soon." }, { status: 201, headers: { "Cache-Control": "no-store" } });
+  }
+
   const name = asText(body.name);
   const phone = asText(body.phone);
   const whatsapp = asText(body.whatsapp);
@@ -41,23 +70,6 @@ export async function POST(request: Request) {
     }
     payload = { type: "lead", name, phone, whatsapp, puja, location, preferredDate, message };
     enquiryDetails = { puja, pujaDate: preferredDate, city: "", location, panditName: "", additionalRequirement: message, enquiryType: "Book Puja", message, source: "Website Lead Form" };
-  } else if (body.type === "pandit") {
-    const city = asText(body.city);
-    const state = asText(body.state);
-    const experience = asText(body.experience);
-    const specialization = asText(body.specialization);
-    const languages = asText(body.languages);
-    const availability = asText(body.availability);
-    const address = asText(body.address);
-    if (!name || name.length > 120 || !phone || phone.length > 24 || phone.replace(/\D/g, "").length < 8 || !city || !state || !specialization) {
-      return Response.json({ error: "Please complete your name, phone, city, state, and specialization." }, { status: 400 });
-    }
-    if ((experience && !/^\d+(\.\d+)?$/.test(experience)) || [whatsapp, city, state, experience, specialization, languages, availability, address].some((value) => value.length > 2000)) {
-      return Response.json({ error: "Please check the registration details and try again." }, { status: 400 });
-    }
-    payload = { type: "pandit", name, phone, whatsapp, city, state, experience, specialization, languages, availability, address, idProofType: "", idProofNumber: "" };
-    const message = [`City: ${city}`, `State: ${state}`, `Experience: ${experience || "Not provided"} years`, `Specialization: ${specialization}`, `Languages: ${languages || "Not provided"}`, `Availability: ${availability || "Not provided"}`, `Address: ${address || "Not provided"}`].join("\n");
-    enquiryDetails = { puja: specialization, pujaDate: "", city, location: address, panditName: name, additionalRequirement: message, enquiryType: "Pandit Registration", message, source: "Pandit Registration Form" };
   } else {
     return Response.json({ error: "Please check the submission type and try again." }, { status: 400 });
   }

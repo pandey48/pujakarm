@@ -19,7 +19,20 @@ import { featuredMantras } from "@/data/mantras";
 import { pujas } from "@/data/pujas";
 import { whatsappUrl } from "@/lib/constants";
 
-export const metadata: Metadata = { title: "Online Puja & Pandit Booking", description: "Book experienced Pandits online for Hindu puja, havan, Griha Pravesh, Satyanarayan Puja and other Vedic rituals.", alternates: { canonical: "/" }, openGraph: { title: "Online Puja & Pandit Booking | PujaPath", description: "Book experienced Pandits online for Hindu puja and Vedic rituals.", siteName: "PujaPath", type: "website", url: "/", images: ["/opengraph-image"] } };
+export const metadata: Metadata = {
+  title: "Book Online Puja & Find Pandits | PujaPath",
+  description: "Book online puja services or find a Pandit for rituals at home. Explore Hindu pujas, choose your city, and send a request to confirm availability with PujaPath.",
+  keywords: ["book online puja", "online puja services", "book a Pandit", "Pandit for puja", "Hindu puja booking", "home puja", "online rituals"],
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: "Book Online Puja & Find Pandits | PujaPath",
+    description: "Explore Hindu pujas, find a Pandit for your city, and request at-home or online ritual services.",
+    siteName: "PujaPath",
+    type: "website",
+    url: "/",
+    images: ["/opengraph-image"],
+  },
+};
 
 export default function HomePage() {
   return <>
@@ -28,7 +41,7 @@ export default function HomePage() {
     <section className="pp-search-hero" aria-labelledby="hero-title">
       <div className="pp-search-hero-frame">
         <DeferredHeroVideo src="/video/herobg.mp4" poster="https://images.unsplash.com/photo-1700765020008-7fd77c847f8a?auto=format&fit=crop&w=1800&q=85" />
-        <div className="pp-search-hero-content"><div className="pp-hero-topline"><span className="pp-hero-badge">Authentic Vedic Rituals <i /> Pandit Enquiries</span></div><h1 id="hero-title">Book a Puja with<br /><em>Trusted Pandits</em></h1><p>Find the right puja, experienced Pandit and suitable time for your family — at home or online.</p><HeroDiscovery /><div className="pp-hero-assurance"><span><BadgeCheck size={14} /> Share ritual preferences</span><span><BadgeCheck size={14} /> Ask about samagri</span><span><BadgeCheck size={14} /> Confirm availability first</span></div><Link className="pp-hero-consultation" href="#astrologers-acharyas"><span>Click Me - Get Free Puja Consultation</span><ArrowDown size={15} aria-hidden="true" /></Link></div>
+        <div className="pp-search-hero-content"><div className="pp-hero-topline"><span className="pp-hero-badge">Authentic Vedic Rituals <i /> Pandit Enquiries</span></div><h1 id="hero-title">Book Puja Online with<br /><em>Trusted Pandits</em></h1><p>Find the right puja, experienced Pandit and suitable time for your family — at home or online.</p><HeroDiscovery /><div className="pp-hero-assurance"><span><BadgeCheck size={14} /> Share ritual preferences</span><span><BadgeCheck size={14} /> Ask about samagri</span><span><BadgeCheck size={14} /> Confirm availability first</span></div><Link className="pp-hero-consultation" href="#astrologers-acharyas"><span>Click Me - Get Free Puja Consultation</span><ArrowDown size={15} aria-hidden="true" /></Link></div>
         <MantraRotator />
       </div>
     </section>
