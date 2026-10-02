@@ -34,22 +34,37 @@ function savePanditRegistration_(data) {
       sheet = spreadsheet.insertSheet("Pandits");
     }
 
+    let currentHeaders;
     if (sheet.getLastRow() === 0) {
       sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+      currentHeaders = headers.slice();
     } else {
-      if (sheet.getLastColumn() > headers.length) {
-        throw new Error('The "Pandits" sheet has unexpected extra columns.');
-      }
-      const currentHeaders = sheet.getRange(1, 1, 1, headers.length).getDisplayValues()[0];
-      if (headers.some(function (header, index) {
-        return currentHeaders[index].trim() !== header;
-      })) {
-        throw new Error('The "Pandits" sheet header does not match the required column order.');
+      const lastColumn = Math.max(sheet.getLastColumn(), 1);
+      currentHeaders = sheet.getRange(1, 1, 1, lastColumn).getDisplayValues()[0].map(function (header) {
+        return header.trim();
+      });
+      const missingHeaders = headers.filter(function (header) {
+        return currentHeaders.indexOf(header) === -1;
+      });
+      if (missingHeaders.length) {
+        sheet.getRange(1, currentHeaders.length + 1, 1, missingHeaders.length).setValues([missingHeaders]);
+        currentHeaders = currentHeaders.concat(missingHeaders);
       }
     }
 
-    sheet.appendRow(fields.map(function (field) {
-      return data[field].trim();
+    const fieldByHeader = {
+      "Pandit Name": "name",
+      "Mobile Number": "phone",
+      "WhatsApp Number": "whatsapp",
+      City: "city",
+      State: "state",
+      Language: "language",
+      "Puja/Services": "services",
+      Experience: "experience",
+    };
+    sheet.appendRow(currentHeaders.map(function (header) {
+      const field = fieldByHeader[header];
+      return field ? data[field].trim() : "";
     }));
     return { success: true, type: "pandit" };
   } finally {

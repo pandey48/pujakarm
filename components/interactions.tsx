@@ -55,8 +55,13 @@ export function PanditJoinForm() {
     const formElement = event.currentTarget;
     const language = values.getAll("language").map(String).join(", ");
     const selectedServices = values.getAll("services").map(String).join(", ");
+    const name = String(values.get("name") || "").trim();
     const phone = String(values.get("phone") || "").trim();
     const whatsapp = String(values.get("whatsapp") || "").trim();
+    if (!name) {
+      setError("Enter your name.");
+      return;
+    }
     if (!language || !selectedServices) {
       setError("Select at least one language and one puja or service.");
       return;
@@ -71,7 +76,7 @@ export function PanditJoinForm() {
     try {
       await submitWebsiteEnquiry("pandit-registration", {
         type: "pandit",
-        name: String(values.get("name") || ""),
+        name,
         phone,
         whatsapp,
         city: String(values.get("city") || ""),
@@ -94,8 +99,8 @@ export function PanditJoinForm() {
 
   return <form className="form-grid pandit-registration-form" onSubmit={submit}>
     <div className="form-field"><label htmlFor="pandit-name">Pandit Name *</label><input id="pandit-name" name="name" autoComplete="name" maxLength={120} required /></div>
-    <div className="form-field"><label htmlFor="pandit-phone">Mobile Number *</label><input id="pandit-phone" name="phone" type="tel" autoComplete="tel" inputMode="tel" pattern="(?:\+?91[ -]?)?[6-9][0-9]{9}" maxLength={16} placeholder="+91 9876543210" required /></div>
-    <div className="form-field"><label htmlFor="pandit-whatsapp">WhatsApp Number *</label><input id="pandit-whatsapp" name="whatsapp" type="tel" autoComplete="tel" inputMode="tel" pattern="(?:\+?91[ -]?)?[6-9][0-9]{9}" maxLength={16} placeholder="+91 9876543210" required /></div>
+    <div className="form-field"><label htmlFor="pandit-phone">Mobile Number *</label><input id="pandit-phone" name="phone" type="tel" autoComplete="tel" inputMode="tel" pattern="(?:\+?91[\- ]?)?[6-9][0-9]{9}" maxLength={16} placeholder="+91 9876543210" required /></div>
+    <div className="form-field"><label htmlFor="pandit-whatsapp">WhatsApp Number *</label><input id="pandit-whatsapp" name="whatsapp" type="tel" autoComplete="tel" inputMode="tel" pattern="(?:\+?91[\- ]?)?[6-9][0-9]{9}" maxLength={16} placeholder="+91 9876543210" required /></div>
     <div className="form-field"><label htmlFor="pandit-city">City *</label><input id="pandit-city" name="city" autoComplete="address-level2" maxLength={120} required /></div>
     <div className="form-field"><label htmlFor="pandit-state">State *</label><select id="pandit-state" name="state" defaultValue="" required><option value="" disabled>Select a state</option>{states.map((state) => <option key={state}>{state}</option>)}</select></div>
     <div className="form-field"><label htmlFor="pandit-experience">Experience (years) *</label><input id="pandit-experience" name="experience" type="number" min="0" max="80" step="0.5" required /></div>

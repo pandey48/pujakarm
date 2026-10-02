@@ -29,13 +29,14 @@ export function BookingForm({ presetPuja = "", presetRequirement = "" }: { prese
       : selectedPujaName;
     const phone = String(form.get("phone") || "");
     const message = String(form.get("message") || "");
+    const name = String(form.get("name") || "").trim();
     submitLock.current = true;
     setSubmitting(true);
     setErrorMessage("");
     try {
       await submitWebsiteEnquiry(`booking:${presetPuja || "general"}`, {
         type: "lead",
-        name: String(form.get("name") || ""),
+        name,
         phone,
         whatsapp: String(form.get("whatsapp") || ""),
         puja: pujaName,
