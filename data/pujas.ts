@@ -1,5 +1,5 @@
 import type { Puja } from "@/lib/types";
-import { homeOnlyCatalogPujas, pujaCatalog } from "@/data/puja-catalog";
+import { pujaCatalog } from "@/data/puja-catalog";
 
 const cities = ["Bhopal", "Indore", "Ahmedabad", "Varanasi", "Prayagraj", "Hyderabad", "Bengaluru", "Mumbai", "Delhi", "Pune", "Jaipur", "Lucknow", "Noida"];
 const ritualFaqs = [
@@ -84,7 +84,6 @@ const catalogPujas: Puja[] = pujaCatalog.flatMap(({ name, category }) => {
   if (knownPujas.has(key)) return [];
   knownPujas.add(key);
   const slug = slugify(name);
-  const homeOnly = homeOnlyCatalogPujas.has(name);
   return [{
     id: `catalog-${slug}`,
     slug,
@@ -94,7 +93,7 @@ const catalogPujas: Puja[] = pujaCatalog.flatMap(({ name, category }) => {
     category,
     duration: "Varies by ritual",
     panditCount: "As per ceremony",
-    type: homeOnly ? "Home" : "Home & Online",
+    type: "Home",
     benefits: ["Discuss your family tradition and language preference", "Ask about the ceremony sequence and preparation", "Request a date and location for an availability check"],
     samagri: ["The final samagri list depends on the chosen vidhi", "Offerings and arrangements are confirmed before booking"],
     cities,

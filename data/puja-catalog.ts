@@ -22,7 +22,3 @@ const entries: { category: CatalogCategory; names: string[] }[] = [
 ];
 
 export const pujaCatalog = entries.flatMap(({ category, names }) => names.map((name) => ({ name, category })));
-
-export const homeOnlyCatalogPujas = new Set([
-  "Ayyappa Puja", "Chhath Puja", "Bhoomi Puja", "Vahan (Vehicle) Puja", "Vivah Sanskar (Hindu Wedding Ceremony)", "Namkaran Sanskar", "Mundan Sanskar", "Upanayana (Janeu) Sanskar", "Karnavedha Sanskar", "Nischitartham (Engagement Ceremony)", "Shashtipurti", "Sathabhishekam", "Kumbh Vivah", "Tripindi Shraddha", "Narayan Bali", "Asthi Visarjan Assistance", "Antim Sanskar (Last Rites Assistance)", "Terahvi",
-]);

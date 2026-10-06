@@ -4,7 +4,7 @@ export const SOCIAL_LINKS = [
   { label: "YouTube", href: "https://www.youtube.com/@pujapath" },
 ];
 export const BRAND_NAME = "PujaPath";
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://www.poojapath.com").replace(/\/+$/, "");
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://www.pujapathin.in").replace(/\/+$/, "");
 export const WHATSAPP_NUMBER = "917389368597";
 export const CONTACT_PHONE = "+91 7389368597";
 export const CONTACT_EMAIL = "namaste@pujapath.example";

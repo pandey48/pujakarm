@@ -15,7 +15,8 @@ export async function generateMetadata({ params }: PageProps<"/pujas/[slug]">): 
   const { slug } = await params;
   const puja = pujas.find((item) => item.slug === slug);
   if (!puja) return { title: "Puja not found" };
-  return { title: puja.name, description: puja.shortDescription, alternates: { canonical: `/pujas/${puja.slug}` }, openGraph: { title: `${puja.name} | PujaPath`, description: puja.shortDescription, siteName: "PujaPath", type: "website", url: `/pujas/${puja.slug}`, images: ["/opengraph-image"] } };
+  const title = `${puja.name} | PujaPath`;
+  return { title: puja.name, description: puja.shortDescription, alternates: { canonical: `/pujas/${puja.slug}` }, openGraph: { title, description: puja.shortDescription, siteName: "PujaPath", type: "website", url: `/pujas/${puja.slug}`, images: [{ url: puja.image, alt: `${puja.name} ceremony` }] }, twitter: { card: "summary_large_image", title, description: puja.shortDescription, images: [puja.image] } };
 }
 
 export default async function PujaDetailPage({ params }: PageProps<"/pujas/[slug]">) {

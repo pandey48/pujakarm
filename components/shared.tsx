@@ -29,7 +29,7 @@ export function PujaCard({ puja }: { puja: Puja }) {
       <h3><Link href={`/pujas/${puja.slug}`}>{puja.name}</Link></h3>
       <p>{puja.shortDescription}</p>
       <div className="puja-card-facts"><span><Clock3 size={15} />{puja.duration}</span><span className="puja-card-formats">{hasHome && <span><House size={15} />Home Puja</span>}{hasOnline && <span><Video size={15} />Online</span>}</span></div>
-      <div className="puja-card-actions"><Link href={`/booking?puja=${puja.slug}`} className="button button-card button-book-puja">Book Now <ArrowRight size={15} /></Link></div>
+      <div className="puja-card-actions"><Link href={`/pujas/${puja.slug}`} className="button button-outline button-card puja-view-details">View details</Link><Link href={`/booking?puja=${puja.slug}`} className="button button-card button-book-puja">Check Availability <ArrowRight size={15} /></Link></div>
       <a href={whatsappUrl(dakshinaMessage)} target="_blank" rel="noreferrer" className="puja-card-dakshina">Dakshina on WhatsApp <ArrowUpRight size={14} aria-hidden="true" /></a>
     </div>
   </article>;
@@ -50,7 +50,7 @@ export function CityCard({ city }: { city: City }) {
 }
 
 export function TrustSection() {
-  const items = [[ShieldCheck, "Verified Pandits", "Profiles reviewed before joining"], [Sparkles, "Vedic Rituals", "Traditions treated with care"], [House, "Home & Online", "Choose how you participate"], [Check, "Easy Booking", "Clear details, one request"]] as const;
+  const items = [[ShieldCheck, "Pandit enquiries", "Discuss preferences and availability"], [Sparkles, "Vedic Rituals", "Traditions treated with care"], [House, "Home & Online", "Choose how you participate"], [Check, "Easy Booking", "Clear details, one request"]] as const;
   return <div className="trust-row">{items.map(([Icon, title, detail]) => <div className="trust-item" key={title}><span className="trust-icon"><Icon size={21} strokeWidth={1.7} /></span><div><strong>{title}</strong><span>{detail}</span></div></div>)}</div>;
 }
 
@@ -64,10 +64,10 @@ function SearchGlyph({ size = 20 }: { size?: number }) { return <MapPin size={si
 export function Footer() {
   const linkGroups = [
     { title: "Explore pujas", links: [["Griha Pravesh", "/pujas/griha-pravesh-puja"], ["Satyanarayan", "/pujas/satyanarayan-puja"], ["Rudrabhishek", "/pujas/rudrabhishek-puja"], ["Ganesh Puja", "/pujas/ganesh-puja"], ["Lakshmi Puja", "/pujas/lakshmi-puja"]] },
-    { title: "PujaPath", links: [["About us", "/about"], ["Contact", "/contact"], ["Frequently asked", "/faq"], ["Join as Pandit", "/pandit/join"], ["Book a puja", "/booking"]] },
+    { title: "PujaPath", links: [["About us", "/about"], ["Contact", "/contact"], ["Frequently asked", "/faq"], ["Puja guides", "/guides"], ["Join as Pandit", "/pandit/join"], ["Book a puja", "/booking"], ["Puja at home", "/pujas?type=home"], ["Online puja", "/pujas?type=online"]] },
     { title: "Find us in", links: [["Hyderabad", "/cities/hyderabad"], ["Bengaluru", "/cities/bengaluru"], ["Mumbai", "/cities/mumbai"], ["Delhi", "/cities/delhi"], ["Pune", "/cities/pune"]] },
   ];
-  return <footer className="site-footer"><div className="footer-main"><div className="footer-brand"><Link href="/" className="brand"><span className="brand-mark">ॐ</span><span>Puja<span className="brand-accent">Path</span><small>RITUALS, WITH CARE</small></span></Link><p>Trusted Pandits. Authentic Pujas.<br />Right at Your Doorstep.</p><a className="footer-whatsapp" href={whatsappUrl("Namaste PujaPath, I would like to enquire.")} target="_blank" rel="noreferrer"><span className="whatsapp-symbol">◉</span> Chat with our team</a></div>{linkGroups.map((group) => <div className="footer-links" key={group.title}><h3>{group.title}</h3>{group.links.map(([label, href]) => <Link href={href} key={label}>{label}</Link>)}</div>)}<div className="footer-links"><h3>Stay connected</h3><Link href="/contact">Get in touch</Link><Link href="/faq">Booking FAQs</Link><Link href="/privacy">Privacy notice</Link><Link href="/terms">Terms of service</Link><div className="footer-socials">{SOCIAL_LINKS.map((social, index) => <a href={social.href} key={social.label} aria-label={social.label} target="_blank" rel="noreferrer"><span aria-hidden="true">{["◎", "f", "▶"][index]}</span></a>)}</div></div></div><div className="footer-bottom"><span>© {new Date().getFullYear()} PujaPath. Made with care.</span><span>Namaste <span className="footer-om">ॐ</span></span></div></footer>;
+  return <footer className="site-footer"><div className="footer-main"><div className="footer-brand"><Link href="/" className="brand"><span className="brand-mark">ॐ</span><span>Puja<span className="brand-accent">Path</span><small>RITUALS, WITH CARE</small></span></Link><p>Puja booking and Pandit enquiries.<br />Rituals, with care.</p><a className="footer-whatsapp" href={whatsappUrl("Namaste PujaPath, I would like to enquire.")} target="_blank" rel="noreferrer"><span className="whatsapp-symbol">◉</span> Chat with our team</a></div>{linkGroups.map((group) => <div className="footer-links" key={group.title}><h3>{group.title}</h3>{group.links.map(([label, href]) => <Link href={href} key={label}>{label}</Link>)}</div>)}<div className="footer-links"><h3>Stay connected</h3><Link href="/contact">Get in touch</Link><Link href="/faq">Booking FAQs</Link><Link href="/privacy">Privacy notice</Link><Link href="/terms">Terms of service</Link><div className="footer-socials">{SOCIAL_LINKS.map((social, index) => <a href={social.href} key={social.label} aria-label={social.label} target="_blank" rel="noreferrer"><span aria-hidden="true">{["◎", "f", "▶"][index]}</span></a>)}</div></div></div><div className="footer-bottom"><span>© {new Date().getFullYear()} PujaPath. Made with care.</span><span>Namaste <span className="footer-om">ॐ</span></span></div></footer>;
 }
 
 export function FAQList({ items }: { items: { question: string; answer: string }[] }) {
@@ -75,5 +75,5 @@ export function FAQList({ items }: { items: { question: string; answer: string }
 }
 
 export function FeatureBand() {
-  return <section className="feature-band"><div className="feature-card feature-home"><span className="eyebrow">IN YOUR SPACE</span><House size={27} /><h3>Home puja, at your pace.</h3><p>Experienced Pandits perform the puja at your home.</p><Link href="/pujas?type=home" className="text-link">Book home puja <ArrowRight size={16} /></Link></div><div className="feature-card feature-online"><span className="eyebrow">WHEREVER YOU ARE</span><Video size={27} /><h3>Join the puja from anywhere.</h3><p>Take part in a guided ceremony over video.</p><Link href="/pujas?type=online" className="text-link">Book online puja <ArrowRight size={16} /></Link></div></section>;
+  return <section className="feature-band"><div className="feature-card feature-home"><span className="eyebrow">IN YOUR SPACE</span><House size={27} /><h3>Home puja, at your pace.</h3><p>Request a Pandit for a home puja and confirm the arrangements before booking.</p><Link href="/pujas?type=home" className="text-link">Book home puja <ArrowRight size={16} /></Link></div><div className="feature-card feature-online"><span className="eyebrow">WHEREVER YOU ARE</span><Video size={27} /><h3>Join the puja from anywhere.</h3><p>Take part in a guided ceremony over video.</p><Link href="/pujas?type=online" className="text-link">Book online puja <ArrowRight size={16} /></Link></div></section>;
 }

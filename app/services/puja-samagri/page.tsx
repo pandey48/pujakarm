@@ -16,6 +16,12 @@ export const metadata: Metadata = {
     type: "website",
     url: "/services/puja-samagri",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Puja Samagri Booking | PujaPath",
+    description,
+    images: ["/opengraph-image"],
+  },
 };
 
 export default function PujaSamagriPage() {
