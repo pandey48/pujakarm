@@ -42,12 +42,12 @@ Replace the canonical site URL, social links and placeholder contact information
 
 `/api/enquiries` preserves the existing `type: "lead"` workflow and sends `type: "pandit"` registrations to the configured Google Apps Script Web App. Pandit registrations contain only the eight requested fields; they are not added to the local Leads enquiry store. The Web App URL is set in `lib/google-apps-script.ts`.
 
-The Apps Script source is managed in Google, not in this repository. Add `apps-script/PanditRegistration.gs` to the Apps Script project attached to the existing spreadsheet. In the existing `doPost(e)`, parse the request as it does today, then add this branch before the existing Leads logic (replace `data` below with the existing parsed-payload variable name):
+The Apps Script source is managed in Google, not in this repository. Add `apps-script/PanditRegistration.gs` to the Apps Script project backing the Web App. In the existing `doPost(e)`, keep the existing spreadsheet lookup (`ss`) and request parsing, then use this branch before the existing Leads logic:
 
 ```js
 if (data.type === "pandit") {
 	try {
-		const result = savePanditRegistration_(data);
+		const result = savePanditRegistration_(data, ss);
 		return ContentService.createTextOutput(JSON.stringify(result))
 			.setMimeType(ContentService.MimeType.JSON);
 	} catch (error) {
@@ -63,7 +63,7 @@ if (data.type === "lead") {
 }
 ```
 
-Do not replace the existing `doPost(e)` or Leads branch. The helper checks for a `Pandits` tab, creates it if missing, writes/validates the eight-column header, and appends the registration row. If the Apps Script is standalone rather than bound to the spreadsheet, bind it to the existing spreadsheet or update the helper to open that spreadsheet by ID before deployment.
+Do not replace the existing `doPost(e)` or Leads branch. The helper creates the `Pandits` tab if missing, ensures the required column headers exist, and writes each value under its matching header (so an existing sheet's column order does not shift the Pandit name into another column). Pass the same spreadsheet object used by `doPost(e)`; this also works when the Apps Script opens the spreadsheet by ID.
 
 ### Deploy and verify
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Check, PackageCheck } from "lucide-react";
+import { BreadcrumbSchema } from "@/app/schema";
 import { Breadcrumbs } from "@/components/shared";
 
 const description = "Book puja samagri along with your puja enquiry. PujaPath helps arrange the items needed for your ceremony.";
@@ -27,6 +28,7 @@ export const metadata: Metadata = {
 export default function PujaSamagriPage() {
   return (
     <>
+      <BreadcrumbSchema items={[{ label: "Home", href: "/" }, { label: "Puja Samagri", href: "/services/puja-samagri" }]} />
       <section className="page-intro">
         <div className="content-wrap">
           <Breadcrumbs items={[{ label: "Services", href: "/#services" }, { label: "Puja Samagri" }]} />

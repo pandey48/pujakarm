@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Navbar } from "@/components/navbar";
+import { CityLanguageBar } from "@/components/city-language-bar";
 import { Footer } from "@/components/shared";
 import { FixedBookingBar } from "@/components/fixed-booking-bar";
 import { BRAND_NAME, SITE_URL } from "@/lib/constants";
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en">
-      <body><Navbar /><main className="main-content">{children}</main><Footer /><FixedBookingBar /></body>
+      <body><Navbar /><CityLanguageBar /><main className="main-content">{children}</main><Footer /><FixedBookingBar /></body>
     </html>
   );
 }

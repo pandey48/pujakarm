@@ -2,8 +2,7 @@
 
 import { useMemo, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, ChevronDown, MapPin, Search } from "lucide-react";
-import { cities } from "@/data/cities";
+import { ArrowRight, Search } from "lucide-react";
 import { mantras } from "@/data/mantras";
 import { pujas } from "@/data/pujas";
 
@@ -37,9 +36,6 @@ const searchItems: SearchItem[] = [
 
 export function HomeSearch({ placeholderPuja = "" }: { placeholderPuja?: string }) {
   const [query, setQuery] = useState("");
-  const [city, setCity] = useState("");
-  const [format, setFormat] = useState("");
-  const [date, setDate] = useState("");
   const [focused, setFocused] = useState(false);
   const router = useRouter();
   const suggestions = useMemo(() => {
@@ -52,33 +48,22 @@ export function HomeSearch({ placeholderPuja = "" }: { placeholderPuja?: string 
       .slice(0, 6)
       .map((entry) => entry.item);
   }, [query]);
-
   function search(item?: SearchItem, checkAvailability = false) {
     const matchedItem = item || suggestions[0];
     const clean = item?.searchTerm || matchedItem?.searchTerm || item?.name || matchedItem?.name || query.trim();
     const exactPuja = checkAvailability && matchedItem?.type === "Puja"
       ? pujas.find((puja) => normalizeSearchText(puja.name) === normalizeSearchText(query.trim()))
       : undefined;
-    const requestedFormatIsListed = !format || (format === "At Home"
-      ? exactPuja?.type === "Home" || exactPuja?.type === "Home & Online"
-      : exactPuja?.type === "Online" || exactPuja?.type === "Home & Online");
-    if (exactPuja && requestedFormatIsListed) {
-      const bookingParams = new URLSearchParams({ puja: exactPuja.slug });
-      if (city && city !== "Online") bookingParams.set("location", city);
-      if (date) bookingParams.set("date", date);
-      if (format) bookingParams.set("format", format);
-      router.push(`/booking?${bookingParams.toString()}`);
+    if (exactPuja) {
+      router.push(`/booking?puja=${exactPuja.slug}`);
       return;
     }
     const params = new URLSearchParams();
     if (matchedItem?.category) params.set("category", matchedItem.category);
     else if (clean) params.set("q", clean);
-    if (city && city !== "Online") params.set("city", city);
-    if (format) params.set("type", format === "At Home" ? "home" : "online");
-    if (city === "Online") params.set("type", "online");
     if ((item?.route || matchedItem?.route) === "mantras") router.push("/#mantras");
     else if ((item?.route || matchedItem?.route) === "pandit-registration") router.push("/pandit/join");
-    else router.push(clean || city ? `/pujas?${params.toString()}` : "/pujas");
+    else router.push(clean ? `/pujas?${params.toString()}` : "/pujas");
   }
 
   function submit(event: FormEvent<HTMLFormElement>) {
@@ -96,16 +81,6 @@ export function HomeSearch({ placeholderPuja = "" }: { placeholderPuja?: string 
       </form>
       {focused && suggestions.length > 0 && <div className="pp-search-results" role="group" aria-label="Search suggestions">{suggestions.map((item) => <button key={`${item.type}-${item.name}`} type="button" onMouseDown={(event) => event.preventDefault()} onClick={() => { setQuery(item.name); setFocused(false); }}><Search size={14} /><span>{item.name}</span><small>{item.type}</small><ArrowRight size={14} /></button>)}</div>}
       {focused && query.trim() && suggestions.length === 0 && <div className="pp-search-results"><button type="button" onMouseDown={(event) => event.preventDefault()} onClick={() => search()}><Search size={14} /><span>Search all pujas for “{query.trim()}”</span><ArrowRight size={14} /></button></div>}
-      <div className="pp-search-context">
-        <details className="pp-city-picker">
-          <summary aria-label="Choose location"><MapPin size={17} /><span className="pp-location-text"><small>Location</small><strong>{city || "Select a city"}</strong></span><ChevronDown size={14} /></summary>
-          <div className="pp-city-options" aria-label="Choose a city">
-            {cities.map((item) => <button type="button" key={item.id} onClick={(event) => { setCity(item.name); event.currentTarget.closest("details")?.removeAttribute("open"); }}><MapPin size={13} />{item.name}</button>)}
-          </div>
-        </details>
-        <label className="pp-format-picker"><span>Format</span><select aria-label="Choose puja format" value={format} onChange={(event) => setFormat(event.target.value)}><option value="">Home or Online</option><option value="At Home">At Home</option><option value="Online">Online</option></select></label>
-        <label className="pp-search-date"><span>Date</span><input aria-label="Preferred puja date" type="date" value={date} onChange={(event) => setDate(event.target.value)} /></label>
-      </div>
     </div>
   );
 }

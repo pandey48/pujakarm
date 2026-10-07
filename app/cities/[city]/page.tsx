@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { ArrowRight } from "lucide-react";
-import { Breadcrumbs, FAQList, PujaGrid, SectionHeading } from "@/components/shared";
+import { Breadcrumbs, CityCard, FAQList, PujaGrid, SectionHeading } from "@/components/shared";
 import { BookingForm } from "@/components/booking-form";
 import { cities } from "@/data/cities";
 import { pujas } from "@/data/pujas";
 import { BreadcrumbSchema, FaqSchema, ServiceSchema } from "@/app/schema";
 import { mumbaiSeoPages } from "@/data/mumbai-seo";
+import { slugify } from "@/lib/utils";
 
 const mumbaiFaqs = [
   { question: "How can I enquire about a Pandit in Mumbai?", answer: "Choose a puja and submit your preferred date, Mumbai locality and contact details. PujaPath will follow up to discuss whether a suitable Pandit and format can be arranged." },
@@ -16,28 +17,122 @@ const mumbaiFaqs = [
   { question: "Which areas of Mumbai are served?", answer: "You can share your exact locality, including areas such as Andheri, Borivali, Powai, Dadar, Thane or Navi Mumbai. These examples are enquiry locations, not a guarantee of service coverage." },
 ];
 
+function findCity(slug: string) {
+  const normalizedSlug = slugify(slug);
+  return cities.find((city) =>
+    city.slug === normalizedSlug || city.aliases?.some((alias) => slugify(alias) === normalizedSlug),
+  );
+}
+
+function getCityFaqs(city: (typeof cities)[number]) {
+  if (city.slug === "mumbai") return mumbaiFaqs;
+  const localityText = city.areas.length
+    ? `You can include your exact area, such as ${city.areas.slice(0, 3).join(", ")}. These are examples for your enquiry, not confirmed service zones.`
+    : "Include your exact neighbourhood in the enquiry so the team can discuss the location with you.";
+
+  return [
+    { question: `How can I enquire about a Pandit in ${city.name}?`, answer: `Choose a puja and submit your preferred date, ${city.name} locality and contact details. PujaPath will follow up to discuss whether a suitable Pandit and format can be arranged.` },
+    { question: `Can I request a puja at home in ${city.name}?`, answer: `You can send an at-home puja enquiry for ${city.name}. The team checks the ceremony, date and location before confirming availability.` },
+    { question: `Which areas of ${city.name} can I include?`, answer: localityText },
+  ];
+}
+
 export function generateStaticParams() { return cities.map((city) => ({ city: city.slug })); }
 export async function generateMetadata({ params }: PageProps<"/cities/[city]">): Promise<Metadata> {
   const { city: slug } = await params;
-  const city = cities.find((item) => item.slug === slug);
-  if (!city) return { title: "City not found" };
+  const city = findCity(slug);
+  if (!city) return { title: "City not found", robots: { index: false, follow: true } };
   const isMumbai = city.slug === "mumbai";
-  const title = isMumbai ? "Pandit in Mumbai | Puja at Home & Online Puja" : `Puja Enquiry in ${city.name}`;
-  const description = isMumbai
-    ? "Enquire about a Pandit in Mumbai for puja at home or online. Share your ceremony, preferred date and locality; PujaPath will confirm options with you."
-    : `Browse puja information for ${city.name} and send an enquiry. Availability is confirmed individually.`;
-  return { title, description, alternates: { canonical: `/cities/${city.slug}` }, openGraph: { title: isMumbai ? `${title} | PujaPath` : title, description, siteName: "PujaPath", type: "website", url: `/cities/${city.slug}`, images: ["/opengraph-image"] }, twitter: { card: "summary_large_image", title: isMumbai ? `${title} | PujaPath` : title, description, images: ["/opengraph-image"] } };
+  const title = isMumbai ? "Pandit in Mumbai | Puja at Home & Online Puja" : `Pandit in ${city.name} | Puja at Home & Online`;
+  const description = `Enquire about a Pandit in ${city.name} for ${city.popularPujas.slice(0, 2).join(" or ")}. Share your date and locality; PujaPath will confirm availability with you.`;
+  const keywords = [
+    `Pandit in ${city.name}`,
+    `puja at home in ${city.name}`,
+    `puja services ${city.name}`,
+    ...(city.aliases || []),
+    ...city.areas.slice(0, 5).map((area) => `Pandit in ${area}`),
+  ];
+  return {
+    title,
+    description,
+    keywords,
+    alternates: { canonical: `/cities/${city.slug}` },
+    openGraph: { title: `${title} | PujaPath`, description, siteName: "PujaPath", type: "website", url: `/cities/${city.slug}`, images: ["/opengraph-image"] },
+    twitter: { card: "summary_large_image", title: `${title} | PujaPath`, description, images: ["/opengraph-image"] },
+    robots: { index: true, follow: true },
+  };
 }
 
 export default async function CityDetailPage({ params }: PageProps<"/cities/[city]">) {
   const { city: slug } = await params;
-  const city = cities.find((item) => item.slug === slug);
+  const city = findCity(slug);
   if (!city) notFound();
+  if (slugify(slug) !== city.slug) permanentRedirect(`/cities/${city.slug}`);
   const cityPujas = city.popularPujas.map((name) => pujas.find((puja) => puja.name === name)).filter((puja) => puja !== undefined);
   const isMumbai = city.slug === "mumbai";
-  return <>{isMumbai && <><ServiceSchema city="Mumbai" /><FaqSchema items={mumbaiFaqs} /></>}<BreadcrumbSchema items={[{ label: "Home", href: "/" }, { label: "Cities", href: "/cities" }, { label: city.name, href: `/cities/${city.slug}` }]} /><section className="page-intro"><div className="content-wrap"><Breadcrumbs items={[{ label: "Cities", href: "/cities" }, { label: city.name }]} /><span className="eyebrow">PujaPath location enquiry</span><div className="city-hero"><div><h1>{isMumbai ? "Pandit Booking & Puja at Home in Mumbai" : `Ask About a Puja in ${city.name}`}</h1><p>{isMumbai ? "Enquire about a Pandit in Mumbai for a puja at home or online. Share your ceremony, preferred date and locality; the team will discuss options and confirm availability before you decide." : "Browse rituals and send a request for your preferred date and locality. The city guide is not a live availability calendar; the team will confirm options individually."}</p></div><div className="city-hero-stat"><strong>Enquiry location</strong><span>Availability checked after you contact us</span></div></div></div></section>{isMumbai && <section className="section section-tint"><div className="content-wrap"><SectionHeading eyebrow="Mumbai puja enquiries" title="Choose the kind of help you need" text="These guides explain the enquiry process for different services. A request does not guarantee a Pandit, date or location." /><div className="mumbai-seo-grid">{mumbaiSeoPages.filter((page) => ["pandit-booking-mumbai", "puja-at-home-mumbai", "online-puja-mumbai"].includes(page.slug)).map((page) => <Link className="mumbai-seo-card" href={`/${page.slug}`} key={page.slug}><span>{page.h1}</span><ArrowRight size={16} /><p>{page.intro}</p></Link>)}</div></div></section>}<section className="section"><div className="content-wrap"><SectionHeading eyebrow="Rituals to enquire about" title={`Popular Pujas in ${city.name}`} text="Choose a ceremony to see details and send an availability request." /><PujaGrid items={cityPujas} /></div></section><section className="section section-tint"><div className="content-wrap"><SectionHeading eyebrow="Locality examples" title={`Where in ${city.name}?`} text="These are example localities for the enquiry form, not confirmed service zones. Add your exact area when you request a booking." /><div className="area-pills">{city.areas.map((area) => <span key={area}>{area}</span>)}</div></div></section>{isMumbai && <section className="section"><div className="content-wrap"><SectionHeading eyebrow="The enquiry process" title="How booking works" /><HowBookingWorks /><SectionHeading eyebrow="Common questions" title="Mumbai puja enquiries" /><FAQList items={mumbaiFaqs} /><p><Link href="/mumbai" className="text-link">Browse Mumbai puja guides <ArrowRight size={16} /></Link></p></div></section>}<section className="section"><div className="content-wrap"><div className="contact-grid"><div><span className="eyebrow">Start with a request</span><h2 className="story-copy h2">Ask about your puja in {city.name}</h2><p>Let us know your ceremony and preferred date. We will follow up about location and Pandit availability before confirming anything.</p><Link href="/booking" className="text-link">Open enquiry form <ArrowRight size={16} /></Link>{city.slug === "mumbai" && <Link href="/mumbai" className="text-link">Explore Mumbai puja guides <ArrowRight size={16} /></Link>}</div><div className="form-shell"><BookingForm /></div></div></div></section></>;
-}
+  const faqs = getCityFaqs(city);
+  const relatedCities = cities.filter((item) => item.slug !== city.slug).slice(0, 4);
 
-function HowBookingWorks() {
-  return <ol className="mumbai-booking-steps"><li><strong>Choose your puja</strong><span>Review the ritual details and formats listed for that puja.</span></li><li><strong>Share date and locality</strong><span>Send your preferred date, Mumbai area and contact details.</span></li><li><strong>Discuss arrangements</strong><span>The team follows up about Pandit, format, samagri and availability.</span></li><li><strong>Confirm after discussion</strong><span>Your enquiry is not a booking until details are agreed with you.</span></li></ol>;
+  return <>
+    <ServiceSchema city={city.name} />
+    <FaqSchema items={faqs} />
+    <BreadcrumbSchema items={[{ label: "Home", href: "/" }, { label: "Cities", href: "/cities" }, { label: city.name, href: `/cities/${city.slug}` }]} />
+    <section className="page-intro">
+      <div className="content-wrap">
+        <Breadcrumbs items={[{ label: "Cities", href: "/cities" }, { label: city.name }]} />
+        <span className="eyebrow">Puja and Pandit enquiry guide{city.region ? ` · ${city.region}` : ""}</span>
+        <div className="city-hero">
+          <div>
+            <h1>{isMumbai ? "Pandit Booking & Puja at Home in Mumbai" : `Pandit & Puja Enquiries in ${city.name}`}</h1>
+            <p>{city.description} These city details are enquiry guidance, not a live availability calendar; the team confirms options individually.</p>
+            {city.aliases && <p className="city-aliases">Also searched as: {city.aliases.join(", ")}</p>}
+          </div>
+          <div className="city-hero-stat">
+            <strong>{city.region ? `Explore puja enquiries in ${city.region}` : "Enquiry location"}</strong>
+            <span>Availability is checked after you share your ceremony, date and locality.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+    {isMumbai && <section className="section section-tint"><div className="content-wrap"><SectionHeading eyebrow="Mumbai puja enquiries" title="Choose the kind of help you need" text="These guides explain the enquiry process for different services. A request does not guarantee a Pandit, date or location." /><div className="mumbai-seo-grid">{mumbaiSeoPages.filter((page) => ["pandit-booking-mumbai", "puja-at-home-mumbai", "online-puja-mumbai"].includes(page.slug)).map((page) => <Link className="mumbai-seo-card" href={`/${page.slug}`} key={page.slug}><span>{page.h1}</span><ArrowRight size={16} /><p>{page.intro}</p></Link>)}</div></div></section>}
+    <section className="section">
+      <div className="content-wrap">
+        <SectionHeading eyebrow="Rituals to enquire about" title={`Popular Pujas in ${city.name}`} text="Choose a ceremony to see details and send an availability request." />
+        <PujaGrid items={cityPujas} />
+      </div>
+    </section>
+    {city.areas.length > 0 && <section className="section section-tint">
+      <div className="content-wrap">
+        <SectionHeading eyebrow="Locality examples" title={`Where in ${city.name}?`} text="These are example localities for the enquiry form, not confirmed service zones. Add your exact area when you request a booking." />
+        <div className="area-pills">{city.areas.map((area) => <span key={area}>{area}</span>)}</div>
+      </div>
+    </section>}
+    <section className="section">
+      <div className="content-wrap">
+        <SectionHeading eyebrow="Common questions" title={`${city.name} puja enquiries`} />
+        <FAQList items={faqs} />
+        {isMumbai && <p><Link href="/mumbai" className="text-link">Browse Mumbai puja guides <ArrowRight size={16} /></Link></p>}
+      </div>
+    </section>
+    <section className="section section-tint">
+      <div className="content-wrap">
+        <SectionHeading eyebrow="Explore nearby options" title="Browse other city guides" text="Open another location guide to explore rituals, locality examples and enquiry details." />
+        <div className="city-grid">{relatedCities.map((relatedCity) => <CityCard city={relatedCity} key={relatedCity.id} />)}</div>
+      </div>
+    </section>
+    <section className="section">
+      <div className="content-wrap">
+        <div className="contact-grid">
+          <div>
+            <span className="eyebrow">Start with a request</span>
+            <h2 className="story-copy h2">Ask about your puja in {city.name}</h2>
+            <p>Let us know your ceremony and preferred date. We will follow up about location and Pandit availability before confirming anything.</p>
+            <Link href={`/booking?location=${encodeURIComponent(city.name)}`} className="text-link">Open enquiry form <ArrowRight size={16} /></Link>
+            {city.slug === "mumbai" && <Link href="/mumbai" className="text-link">Explore Mumbai puja guides <ArrowRight size={16} /></Link>}
+          </div>
+          <div className="form-shell"><BookingForm presetLocation={city.name} /></div>
+        </div>
+      </div>
+    </section>
+  </>;
 }

@@ -25,4 +25,6 @@ export interface City {
   description: string;
   areas: string[];
   popularPujas: string[];
+  aliases?: string[];
+  region?: string;
 }

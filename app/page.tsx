@@ -41,14 +41,14 @@ export default function HomePage() {
       <div className="pp-search-hero-frame">
         <HeroBackdrop src="https://images.unsplash.com/photo-1700765020008-7fd77c847f8a" />
         <div className="pp-search-hero-content">
+          <MantraRotator />
           <div className="pp-hero-topline"><span className="pp-hero-badge">Puja enquiries with personal coordination</span></div>
-          <h1 id="hero-title">Book a Pandit for Puja<br /><em>at Home or Online</em></h1>
-          <p>Choose a puja, city, and preferred format. Enquire with PujaPath and we will follow up to discuss a suitable Pandit and availability.</p>
+          <h1 id="hero-title">Book a Pandit for Puja</h1>
+          <p>Search pujas and enquire about availability. Our team will follow up to discuss a suitable Pandit for your ceremony.</p>
           <HeroDiscovery />
           <div className="pp-hero-assurance"><span><BadgeCheck size={14} /> Share ritual preferences</span><span><BadgeCheck size={14} /> Ask about samagri</span><span><BadgeCheck size={14} /> Confirm availability first</span></div>
           <Link className="pp-hero-consultation" href="/booking" aria-label="Request a Pandit for your puja"><span>Request a Pandit</span><ArrowRight size={15} aria-hidden="true" /></Link>
         </div>
-        <MantraRotator />
       </div>
     </section>
 

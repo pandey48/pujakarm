@@ -1,4 +1,4 @@
-function savePanditRegistration_(data) {
+function savePanditRegistration_(data, spreadsheet) {
   const headers = [
     "Pandit Name",
     "Mobile Number",
@@ -20,15 +20,13 @@ function savePanditRegistration_(data) {
   if (!mobilePattern.test(data.phone.trim()) || !mobilePattern.test(data.whatsapp.trim())) {
     throw new Error("Enter valid Indian mobile numbers.");
   }
+  if (!spreadsheet || typeof spreadsheet.getSheetByName !== "function") {
+    throw new Error("A spreadsheet is required to save the Pandit registration.");
+  }
 
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
   try {
-    const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-    if (!spreadsheet) {
-      throw new Error("This Apps Script must be bound to the PujaPath spreadsheet.");
-    }
-
     let sheet = spreadsheet.getSheetByName("Pandits");
     if (!sheet) {
       sheet = spreadsheet.insertSheet("Pandits");
