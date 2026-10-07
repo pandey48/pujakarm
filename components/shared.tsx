@@ -29,7 +29,7 @@ export function PujaCard({ puja }: { puja: Puja }) {
       <h3><Link href={`/pujas/${puja.slug}`}>{puja.name}</Link></h3>
       <p>{puja.shortDescription}</p>
       <div className="puja-card-facts"><span><Clock3 size={15} />{puja.duration}</span><span className="puja-card-formats">{hasHome && <span><House size={15} />Home Puja</span>}{hasOnline && <span><Video size={15} />Online</span>}</span></div>
-      <div className="puja-card-actions"><Link href={`/pujas/${puja.slug}`} className="button button-outline button-card puja-view-details">View details</Link><Link href={`/booking?puja=${puja.slug}`} className="button button-card button-book-puja">Check Availability <ArrowRight size={15} /></Link></div>
+      <div className="puja-card-actions"><Link href={`/pujas/${puja.slug}`} className="button button-outline button-card puja-view-details">View details</Link><Link href={`/booking?puja=${puja.slug}`} className="button button-card button-book-puja">Book now <ArrowRight size={15} /></Link></div>
       <a href={whatsappUrl(dakshinaMessage)} target="_blank" rel="noreferrer" className="puja-card-dakshina">Dakshina on WhatsApp <ArrowUpRight size={14} aria-hidden="true" /></a>
     </div>
   </article>;
