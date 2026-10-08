@@ -48,16 +48,9 @@ export function HomeSearch({ placeholderPuja = "" }: { placeholderPuja?: string 
       .slice(0, 6)
       .map((entry) => entry.item);
   }, [query]);
-  function search(item?: SearchItem, checkAvailability = false) {
+  function search(item?: SearchItem) {
     const matchedItem = item || suggestions[0];
-    const clean = item?.searchTerm || matchedItem?.searchTerm || item?.name || matchedItem?.name || query.trim();
-    const exactPuja = checkAvailability && matchedItem?.type === "Puja"
-      ? pujas.find((puja) => normalizeSearchText(puja.name) === normalizeSearchText(query.trim()))
-      : undefined;
-    if (exactPuja) {
-      router.push(`/booking?puja=${exactPuja.slug}`);
-      return;
-    }
+    const clean = item?.searchTerm || item?.name || query.trim() || matchedItem?.searchTerm || matchedItem?.name || "";
     const params = new URLSearchParams();
     if (matchedItem?.category) params.set("category", matchedItem.category);
     else if (clean) params.set("q", clean);
@@ -68,7 +61,7 @@ export function HomeSearch({ placeholderPuja = "" }: { placeholderPuja?: string 
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    search(undefined, true);
+    search();
   }
 
   return (
@@ -76,11 +69,16 @@ export function HomeSearch({ placeholderPuja = "" }: { placeholderPuja?: string 
       <form className="pp-search" onSubmit={submit} role="search">
         <Search size={19} aria-hidden="true" />
         <label className="sr-only" htmlFor="home-search">Search Puja, Deity, Occasion or Mantra</label>
-        <input id="home-search" value={query} onChange={(event) => setQuery(event.target.value)} onFocus={() => setFocused(true)} onBlur={() => window.setTimeout(() => setFocused(false), 120)} placeholder={placeholderPuja ? `Search ${placeholderPuja}...` : "Search Puja, Deity, Occasion or Mantra..."} autoComplete="off" />
-        <button type="submit" aria-label="Check availability"><Search size={18} /><span>Check Availability</span></button>
+        <input id="home-search" value={query} onChange={(event) => setQuery(event.target.value)} onFocus={() => setFocused(true)} onBlur={() => window.setTimeout(() => setFocused(false), 120)} placeholder={placeholderPuja ? `Search ${placeholderPuja}...` : "Search Puja, Deity, Occasion or Mantra..."} autoComplete="off" aria-autocomplete="list" aria-controls="home-search-results" aria-expanded={focused && Boolean(query.trim())} />
+        <button type="submit" aria-label="Search pujas"><Search size={18} /><span>Search Pujas</span></button>
       </form>
-      {focused && suggestions.length > 0 && <div className="pp-search-results" role="group" aria-label="Search suggestions">{suggestions.map((item) => <button key={`${item.type}-${item.name}`} type="button" onMouseDown={(event) => event.preventDefault()} onClick={() => { setQuery(item.name); setFocused(false); }}><Search size={14} /><span>{item.name}</span><small>{item.type}</small><ArrowRight size={14} /></button>)}</div>}
-      {focused && query.trim() && suggestions.length === 0 && <div className="pp-search-results"><button type="button" onMouseDown={(event) => event.preventDefault()} onClick={() => search()}><Search size={14} /><span>Search all pujas for “{query.trim()}”</span><ArrowRight size={14} /></button></div>}
+      {focused && query.trim() && <div className="pp-search-results pp-home-search-results" id="home-search-results" role="listbox" aria-label="Matching pujas and searches">
+        {suggestions.length > 0 && <>
+          <div className="pp-home-search-heading">Suggestions <span>{suggestions.length} matches</span></div>
+          {suggestions.map((item) => <button key={`${item.type}-${item.name}`} type="button" role="option" aria-selected="false" onMouseDown={(event) => event.preventDefault()} onClick={() => { setQuery(item.name); setFocused(false); search(item); }}><span className="pp-home-search-icon"><Search size={15} /></span><span className="pp-home-search-name">{item.name}</span><small>{item.type}</small><ArrowRight size={15} /></button>)}
+        </>}
+        <button className="pp-home-search-all" type="button" onMouseDown={(event) => event.preventDefault()} onClick={() => { setFocused(false); search(); }}><span>View all pujas for “{query.trim()}”</span><ArrowRight size={15} /></button>
+      </div>}
     </div>
   );
 }

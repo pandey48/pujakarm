@@ -3,6 +3,8 @@ import Link from "next/link";
 import { ArrowRight, ArrowUpRight, Clock3, House, Languages, ShieldCheck, Sparkles, Video, Check, MapPin, Flame, HeartHandshake } from "lucide-react";
 import type { City, Puja } from "@/lib/types";
 import { SOCIAL_LINKS, whatsappUrl } from "@/lib/constants";
+import { cities } from "@/data/cities";
+import { pujas } from "@/data/pujas";
 
 export function SectionHeading({ eyebrow, title, text, link }: { eyebrow?: string; title: string; text?: string; link?: { label: string; href: string } }) {
   return <div className="section-heading"><div>{eyebrow && <span className="eyebrow">{eyebrow}</span>}<h2>{title}</h2>{text && <p>{text}</p>}</div>{link && <Link className="text-link heading-link" href={link.href}>{link.label}<ArrowRight size={16} /></Link>}</div>;
@@ -62,12 +64,44 @@ export function HowItWorks() {
 function SearchGlyph({ size = 20 }: { size?: number }) { return <MapPin size={size} strokeWidth={1.65} />; }
 
 export function Footer() {
-  const linkGroups = [
-    { title: "Explore pujas", links: [["Griha Pravesh", "/pujas/griha-pravesh-puja"], ["Satyanarayan", "/pujas/satyanarayan-puja"], ["Rudrabhishek", "/pujas/rudrabhishek-puja"], ["Ganesh Puja", "/pujas/ganesh-puja"], ["Lakshmi Puja", "/pujas/lakshmi-puja"]] },
-    { title: "PujaPath", links: [["About us", "/about"], ["Contact", "/contact"], ["Frequently asked", "/faq"], ["Puja guides", "/guides"], ["Join as Pandit", "/pandit/join"], ["Book a puja", "/booking"], ["Puja at home", "/pujas?type=home"], ["Online puja", "/pujas?type=online"]] },
-    { title: "Find us in", links: [["Hyderabad", "/cities/hyderabad"], ["Bengaluru", "/cities/bengaluru"], ["Mumbai", "/cities/mumbai"], ["Delhi", "/cities/delhi"], ["Pune", "/cities/pune"]] },
-  ];
-  return <footer className="site-footer"><div className="footer-main"><div className="footer-brand"><Link href="/" className="brand"><span className="brand-mark">ॐ</span><span>Puja<span className="brand-accent">Path</span><small>RITUALS, WITH CARE</small></span></Link><p>Puja booking and Pandit enquiries.<br />Rituals, with care.</p><a className="footer-whatsapp" href={whatsappUrl("Namaste PujaPath, I would like to enquire.")} target="_blank" rel="noreferrer"><span className="whatsapp-symbol">◉</span> Chat with our team</a></div>{linkGroups.map((group) => <div className="footer-links" key={group.title}><h3>{group.title}</h3>{group.links.map(([label, href]) => <Link href={href} key={label}>{label}</Link>)}</div>)}<div className="footer-links"><h3>Stay connected</h3><Link href="/contact">Get in touch</Link><Link href="/faq">Booking FAQs</Link><Link href="/privacy">Privacy notice</Link><Link href="/terms">Terms of service</Link><div className="footer-socials">{SOCIAL_LINKS.map((social, index) => <a href={social.href} key={social.label} aria-label={social.label} target="_blank" rel="noreferrer"><span aria-hidden="true">{["◎", "f", "▶"][index]}</span></a>)}</div></div></div><div className="footer-bottom"><span>© {new Date().getFullYear()} PujaPath. Made with care.</span><span>Namaste <span className="footer-om">ॐ</span></span></div></footer>;
+  const popularPujas = pujas.filter((puja) => puja.isPopular).slice(0, 8);
+  return <footer className="site-footer">
+    <div className="footer-main">
+      <div className="footer-brand">
+        <Link href="/" className="brand"><span className="brand-mark">ॐ</span><span>Puja<span className="brand-accent">Path</span><small>RITUALS, WITH CARE</small></span></Link>
+        <p>Find a Pandit for traditional puja at home or online. Explore ceremonies, share your preferences and request availability with the PujaPath team.</p>
+        <a className="footer-whatsapp" href={whatsappUrl("Namaste PujaPath, I would like to enquire.")} target="_blank" rel="noreferrer"><span className="whatsapp-symbol">◉</span> Chat with our team</a>
+      </div>
+      <nav className="footer-links footer-puja-links" aria-label="Popular puja services">
+        <h3>Popular puja services</h3>
+        {popularPujas.map((puja) => <Link href={`/pujas/${puja.slug}`} key={puja.id}>{puja.name}</Link>)}
+        <Link className="footer-more-link" href="/pujas">Explore all pujas <ArrowRight size={13} /></Link>
+      </nav>
+      <nav className="footer-links footer-city-links" aria-label="Puja services by city">
+        <h3>Find a Pandit by city</h3>
+        {cities.map((city) => <Link href={`/cities/${city.slug}`} key={city.id}>Puja services in {city.name}</Link>)}
+        <Link className="footer-more-link" href="/cities">View all cities <ArrowRight size={13} /></Link>
+      </nav>
+      <nav className="footer-links footer-request-links" aria-label="Puja booking and support">
+        <h3>Request a Pandit</h3>
+        <Link className="footer-request-link" href="/booking">Request a Pandit for your puja</Link>
+        <Link href="/pujas?type=home">Book a puja at home</Link>
+        <Link href="/pujas?type=online">Enquire about online puja</Link>
+        <Link href="/pandit/join">Join PujaPath as a Pandit</Link>
+        <Link href="/guides">Puja booking guides</Link>
+        <Link href="/faq">Frequently asked questions</Link>
+        <Link href="/about">About PujaPath</Link>
+        <Link href="/contact">Contact our team</Link>
+        <Link href="/privacy">Privacy notice</Link>
+        <Link href="/terms">Terms of service</Link>
+        <div className="footer-socials">{SOCIAL_LINKS.map((social, index) => <a href={social.href} key={social.label} aria-label={social.label} target="_blank" rel="noreferrer"><span aria-hidden="true">{["◎", "f", "▶"][index]}</span></a>)}</div>
+      </nav>
+    </div>
+    <div className="footer-bottom">
+      <span>© {new Date().getFullYear()} PujaPath. Puja and Pandit enquiries for home and online ceremonies across India.</span>
+      <span>Namaste <span className="footer-om">ॐ</span></span>
+    </div>
+  </footer>;
 }
 
 export function FAQList({ items }: { items: { question: string; answer: string }[] }) {

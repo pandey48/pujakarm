@@ -43,6 +43,11 @@ export default function HomePage() {
         <div className="pp-search-hero-content">
           <MantraRotator />
           <div className="pp-hero-topline"><span className="pp-hero-badge">Puja enquiries with personal coordination</span></div>
+          <div className="pp-hero-metrics" aria-label="PujaPath highlights">
+            <span><Heart size={13} aria-hidden="true" /> At home</span>
+            <span><UsersRound size={13} aria-hidden="true" /> Family rituals</span>
+            <span><ShieldCheck size={13} aria-hidden="true" /> Verified availability</span>
+          </div>
           <h1 id="hero-title"><span className="pp-search-hero-title-main">Book a Pandit for Puja</span><span className="pp-search-hero-title-subtitle">at Home or Online</span></h1>
           <p>Search pujas and enquire about availability. Our team will follow up to discuss a suitable Pandit for your ceremony.</p>
           <HeroDiscovery />

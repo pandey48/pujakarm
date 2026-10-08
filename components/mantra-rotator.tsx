@@ -22,7 +22,7 @@ export function MantraRotator() {
 
   return (
     <div className="pp-hero-mantra" aria-live="polite" aria-atomic="true">
-      <p key={index} className="pp-mantra-line" lang="sa">{words.map((word, wordIndex) => <span className="pp-mantra-word" key={`${index}-${wordIndex}`} style={{ animationDelay: `${wordIndex * 360}ms` }}>{word}{wordIndex < words.length - 1 ? " " : ""}</span>)}</p>
+      <p key={index} className="pp-mantra-line" lang="sa">{words.map((word, wordIndex) => <span className="pp-mantra-word" key={`${index}-${wordIndex}`} style={{ animationDelay: `${wordIndex * 90}ms` }}>{word}{wordIndex < words.length - 1 ? " " : ""}</span>)}</p>
       <span className="pp-mantra-count">0{index + 1} <i /> 03</span>
     </div>
   );
