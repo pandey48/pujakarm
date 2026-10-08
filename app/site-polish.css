@@ -1720,3 +1720,112 @@ body {
     line-height: 1.6;
   }
 }
+
+.city-language-bar {
+  border-bottom-color: #e5cbb3;
+  background: linear-gradient(110deg, #fff8ef, #f6e8d8);
+}
+
+.city-bar-search,
+.city-bar-formats {
+  border-color: #e7cdb5;
+  background: rgba(255, 253, 249, .94);
+  box-shadow: 0 4px 14px rgba(101, 59, 28, .08);
+}
+
+.city-bar-search > label {
+  color: #4a3025;
+}
+
+.city-bar-search > label svg,
+.city-bar-input-wrap > svg {
+  color: #b8491e;
+}
+
+.city-bar-input-wrap input {
+  border-color: #d9b89c;
+  background: #fffdfa;
+  color: #35281f;
+}
+
+.city-bar-input-wrap input::placeholder {
+  color: #79685c;
+  opacity: 1;
+}
+
+.city-bar-input-wrap input:focus {
+  border-color: #b8491e;
+  box-shadow: 0 0 0 3px rgba(184, 73, 30, .16);
+}
+
+.city-bar-format-link {
+  border-color: #e2c5aa;
+  background: #fffaf4;
+  color: #563729;
+}
+
+.city-bar-format-link svg,
+.city-bar-directory {
+  color: #a83c17;
+}
+
+.city-bar-format-link:hover {
+  border-color: #bf5829;
+  background: #fff0e2;
+  color: #842f13;
+}
+
+.city-bar-format-link:focus-visible {
+  outline-color: #b8491e;
+}
+
+.city-bar-results {
+  border-color: #e5cbb3;
+  background: #fffdfa;
+}
+
+.city-bar-results button {
+  color: #35281f;
+}
+
+.city-bar-results button:hover,
+.city-bar-results button:focus-visible {
+  background: #fff0e2;
+}
+
+.city-bar-results button strong {
+  color: #422c21;
+}
+
+.city-bar-results button small,
+.city-bar-results > p {
+  color: #716052;
+}
+
+.city-bar-results button > svg {
+  color: #a83c17;
+}
+
+.pp-search-hero {
+  padding-top: 18px;
+}
+
+@media (max-width: 640px) {
+  .pp-search-hero {
+    padding-top: 16px;
+  }
+
+  .city-language-inner {
+    background: linear-gradient(110deg, #fff8ef, #f6e8d8);
+  }
+
+  .city-bar-search,
+  .city-bar-formats {
+    border-color: #e4c8ae;
+  }
+
+  .city-bar-input-wrap input {
+    background: #fffdfa;
+    color: #35281f;
+  }
+}
