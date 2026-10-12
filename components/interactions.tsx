@@ -32,7 +32,7 @@ export function PujaExplorer({ initialQuery = "", initialCategory = "", initialT
 
 export function PujaQuestionForm({ pujaName }: { pujaName: string }) {
   const selectedPuja = pujas.find((puja) => puja.name === pujaName);
-  return <BookingForm presetPuja={selectedPuja?.slug || ""} />;
+  return <BookingForm presetPuja={selectedPuja?.slug || ""} idPrefix="puja-question" />;
 }
 
 export function ContactForm() {

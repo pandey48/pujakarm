@@ -1,31 +1,30 @@
 ﻿import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowRight, BadgeCheck, CalendarCheck, Heart, ShieldCheck, UsersRound } from "lucide-react";
+import { ArrowRight, MessageCircle } from "lucide-react";
 import { OrganizationSchema, WebsiteSchema } from "@/app/schema";
 import { HeroDiscovery } from "@/components/hero-discovery";
-import { HeroBackdrop } from "@/components/hero-backdrop";
-import { MantraRotator } from "@/components/mantra-rotator";
 import { HomeCatalog } from "@/components/home-catalog";
 import { MantraCard } from "@/components/mantra-card";
 import { AstrologersAcharyas } from "@/components/astrologers-acharyas";
 import { SamagriGuide } from "@/components/samagri-guide";
 import { ServicesSection } from "@/components/services-section";
-import { CityCard, FAQList, HowItWorks } from "@/components/shared";
+import { CategoryGrid, CityCard, FAQList, HowItWorks, TrustSection } from "@/components/shared";
 import { cities } from "@/data/cities";
+import { categories } from "@/data/pujas";
 import { faqs } from "@/data/faqs";
 import { featuredMantras } from "@/data/mantras";
 import { pujas } from "@/data/pujas";
 import { whatsappUrl } from "@/lib/constants";
 
 export const metadata: Metadata = {
-  title: "Pandit Booking, Puja at Home & Online Puja",
-  description: "Explore Hindu puja services, request a Pandit for a puja at home or online, choose your city and share your preferences. PujaPath confirms availability before booking.",
+  title: "Find a Pandit for Puja at Home or Online",
+  description: "Explore Hindu pujas, share your city, preferred date and ritual details, and ask PujaPath about a suitable Pandit. Availability is confirmed before booking.",
   keywords: ["book online puja", "online puja services", "book a Pandit", "Pandit for puja", "Hindu puja booking", "home puja", "online rituals"],
   alternates: { canonical: "/" },
   openGraph: {
-    title: "Pandit Booking, Puja at Home & Online Puja | PujaPath",
-    description: "Explore Hindu pujas and request a Pandit for an at-home or online ritual. Availability is confirmed before booking.",
+    title: "Find a Pandit for Puja at Home or Online | PujaPath",
+    description: "Explore Hindu pujas, share your city, preferred date and ritual details, and ask PujaPath about a suitable Pandit. Availability is confirmed before booking.",
     siteName: "PujaPath",
     type: "website",
     url: "/",
@@ -33,53 +32,86 @@ export const metadata: Metadata = {
   },
 };
 
+const heroPuja = pujas.find((puja) => puja.slug === "griha-pravesh-puja")!;
+const featuredCitySlugs = ["mumbai", "bengaluru", "hyderabad", "ahmedabad", "pune", "bhopal", "indore", "varanasi", "prayagraj"];
+const featuredCities = featuredCitySlugs.map((slug) => cities.find((city) => city.slug === slug)).filter((city) => city !== undefined);
+const homeFaqs = [
+  faqs[0],
+  faqs[1],
+  faqs[2],
+  faqs[3],
+  faqs[4],
+  { question: "How is availability confirmed?", answer: "Share your preferred date and location in an enquiry. The PujaPath team will check availability and discuss arrangements with you; sending a request does not confirm a booking." },
+];
+
 export default function HomePage() {
   return <>
     <OrganizationSchema />
     <WebsiteSchema />
-    <section className="pp-search-hero" aria-labelledby="hero-title">
-      <div className="pp-search-hero-frame">
-        <HeroBackdrop src="https://images.unsplash.com/photo-1700765020008-7fd77c847f8a" />
-        <div className="pp-search-hero-content">
-          <MantraRotator />
-          <div className="pp-hero-topline"><span className="pp-hero-badge">Puja enquiries with personal coordination</span></div>
-          <div className="pp-hero-metrics" aria-label="PujaPath highlights">
-            <span><Heart size={13} aria-hidden="true" /> At home</span>
-            <span><UsersRound size={13} aria-hidden="true" /> Family rituals</span>
-            <span><ShieldCheck size={13} aria-hidden="true" /> Verified availability</span>
+    <div className="home-page">
+      <section className="home-hero" aria-labelledby="home-hero-title">
+        <div className="home-shell home-hero-grid">
+          <div className="home-hero-copy">
+            <span className="home-eyebrow"><span aria-hidden="true">ॐ</span> PujaPath · Rituals, with care</span>
+            <h1 id="home-hero-title">Find the Right Pandit for Your Puja</h1>
+            <p>Plan your puja with personal guidance. Share your ritual, location, and preferred date to enquire about Pandit availability.</p>
+            <div className="home-search-panel"><HeroDiscovery /></div>
+            <div className="home-hero-actions">
+              <a className="home-whatsapp-link" href={whatsappUrl("Namaste PujaPath, I would like help choosing a puja and checking availability.")} target="_blank" rel="noreferrer"><MessageCircle size={16} aria-hidden="true" /> Prefer WhatsApp? Send an enquiry</a>
+            </div>
           </div>
-          <h1 id="hero-title"><span className="pp-search-hero-title-main">Book a Pandit for Puja</span><span className="pp-search-hero-title-subtitle">at Home or Online</span></h1>
-          <p>Search pujas and enquire about availability. Our team will follow up to discuss a suitable Pandit for your ceremony.</p>
-          <HeroDiscovery />
-          <div className="pp-hero-assurance"><span><BadgeCheck size={14} /> Share ritual preferences</span><span><BadgeCheck size={14} /> Ask about samagri</span><span><BadgeCheck size={14} /> Confirm availability first</span></div>
-          <Link className="pp-hero-consultation" href="/booking" aria-label="Request a Pandit for your puja"><span>Request a Pandit</span><ArrowRight size={15} aria-hidden="true" /></Link>
+          <div className="home-hero-image">
+            <Image src={heroPuja.image} alt="Traditional puja preparations for a Griha Pravesh ceremony" fill priority sizes="(max-width: 767px) 100vw, (max-width: 1023px) 40vw, 46vw" className="cover-image" />
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section className="pp-stats" aria-label="PujaPath offerings"><div><strong>{pujas.length}</strong><span>Puja listings</span></div><div><strong>At Home</strong><span>Available on selected rituals</span></div><div><strong>Online</strong><span>Available on selected rituals</span></div><div><strong>Pandit enquiry</strong><span>Share your preferences</span></div></section>
+      <section className="home-trust" aria-label="What to expect from PujaPath"><div className="home-shell"><TrustSection /></div></section>
 
-    <HomeCatalog items={pujas} />
+      <HomeCatalog items={pujas} />
 
-    <ServicesSection />
+      <section className="home-how" id="how-it-works" aria-labelledby="home-how-title">
+        <div className="home-shell"><div className="home-section-heading"><div><span className="home-section-kicker">A clear enquiry process</span><h2 id="home-how-title">How Booking Works</h2><p>An enquiry is the start of a conversation, not a confirmed booking.</p></div></div><HowItWorks /></div>
+      </section>
 
-    <SamagriGuide items={pujas.slice(0, 12)} />
+      <section className="home-categories" aria-labelledby="home-categories-title">
+        <div className="home-shell">
+          <div className="home-section-heading"><div><span className="home-section-kicker">Browse by tradition</span><h2 id="home-categories-title">Find a Puja by Category</h2><p>Explore ceremonies by occasion and ritual type.</p></div><Link href="/pujas" className="home-text-link">All pujas <ArrowRight size={15} /></Link></div>
+          <CategoryGrid categories={categories} />
+        </div>
+      </section>
 
-    <section className="pp-how" id="how-it-works"><div className="pp-wrap"><div className="pp-section-heading"><div><span className="pp-kicker">Clear and personal</span><h2>Book Your Puja in 4 Simple Steps</h2><p>Share what you need and our team will help confirm the details.</p></div></div><HowItWorks /></div></section>
+      <ServicesSection />
 
-    <section className="pp-city-section"><div className="pp-wrap"><div className="pp-section-heading"><div><span className="pp-kicker">Locality and format</span><h2>Book a Pandit Near You</h2><p>Choose a city to send an enquiry. Service availability is confirmed individually before booking.</p></div><Link className="pp-view" href="/cities">View location guides <ArrowRight size={16} /></Link></div><div className="pp-city-grid">{cities.slice(0, 8).map((city) => <CityCard city={city} key={city.id} />)}<Link href="/pujas?type=online" className="pp-online-city"><span>Online Puja</span><small>Ask about joining a ritual online</small><ArrowRight size={16} /></Link></div><p className="pp-demo-note">Location cards are enquiry options, not a live availability calendar.</p><Link className="pp-view" href="/cities/mumbai">Explore PujaPath Mumbai services <ArrowRight size={16} /></Link></div></section>
+      <section className="home-cities" aria-labelledby="home-cities-title">
+        <div className="home-shell">
+          <div className="home-section-heading"><div><span className="home-section-kicker">Explore by location</span><h2 id="home-cities-title">Puja Enquiries by City</h2><p>Choose a city guide and share your preferred locality. Service availability is confirmed individually.</p></div><Link href="/cities" className="home-text-link">Explore all cities <ArrowRight size={15} /></Link></div>
+          <div className="home-city-grid">{featuredCities.map((city) => <CityCard city={city} key={city.id} />)}</div>
+        </div>
+      </section>
 
-    <AstrologersAcharyas />
+      <AstrologersAcharyas />
 
-    <section className="pp-guides"><div className="pp-wrap"><div className="pp-section-heading"><div><span className="pp-kicker">Plan with clarity</span><h2>Popular Puja Guides</h2><p>Practical advice for choosing a ritual and preparing an enquiry.</p></div><Link className="pp-view" href="/guides">All guides <ArrowRight size={16} /></Link></div><Link className="pp-guide-feature" href="/guides/how-to-book-a-pandit-for-puja-at-home"><span className="pp-guide-feature-label">Booking advice · 4 min read</span><strong>How to Book a Pandit for Puja at Home</strong><span>Learn which details to share and what to confirm before you book.<ArrowRight size={16} /></span></Link></div></section>
+      <SamagriGuide items={pujas.slice(0, 12)} />
 
-    <section className="pp-mantras" id="mantras"><div className="pp-wrap"><div className="pp-section-heading"><div><span className="pp-kicker">Read and understand</span><h2>Vedic Mantras</h2><p>Listen, read and understand ancient Sanskrit chants.</p></div></div><div className="pp-mantra-grid">{featuredMantras.map((mantra) => <MantraCard mantra={mantra} key={mantra.name} />)}</div><div className="pp-live-puja-videos"><div className="pp-live-puja-heading"><span className="pp-kicker">Puja in practice</span><h3>Live Puja Videos</h3><p>Watch moments from puja ceremonies and see traditional rituals in practice.</p></div><div className="pp-live-puja-grid"><figure className="pp-live-puja-card"><video controls playsInline preload="none" width="478" height="850" aria-label="Watch live puja ceremony video 1"><source src="/video/live-puja-1.mp4" type="video/mp4" />Your browser does not support video playback.</video><figcaption>Puja ceremony 01</figcaption></figure><figure className="pp-live-puja-card"><video controls playsInline preload="none" width="478" height="850" aria-label="Watch live puja ceremony video 2"><source src="/video/live-puja-2.mp4" type="video/mp4" />Your browser does not support video playback.</video><figcaption>Puja ceremony 02</figcaption></figure></div></div>
-    <section className="pp-process-note"><span className="pp-kicker">What to expect</span><h2>Your enquiry starts a conversation</h2><p>Share the puja, city, preferred date and any family preferences. PujaPath will follow up to discuss the Pandit, format, samagri and availability before you decide. Submitting a request does not confirm a booking.</p><Link className="pp-view" href="/booking">Start a puja enquiry <ArrowRight size={16} /></Link></section></div></section>
+      <section className="home-guides" aria-labelledby="home-guides-title">
+        <div className="home-shell">
+          <div className="home-section-heading"><div><span className="home-section-kicker">Plan with clarity</span><h2 id="home-guides-title">Puja Guides and Advice</h2><p>Practical guidance for choosing a ritual and preparing your enquiry.</p></div><Link href="/guides" className="home-text-link">All guides <ArrowRight size={15} /></Link></div>
+          <Link className="home-guide-card" href="/guides/how-to-book-a-pandit-for-puja-at-home"><span>Booking advice · 4 min read</span><strong>How to Book a Pandit for Puja at Home</strong><small>Learn which details to share and what to confirm before you book.</small><ArrowRight size={18} aria-hidden="true" /></Link>
+        </div>
+      </section>
 
-    <section className="pp-why"><div className="pp-wrap pp-why-inner"><div className="pp-why-copy"><span className="pp-kicker">A clearer way to enquire</span><h2>Traditional Rituals.<br />Simple Booking.</h2><p>Know what details to share before you request a puja.</p></div><div className="pp-benefits"><article><span><UsersRound size={21} /></span><div><strong>Pandit preferences</strong><small>Share experience, language and ritual needs</small></div></article><article><span><CalendarCheck size={21} /></span><div><strong>Clear process</strong><small>Request a date and get availability confirmed</small></div></article><article><span><ShieldCheck size={21} /></span><div><strong>Home or online</strong><small>Choose the format that suits your family</small></div></article><article><span><BadgeCheck size={21} /></span><div><strong>Personal guidance</strong><small>Ask us which ritual may fit your occasion</small></div></article></div><div className="pp-why-image"><Image src="https://images.unsplash.com/photo-1604881991720-f91add269bed?auto=format&fit=crop&w=800&q=85" alt="Traditional puja offerings with flowers and a brass kalash" fill sizes="(max-width: 720px) 90vw, 28vw" className="cover-image" /></div></div></section>
+      <section className="home-mantras" id="mantras" aria-labelledby="home-mantras-title">
+        <div className="home-shell"><div className="home-section-heading"><div><span className="home-section-kicker">Read and reflect</span><h2 id="home-mantras-title">Mantras to Explore</h2><p>Short Sanskrit excerpts and meanings from the PujaPath collection.</p></div></div><div className="home-mantra-grid">{featuredMantras.map((mantra) => <MantraCard mantra={mantra} key={mantra.name} />)}</div></div>
+      </section>
 
-    <section className="pp-faq"><div className="pp-wrap pp-faq-inner"><div><span className="pp-kicker">Need a little clarity?</span><h2>Frequently Asked Questions</h2><p>Learn what to expect when you send a puja enquiry.</p><Link className="pp-view" href="/faq">More FAQs <ArrowRight size={16} /></Link></div><FAQList items={faqs.slice(0, 7)} /></div></section>
+      <section className="home-faq" aria-labelledby="home-faq-title">
+        <div className="home-shell home-faq-layout"><div><span className="home-section-kicker">Good to know</span><h2 id="home-faq-title">Frequently Asked Questions</h2><p>What to expect when you send a puja enquiry.</p><Link href="/faq" className="home-text-link">More FAQs <ArrowRight size={15} /></Link></div><FAQList items={homeFaqs} /></div>
+      </section>
 
-    <section className="pp-final-cta"><div className="pp-wrap pp-cta-inner"><span className="pp-kicker">Need help choosing?</span><h2>Not Sure Which Puja You Need?</h2><p>Tell us your occasion and our team can help you find a suitable ritual.</p><div><a className="pp-cta-primary" href={whatsappUrl("Namaste, I need help choosing a puja.")} target="_blank" rel="noreferrer"><Heart size={16} /> Talk to Us</a><Link className="pp-cta-secondary" href="/pujas">Explore Pujas</Link></div></div></section>
+      <section className="home-final-cta" aria-labelledby="home-final-title">
+        <div className="home-shell home-final-inner"><div><span className="home-section-kicker">Personal guidance, one step at a time</span><h2 id="home-final-title">Planning a Puja? Let’s Help You Get Started</h2><p>Tell us the occasion, city, preferred date, and ritual requirements. Our team will help you understand the next steps.</p></div><div className="home-final-actions"><a href={whatsappUrl("Namaste PujaPath, I would like to enquire about a puja. I can share my occasion, city and preferred date.")} target="_blank" rel="noreferrer" className="home-final-whatsapp"><MessageCircle size={17} aria-hidden="true" /> Enquire on WhatsApp</a><Link href="/pujas" className="home-final-pujas">Explore All Pujas <ArrowRight size={16} aria-hidden="true" /></Link></div></div>
+      </section>
+    </div>
   </>;
 }

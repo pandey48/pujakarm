@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ArrowRight, House, MapPin, Search, Video } from "lucide-react";
 import { cities } from "@/data/cities";
 import { getLocationSearchResults } from "@/lib/location-seo";
 
 export function CityLanguageBar() {
   const [query, setQuery] = useState("");
+  const pathname = usePathname();
   const router = useRouter();
   const results = useMemo(() => getLocationSearchResults(query, cities).slice(0, 6), [query]);
 
@@ -16,6 +17,8 @@ export function CityLanguageBar() {
     setQuery("");
     router.push(href);
   }
+
+  if (pathname === "/") return null;
 
   return <>
     <div className="city-language-bar">

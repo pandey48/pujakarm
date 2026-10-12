@@ -1,7 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { Bookmark, Play } from "lucide-react";
+import { Bookmark } from "lucide-react";
 import type { VedicMantra } from "@/data/mantras";
 
 const STORAGE_KEY = "pujapath-saved-mantras";
@@ -34,5 +34,5 @@ export function MantraCard({ mantra }: { mantra: VedicMantra }) {
     } catch { return; }
   }
 
-  return <article className="pp-mantra-card"><div className="pp-mantra-top"><button className="pp-play" type="button" disabled aria-label={`${mantra.name} audio not available yet`} title="Audio recording not available yet"><Play size={15} fill="currentColor" /></button><span className="pp-audio-unavailable">Audio coming soon</span><button className={`pp-save ${saved ? "is-saved" : ""}`} type="button" aria-pressed={saved} aria-label={saved ? `Remove ${mantra.name} from saved mantras on this device` : `Save ${mantra.name} on this device`} onClick={toggleSaved}><Bookmark size={17} fill={saved ? "currentColor" : "none"} /></button></div><h3>{mantra.name}</h3><p className="pp-sanskrit" lang="sa">{mantra.sanskrit}</p><p className="pp-meaning">{mantra.meaning}</p></article>;
+  return <article className="pp-mantra-card"><div className="pp-mantra-top"><span className="pp-mantra-label">Mantra excerpt</span><button className={`pp-save ${saved ? "is-saved" : ""}`} type="button" aria-pressed={saved} aria-label={saved ? `Remove ${mantra.name} from saved mantras on this device` : `Save ${mantra.name} on this device`} onClick={toggleSaved}><Bookmark size={17} fill={saved ? "currentColor" : "none"} /></button></div><h3>{mantra.name}</h3><p className="pp-sanskrit" lang="sa">{mantra.sanskrit}</p><p className="pp-meaning">{mantra.meaning}</p></article>;
 }

@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { buildEnquiry, getEnquiry, saveEnquiry } from "@/lib/enquiry-store";
+import { findBookingCity, preferredLanguages } from "@/data/cities";
 import type { EnquirySubmission } from "@/lib/enquiry-types";
 import { submitToGoogleAppsScript } from "@/lib/google-apps-script";
 import { notifyWhatsAppOfEnquiry } from "@/lib/whatsapp-notification";
@@ -58,18 +59,38 @@ export async function POST(request: Request) {
 
   if (body.type === "lead") {
     const puja = asText(body.puja);
-    const location = asText(body.location);
+    const city = asText(body.city);
+    const area = asText(body.area);
+    const legacyLocation = asText(body.location);
+    const hasSeparateLocationFields = "city" in body || "area" in body;
+    const storedArea = area || legacyLocation;
+    const location = [storedArea, city].filter(Boolean).join(", ") || legacyLocation;
+    const preferredLanguage = asText(body.preferredLanguage);
     const preferredDate = asText(body.preferredDate);
     const message = asText(body.message);
     const parsedDate = preferredDate ? new Date(`${preferredDate}T00:00:00.000Z`) : null;
-    if (!name || name.length > 120 || !phone || phone.length > 24 || phone.replace(/\D/g, "").length < 8 || !puja || !location || (preferredDate && (!parsedDate || Number.isNaN(parsedDate.getTime()) || parsedDate.toISOString().slice(0, 10) !== preferredDate))) {
-      return Response.json({ error: "Please enter your name, a valid phone number, puja or service, and location." }, { status: 400 });
+    const validLanguage = !preferredLanguage || preferredLanguages.some((language) => language.toLowerCase() === preferredLanguage.toLowerCase());
+    const bookingCity = findBookingCity(city);
+    const cityLanguageIsVerified = bookingCity?.serviceAvailability === "verified" && Boolean(bookingCity.supportedLanguages?.length);
+    const languageMatchesCity = !preferredLanguage || !cityLanguageIsVerified ||
+      bookingCity?.supportedLanguages?.some((language) => language.toLowerCase() === preferredLanguage.toLowerCase()) === true;
+    if (!name || name.length > 120 || !phone || phone.length > 24 || phone.replace(/\D/g, "").length < 8 || !puja || !location || (hasSeparateLocationFields && (!city || !storedArea)) || (preferredDate && (!parsedDate || Number.isNaN(parsedDate.getTime()) || parsedDate.toISOString().slice(0, 10) !== preferredDate))) {
+      return Response.json({ error: "Please enter your name, a valid phone number, puja or service, city, and area." }, { status: 400 });
     }
-    if ([whatsapp, puja, location, preferredDate, message].some((value) => value.length > 2000)) {
+    if (!validLanguage) {
+      return Response.json({ error: "Choose a preferred language from the supported options." }, { status: 400 });
+    }
+    if (!languageMatchesCity) {
+      return Response.json({ error: "Choose a language verified for the selected city, or contact the team to discuss your preference." }, { status: 400 });
+    }
+    if ([whatsapp, puja, city, storedArea, preferredLanguage, location, preferredDate, message].some((value) => value.length > 2000)) {
       return Response.json({ error: "One or more fields are too long." }, { status: 400 });
     }
-    payload = { type: "lead", name, phone, whatsapp, puja, location, preferredDate, message };
-    enquiryDetails = { puja, pujaDate: preferredDate, city: "", location, panditName: "", additionalRequirement: message, enquiryType: "Book Puja", message, source: "Website Lead Form" };
+    if (city.length > 120 || storedArea.length > 120 || preferredLanguage.length > 40) {
+      return Response.json({ error: "Please check the city, area, and language values and try again." }, { status: 400 });
+    }
+    payload = { type: "lead", name, phone, whatsapp, puja, city, area: storedArea, preferredLanguage, location, preferredDate, message };
+    enquiryDetails = { puja, pujaDate: preferredDate, city, location: storedArea, panditName: "", additionalRequirement: message, enquiryType: "Book Puja", message, source: "Website Lead Form" };
   } else {
     return Response.json({ error: "Please check the submission type and try again." }, { status: 400 });
   }
@@ -83,7 +104,7 @@ export async function POST(request: Request) {
     name, phone, whatsapp,
     puja: enquiryDetails.puja, panditName: enquiryDetails.panditName, pujaDate: enquiryDetails.pujaDate,
     preferredTime: "", city: enquiryDetails.city, location: enquiryDetails.location, bookingType: "",
-    languagePreference: "", traditionPreference: "", gotra: "", additionalRequirement: enquiryDetails.additionalRequirement,
+    languagePreference: payload.type === "lead" ? payload.preferredLanguage : "", traditionPreference: "", gotra: "", additionalRequirement: enquiryDetails.additionalRequirement,
     enquiryType: enquiryDetails.enquiryType, message: enquiryDetails.message, source: enquiryDetails.source,
   }, requestId);
   let savedEnquiry = await getEnquiry(enquiry.id).catch((error) => {

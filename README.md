@@ -36,6 +36,12 @@ The JSON store is a starter persistence adapter for a single long-running Node s
 
 The draft Pandit directory data is not rendered as public profiles. No ratings, experience claims or live availability are published from those draft entries. The homepage consultation cards use only the existing names, designations and contact links; confirm those business details before changing their copy. Mantra bookmarks are saved only in the visitor's browser; audio controls stay disabled until recordings are supplied. City and puja entries are enquiry options and do not promise availability until the team confirms.
 
+## City, locality and language configuration
+
+`data/cities.ts` is the shared source for city enquiry options, suggested localities, preferred languages, and optional verified service/SEO configuration. Add a city to `cityRecords` and add its localities to `localityOptions`; booking forms and city search use the same data. `preferredLanguages` contains the selectable customer preferences. The current 14 city guides remain indexable as enquiry guides; Thane and Navi Mumbai are offered as booking preferences but their city pages are not indexable yet.
+
+Service coverage defaults to `unverified`, with no verified pujas or Pandit languages. Only set `serviceAvailability: "verified"` and populate `availablePujas` / `supportedLanguages` after those details are confirmed. A locality page is included in the sitemap only when its city is verified, the locality is configured in `indexableLocalities` with a unique title, description and at least 40 words of useful content, and the relevant service is verified. Existing `/puja/...` URLs remain available but are not indexed by default. This configuration does not replace or infer availability from Pandit registration submissions in Google Sheets.
+
 Replace the canonical site URL, social links and placeholder contact information before launch. Review the privacy and terms copy with qualified counsel. Configure persistent storage, backups, monitoring and access controls before handling real customer enquiries in production.
 
 ## Google Sheets submissions

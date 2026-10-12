@@ -46,6 +46,7 @@ export function ServicesSection() {
             <h2 id="services-title">Our Services</h2>
             <p>Plan your puja and the preparations that go with it.</p>
           </div>
+          <Link className="pp-service-action" href="/services">Explore all services<ArrowRight size={14} /></Link>
         </div>
         <div className="pp-service-grid">
           {services.map(({ title, type, description, action, href, Icon }) => (

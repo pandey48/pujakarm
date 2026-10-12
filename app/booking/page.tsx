@@ -10,6 +10,7 @@ export default async function BookingPage({ searchParams }: PageProps<"/booking"
   const selectedPuja = typeof params.puja === "string" ? params.puja : "";
   const serviceRequest = typeof params.serviceRequest === "string" ? params.serviceRequest : "";
   const locationService = findLocationService(serviceRequest);
+  const requestedRequirement = typeof params.requirement === "string" ? params.requirement.slice(0, 160) : "";
   const presetLocation = typeof params.location === "string"
     ? params.location
     : typeof params.city === "string"
@@ -20,13 +21,13 @@ export default async function BookingPage({ searchParams }: PageProps<"/booking"
   const isAstrologerEnquiry = params.service === "online-astrologer";
   const puja = isAstrologerEnquiry ? "online-astrologer" : selectedPuja || locationService?.catalogSlug || "";
   const isSamagriEnquiry = params.question === "samagri";
-  const presetRequirement = isAstrologerEnquiry
+  const presetRequirement = requestedRequirement || (isAstrologerEnquiry
     ? "I would like to book an online astrologer consultation. Please share available session times and details."
     : locationService
       ? `I would like to enquire about ${locationService.name}. Please discuss the available arrangements for my location and preferred date.`
     : isSamagriEnquiry
       ? "I would like to book puja samagri along with my puja. Please help arrange the items needed for my ceremony."
-      : "";
+      : "");
   const heading = isAstrologerEnquiry ? "Request an Online Astrologer Consultation" : isSamagriEnquiry ? "Request Puja Samagri" : locationService ? `Enquire about ${locationService.name}` : "Request a puja booking";
   const intro = isAstrologerEnquiry
     ? "Share your questions and preferred time. Our team will confirm consultant availability and session details."

@@ -48,16 +48,17 @@ export function CategoryGrid({ categories }: { categories: string[] }) {
 }
 
 export function CityCard({ city }: { city: City }) {
-  return <Link href={`/cities/${city.slug}`} className="city-card"><MapPin size={16} /><span>{city.name}</span><ArrowUpRight size={15} className="city-arrow" /></Link>;
+  const href = city.cityGuideIndexable === false ? `/booking?city=${encodeURIComponent(city.name)}` : `/cities/${city.slug}`;
+  return <Link href={href} className="city-card"><MapPin size={16} /><span>{city.cityGuideIndexable === false ? `Enquire in ${city.name}` : city.name}</span><ArrowUpRight size={15} className="city-arrow" /></Link>;
 }
 
 export function TrustSection() {
-  const items = [[ShieldCheck, "Pandit enquiries", "Discuss preferences and availability"], [Sparkles, "Vedic Rituals", "Traditions treated with care"], [House, "Home & Online", "Choose how you participate"], [Check, "Easy Booking", "Clear details, one request"]] as const;
+  const items = [[HeartHandshake, "Personal coordination", "Discuss your ritual and preferences"], [House, "Home & online", "Options depend on the puja"], [Flame, "Preparation guidance", "Discuss ritual and samagri"], [Check, "Availability confirmed", "Our team checks before booking"]] as const;
   return <div className="trust-row">{items.map(([Icon, title, detail]) => <div className="trust-item" key={title}><span className="trust-icon"><Icon size={21} strokeWidth={1.7} /></span><div><strong>{title}</strong><span>{detail}</span></div></div>)}</div>;
 }
 
 export function HowItWorks() {
-  const steps = [[SearchGlyph, "Choose your puja", "Explore ceremonies and find the right fit."], [MapPin, "Share your details", "Tell us your city, date and preferences."], [Languages, "Meet your Pandit", "We coordinate the details with you."], [Sparkles, "Begin the ritual", "Join at home or online, with guidance."]] as const;
+  const steps = [[SearchGlyph, "Choose your puja", "Explore ceremonies and find the right fit."], [MapPin, "Share your details", "Tell us your city, preferred date and requirements."], [Languages, "Discuss arrangements", "Our team checks Pandit and format availability with you."], [Sparkles, "Confirm before proceeding", "Agree on the ritual details before the ceremony."]] as const;
   return <div className="steps-grid">{steps.map(([Icon, title, detail], index) => <div className="step-item" key={title}><div className="step-number">0{index + 1}</div><span className="step-icon"><Icon size={22} strokeWidth={1.65} /></span><h3>{title}</h3><p>{detail}</p></div>)}</div>;
 }
 
@@ -79,12 +80,13 @@ export function Footer() {
       </nav>
       <nav className="footer-links footer-city-links" aria-label="Puja services by city">
         <h3>Find a Pandit by city</h3>
-        {cities.map((city) => <Link href={`/cities/${city.slug}`} key={city.id}>Puja services in {city.name}</Link>)}
+        {cities.map((city) => <Link href={city.cityGuideIndexable === false ? `/booking?city=${encodeURIComponent(city.name)}` : `/cities/${city.slug}`} key={city.id}>{city.cityGuideIndexable === false ? `Enquire in ${city.name}` : `Puja enquiry guide: ${city.name}`}</Link>)}
         <Link className="footer-more-link" href="/cities">View all cities <ArrowRight size={13} /></Link>
       </nav>
       <nav className="footer-links footer-request-links" aria-label="Puja booking and support">
         <h3>Request a Pandit</h3>
         <Link className="footer-request-link" href="/booking">Request a Pandit for your puja</Link>
+        <Link href="/services">Pandit and Puja Services</Link>
         <Link href="/pujas?type=home">Book a puja at home</Link>
         <Link href="/pujas?type=online">Enquire about online puja</Link>
         <Link href="/pandit/join">Join PujaPath as a Pandit</Link>

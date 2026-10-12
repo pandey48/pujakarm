@@ -8,6 +8,44 @@ const ritualFaqs = [
 ];
 
 const corePujas: Puja[] = [
+  {
+    id: "havan",
+    slug: "havan",
+    name: "Havan",
+    shortDescription: "A Vedic fire ceremony planned around your family’s tradition and occasion.",
+    description: "A Havan is a Vedic fire ritual in which offerings and mantras are part of the ceremony. The exact vidhi, purpose and preparations vary, so share your occasion and tradition with the team before a date is discussed.",
+    category: "Homam & Havan",
+    duration: "Varies by ritual",
+    panditCount: "As per ceremony",
+    type: "Home",
+    benefits: ["Discuss the purpose and ritual sequence with the Pandit", "Share family, date and location preferences", "Confirm preparation requirements before booking"],
+    samagri: ["The final samagri list depends on the chosen vidhi", "Offerings and arrangements are confirmed before booking"],
+    cities,
+    image: "https://images.unsplash.com/photo-1700765020008-7fd77c847f8a?auto=format&fit=crop&w=900&q=85",
+    faqs: [
+      { question: "What details should I share for a Havan enquiry?", answer: "Share the occasion, your city and locality, a preferred date and your language preference. The team will discuss the ritual requirements with you." },
+      { question: "Is the preparation list the same for every Havan?", answer: "No. The vidhi and offerings can differ by purpose and family tradition. Confirm the preparation list with the Pandit before the ceremony." },
+    ],
+  },
+  {
+    id: "shraddha",
+    slug: "shraddha",
+    name: "Shraddha / Pitru Puja",
+    shortDescription: "A respectful enquiry for a family’s ancestral observance and customs.",
+    description: "Shraddha and Pitru observances follow family and regional customs. Share the observance you have in mind and any timing or location considerations so the team can discuss the appropriate details with you.",
+    category: "Pind Daan & Shraddha",
+    duration: "Varies by ritual",
+    panditCount: "As per ceremony",
+    type: "Home",
+    benefits: ["Discuss customary observances with the Pandit", "Share location and timing considerations", "Confirm ritual details before making arrangements"],
+    samagri: ["Offerings and preparation depend on the family’s chosen vidhi", "The team will discuss requirements before booking"],
+    cities,
+    image: "https://images.unsplash.com/photo-1604881991720-f91add269bed?auto=format&fit=crop&w=900&q=85",
+    faqs: [
+      { question: "What should I include in a Shraddha enquiry?", answer: "Share the observance you are planning, your city and locality, any preferred date and the best way for the team to contact you." },
+      { question: "Can family customs be discussed before booking?", answer: "Yes. Include relevant family or regional customs in your enquiry so the team can discuss the ritual requirements with you." },
+    ],
+  },
   { id: "griha-pravesh", slug: "griha-pravesh-puja", name: "Griha Pravesh Puja", shortDescription: "A traditional housewarming ritual for a blessed beginning.", description: "Welcome auspiciousness into your new home with a thoughtfully guided Griha Pravesh ceremony. The Pandit will discuss your family traditions and the suitable sequence before the day.", category: "Griha Pravesh", duration: "3–4 hours", panditCount: "1–2 Pandits", type: "Home", benefits: ["Begin life in a new home with a traditional ceremony", "Includes Ganesh puja and Vastu prayers", "Ritual sequence explained before the puja"], samagri: ["Kalash and coconut", "Flowers and fruits", "Havan samagri", "Puja thali and essentials"], cities, image: "https://images.unsplash.com/photo-1700765020008-7fd77c847f8a?auto=format&fit=crop&w=900&q=85", faqs: ritualFaqs },
   { id: "satyanarayan", slug: "satyanarayan-puja", name: "Satyanarayan Puja", shortDescription: "A devotional observance for gratitude and family well-being.", description: "Gather your loved ones for the Satyanarayan Katha and puja, performed with care and guidance in a language your family is comfortable with.", category: "Shanti & Dosha Puja", duration: "2–3 hours", panditCount: "1 Pandit", type: "Home & Online", benefits: ["A meaningful family devotional gathering", "Katha recitation in a preferred language", "Suitable for milestones and special occasions"], samagri: ["Panchamrit ingredients", "Flowers and tulsi", "Fruits and prasad", "Puja essentials"], cities, image: "https://images.unsplash.com/photo-1606293926075-69a00dbfde81?auto=format&fit=crop&w=900&q=85", faqs: ritualFaqs },
   { id: "rudrabhishek", slug: "rudrabhishek-puja", name: "Rudrabhishek Puja", shortDescription: "An offering to Lord Shiva with Rudra mantras and abhishek.", description: "A guided Shiva puja featuring abhishek and Vedic chanting, arranged for your home or joined online with clear guidance for offerings.", category: "Shiv Puja", duration: "2–3 hours", panditCount: "1–2 Pandits", type: "Home & Online", benefits: ["Traditional Rudra mantra recitation", "Guided abhishek offerings", "Home or online participation"], samagri: ["Milk and water", "Bilva leaves", "Flowers and fruits", "Puja essentials"], cities, image: "https://images.unsplash.com/photo-1758256822717-cbdbf29bb2bb?auto=format&fit=crop&w=900&q=85", faqs: ritualFaqs },
@@ -75,6 +113,7 @@ const canonicalKey = (value: string) => {
   if (slug === "pind-daan") return "pind-daan-puja";
   if (slug === "ganapati-homam") return "ganesh-homam";
   if (slug === "vivah-sanskar-hindu-wedding-ceremony") return "vivah-puja";
+  if (slug === "shraddha-pitru-puja" || slug === "shraddha") return "shraddha";
   return slug;
 };
 
@@ -99,6 +138,7 @@ const catalogPujas: Puja[] = pujaCatalog.flatMap(({ name, category }) => {
     cities,
     image: imageForPuja(name, category),
     faqs: ritualFaqs,
+    isIndexable: false,
   }];
 });
 

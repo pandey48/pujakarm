@@ -1,8 +1,8 @@
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { locationServices } from "@/data/location-services";
 import { LocationSeoPage } from "@/components/location-seo-page";
 import { BRAND_NAME, SITE_URL } from "@/lib/constants";
-import { getAreaFeaturedService, getSeoLocationParams, resolveLocationPage } from "@/lib/location-seo";
+import { getAreaFeaturedService, getSeoLocationParams, isIndexableLocationPage, resolveLocationPage } from "@/lib/location-seo";
 
 export const dynamicParams = true;
 
@@ -14,12 +14,14 @@ function getMetadataContent(page) {
   const city = page.city;
   const area = page.area;
   if (page.kind === "city") {
-    const title = `Puja & Pandit Booking in ${city.name}`;
-    const description = `Explore puja and Pandit enquiries in ${city.name} for ${city.services.map((slug) => locationServices.find((service) => service.slug === slug)?.name).filter(Boolean).join(", ")}. Share your locality and preferred date; availability is confirmed individually.`;
+    const title = `Puja Enquiry Guide for ${city.name}`;
+    const description = `${city.description} Share your locality and preferred date; arrangements and availability are confirmed individually.`;
     return { title, description };
   }
   if (page.kind === "area") {
-    const title = `Pandit & Puja Services in ${area.name}, ${city.name}`;
+    const configuredSeo = city.indexableLocalities?.[area.slug];
+    if (configuredSeo) return { title: configuredSeo.title, description: configuredSeo.description };
+    const title = `Puja Enquiry Guide for ${area.name}, ${city.name}`;
     const description = `Explore puja enquiries in ${area.name}, ${city.name}. Share your ceremony, preferred date and locality; PujaPath will discuss home or online arrangements and confirm availability with you.`;
     return { title, description };
   }
@@ -38,16 +40,19 @@ export async function generateMetadata({ params }) {
   const { city: citySlug, segments = [] } = await params;
   const page = resolveLocationPage(citySlug, segments);
   if (!page) return { title: "Puja location not found", robots: { index: false, follow: true } };
+  if (page.kind === "city") permanentRedirect(`/cities/${page.city.slug}`);
   const path = `/puja/${page.city.slug}${page.area ? `/${page.area.slug}` : ""}${page.service ? `/${page.service.slug}` : ""}`;
   const { title, description } = getMetadataContent(page);
   const brandedTitle = `${title} | ${BRAND_NAME}`;
+  const canonicalPath = page.kind === "city" ? `/cities/${page.city.slug}` : path;
+  const indexable = isIndexableLocationPage(page);
   return {
     title,
     description,
-    alternates: { canonical: path },
-    openGraph: { title: brandedTitle, description, siteName: BRAND_NAME, type: "website", url: path, images: [{ url: `${SITE_URL}/opengraph-image`, alt: brandedTitle }] },
+    alternates: { canonical: canonicalPath },
+    openGraph: { title: brandedTitle, description, siteName: BRAND_NAME, type: "website", url: canonicalPath, images: [{ url: `${SITE_URL}/opengraph-image`, alt: brandedTitle }] },
     twitter: { card: "summary_large_image", title: brandedTitle, description, images: [`${SITE_URL}/opengraph-image`] },
-    robots: { index: true, follow: true },
+    robots: { index: indexable, follow: true },
   };
 }
 
@@ -55,28 +60,34 @@ export default async function LocationSeoRoute({ params }) {
   const { city: citySlug, segments = [] } = await params;
   const page = resolveLocationPage(citySlug, segments);
   if (!page) notFound();
+  if (page.kind === "city") permanentRedirect(`/cities/${page.city.slug}`);
 
   const city = page.city;
-  const firstArea = city.areas[0];
   const serviceLinks = page.kind === "city"
-    ? city.services.map((serviceSlug) => {
+    ? city.services.flatMap((serviceSlug) => {
       const service = locationServices.find((item) => item.slug === serviceSlug);
-      const targetArea = city.areas.find((area) => getAreaFeaturedService(city, area)?.slug === serviceSlug) || firstArea;
-      return service && getAreaFeaturedService(city, targetArea)?.slug === serviceSlug
-        ? { label: `${service.name} near ${targetArea.name}`, href: `/puja/${city.slug}/${targetArea.slug}/${service.slug}` }
-        : null;
-    }).filter(Boolean)
+      const targetArea = service && city.areas.find((area) =>
+        getAreaFeaturedService(city, area)?.slug === serviceSlug &&
+        isIndexableLocationPage({ kind: "service", city, area, service }),
+      );
+      return targetArea ? [{ label: `${service.name} near ${targetArea.name}`, href: `/puja/${city.slug}/${targetArea.slug}/${service.slug}` }] : [];
+    })
     : page.kind === "area"
-      ? [{ label: `${page.featuredService.name} in ${page.area.name}`, href: `/puja/${city.slug}/${page.area.slug}/${page.featuredService.slug}` }]
+      ? page.featuredService && isIndexableLocationPage({ kind: "service", city, area: page.area, service: page.featuredService })
+        ? [{ label: `${page.featuredService.name} in ${page.area.name}`, href: `/puja/${city.slug}/${page.area.slug}/${page.featuredService.slug}` }]
+        : []
       : [];
   const areaLinks = page.kind === "city"
-    ? city.areas.map((area) => ({ label: `Puja enquiries in ${area.name}`, href: `/puja/${city.slug}/${area.slug}` }))
+    ? city.areas
+      .filter((area) => isIndexableLocationPage({ kind: "area", city, area }))
+      .map((area) => ({ label: `Puja enquiries in ${area.name}`, href: `/puja/${city.slug}/${area.slug}` }))
     : [];
   const areaIndex = page.area ? city.areas.findIndex((item) => item.slug === page.area.slug) : -1;
   const nearbyAreaLinks = page.kind === "area"
     ? [-2, -1, 1, 2]
       .map((offset) => city.areas[(areaIndex + offset + city.areas.length) % city.areas.length])
       .filter((item, index, items) => item && item.slug !== page.area.slug && items.findIndex((other) => other.slug === item.slug) === index)
+      .filter((item) => isIndexableLocationPage({ kind: "area", city, area: item }))
       .map((item) => ({ label: `${item.name}, ${city.name}`, href: `/puja/${city.slug}/${item.slug}` }))
     : [];
   const relatedServiceLinks = page.kind === "service"
@@ -87,10 +98,14 @@ export default async function LocationSeoRoute({ params }) {
       .concat([{ label: `More pujas in ${page.area.name}`, href: `/puja/${city.slug}/${page.area.slug}` }])
     : [];
   const bookingHref = `/booking?location=${encodeURIComponent(page.area ? `${page.area.name}, ${city.name}` : city.name)}${page.service ? `&serviceRequest=${encodeURIComponent(page.service.slug)}` : page.featuredService ? `&serviceRequest=${encodeURIComponent(page.featuredService.slug)}` : ""}`;
+  const hasVerifiedService = page.kind === "service" &&
+    city.serviceAvailability === "verified" &&
+    city.availablePujas?.includes(page.service.catalogSlug || page.service.slug) === true;
 
   return (
     <LocationSeoPage
       page={page}
+      hasVerifiedService={hasVerifiedService}
       areaLinks={areaLinks}
       nearbyAreaLinks={nearbyAreaLinks}
       serviceLinks={serviceLinks}

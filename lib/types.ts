@@ -8,6 +8,7 @@ export interface Puja {
   description: string;
   category: string;
   isPopular?: boolean;
+  isIndexable?: boolean;
   duration: string;
   panditCount: string;
   type: PujaType;
@@ -25,6 +26,15 @@ export interface City {
   description: string;
   areas: string[];
   popularPujas: string[];
+  serviceAvailability?: "unverified" | "verified";
+  availablePujas?: string[];
+  supportedLanguages?: string[];
+  cityGuideIndexable?: boolean;
+  indexableLocalities?: Record<string, { title: string; description: string; content: string }>;
+  legacyLocationSeo?: {
+    enquiryServices: string[];
+    areaEnquiryServices?: Record<string, string>;
+  };
   aliases?: string[];
   region?: string;
 }

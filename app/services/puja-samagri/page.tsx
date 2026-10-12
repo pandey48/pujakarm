@@ -31,7 +31,7 @@ export default function PujaSamagriPage() {
       <BreadcrumbSchema items={[{ label: "Home", href: "/" }, { label: "Puja Samagri", href: "/services/puja-samagri" }]} />
       <section className="page-intro">
         <div className="content-wrap">
-          <Breadcrumbs items={[{ label: "Services", href: "/#services" }, { label: "Puja Samagri" }]} />
+          <Breadcrumbs items={[{ label: "Services", href: "/services" }, { label: "Puja Samagri" }]} />
           <span className="eyebrow">Ceremony preparations</span>
           <h1>Puja Samagri</h1>
           <p>{description}</p>

@@ -7,6 +7,9 @@ export type LeadSubmission = {
 	phone: string;
 	whatsapp: string;
 	puja: string;
+	city: string;
+	area: string;
+	preferredLanguage: string;
 	location: string;
 	preferredDate: string;
 	message: string;

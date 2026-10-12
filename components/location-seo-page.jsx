@@ -61,6 +61,8 @@ function getIntro(page) {
     return `Explore puja and Pandit enquiries in ${city.name}. Share your ceremony, preferred date and locality; PujaPath will discuss possible home or online arrangements and confirm availability with you.`;
   }
   if (page.kind === "area") {
+    const configuredContent = city.indexableLocalities?.[area.slug]?.content;
+    if (configuredContent) return configuredContent;
     const index = city.areas.findIndex((item) => item.slug === area.slug);
     const intros = [
       `Families planning a ceremony in ${area.name}, ${city.name}, can share their puja, preferred date and any traditions they would like to discuss. PujaPath follows up about preparations and confirms whether arrangements can be made.`,
@@ -85,32 +87,32 @@ function LocationLinks({ items, className = "location-link-grid" }) {
   );
 }
 
-export function LocationSeoPage({ page, areaLinks = [], nearbyAreaLinks = [], serviceLinks = [], relatedServiceLinks = [], bookingHref }) {
+export function LocationSeoPage({ page, areaLinks = [], nearbyAreaLinks = [], serviceLinks = [], relatedServiceLinks = [], bookingHref, hasVerifiedService = false }) {
   const { kind, city, area, service } = page;
   const faqs = getFaqs(page);
   const currentLabel = kind === "city" ? city.name : kind === "area" ? area.name : service.name;
   const breadcrumbItems = [
     { label: "Home", href: "/" },
     { label: "Puja", href: "/pujas" },
-    { label: city.name, href: `/puja/${city.slug}` },
+    { label: city.name, href: `/cities/${city.slug}` },
     ...(area ? [{ label: area.name, href: `/puja/${city.slug}/${area.slug}` }] : []),
     ...(service ? [{ label: service.name }] : []),
   ];
   const heading = kind === "city"
-    ? `Puja & Pandit Booking in ${city.name}`
+    ? `Puja and Pandit Enquiry Guide for ${city.name}`
     : kind === "area"
-      ? `Puja & Pandit Booking in ${area.name}, ${city.name}`
+      ? `Puja Enquiry for ${area.name}, ${city.name}`
       : `${service.name} in ${area.name}, ${city.name}`;
   return (
     <>
       <BreadcrumbSchema items={breadcrumbItems} />
       <FaqSchema items={faqs} />
-      <LocationServiceSchema
+      {hasVerifiedService && <LocationServiceSchema
         name={service ? service.name : area ? `Puja and Pandit enquiries in ${area.name}` : `Puja and Pandit enquiries in ${city.name}`}
         description={getIntro(page)}
         city={city}
         area={area}
-      />
+      />}
       <section className="location-seo-hero">
         <div className="content-wrap">
           <Breadcrumbs items={breadcrumbItems.slice(1).map((item, index, list) => ({
@@ -131,18 +133,18 @@ export function LocationSeoPage({ page, areaLinks = [], nearbyAreaLinks = [], se
 
       {kind === "city" && (
         <>
-          <section className="section">
+          {serviceLinks.length > 0 && <section className="section">
             <div className="content-wrap">
               <SectionHeading eyebrow={`Explore ${city.name}`} title={`Puja services in ${city.name}`} text={`Browse ceremony enquiries and choose a location to share your requirements. Home or online arrangements depend on the selected puja and are confirmed with the team.`} />
               <LocationLinks items={serviceLinks} />
             </div>
-          </section>
-          <section className="section section-tint">
+          </section>}
+          {areaLinks.length > 0 && <section className="section section-tint">
             <div className="content-wrap">
               <SectionHeading eyebrow="Local puja guides" title={`Popular areas in ${city.name}`} text="Choose a neighbourhood guide to explore local enquiry details and related ceremonies." />
               <LocationLinks items={areaLinks} />
             </div>
-          </section>
+          </section>}
         </>
       )}
 
@@ -164,17 +166,17 @@ export function LocationSeoPage({ page, areaLinks = [], nearbyAreaLinks = [], se
           </section>
           <section className="section section-tint">
             <div className="content-wrap">
-              <SectionHeading eyebrow="Puja enquiries" title={`Explore a puja in ${area.name}`} text="Open the featured ceremony guide or browse the full catalogue to compare puja details." />
+              <SectionHeading eyebrow="Puja enquiries" title={`Explore a puja in ${area.name}`} text="Browse the puja catalogue to compare ceremony details and send an enquiry." />
               <LocationLinks items={serviceLinks} />
               <p className="location-catalog-link"><Link href="/pujas">Browse all pujas <ArrowRight size={15} /></Link></p>
             </div>
           </section>
-          <section className="section">
+          {nearbyAreaLinks.length > 0 && <section className="section">
             <div className="content-wrap">
               <SectionHeading eyebrow="Nearby location guides" title={`Other areas near ${area.name}`} text={`Explore another area in ${city.name}. These links are location guides and do not represent confirmed service coverage.`} />
               <LocationLinks items={nearbyAreaLinks} />
             </div>
-          </section>
+          </section>}
         </>
       )}
 
@@ -221,7 +223,7 @@ export function LocationSeoPage({ page, areaLinks = [], nearbyAreaLinks = [], se
           </div>
           {kind !== "city" && (
             <p className="location-parent-link">
-              <Link href={`/puja/${city.slug}`}>Explore all puja enquiries in {city.name} <ArrowRight size={15} /></Link>
+              <Link href={`/cities/${city.slug}`}>Explore all puja enquiries in {city.name} <ArrowRight size={15} /></Link>
             </p>
           )}
         </div>
