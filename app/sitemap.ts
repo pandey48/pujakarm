@@ -7,7 +7,7 @@ import { guides } from "@/data/guides";
 import { getSeoLocationUrls } from "@/lib/location-seo";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticRoutes = ["", "/pujas", "/services", "/cities", "/mumbai", "/guides", "/about", "/contact", "/faq", "/privacy", "/terms", "/services/puja-samagri"];
+  const staticRoutes = ["", "/pujas", "/services", "/cities", "/mumbai", "/guides", "/about", "/contact", "/faq", "/services/puja-samagri"];
   const entries = [
     ...staticRoutes.map((route) => ({ url: `${SITE_URL}${route}`, changeFrequency: "weekly" as const, priority: route === "" ? 1 : 0.7 })),
     ...pujas.filter((puja) => puja.isIndexable !== false).map((puja) => ({ url: `${SITE_URL}/pujas/${puja.slug}`, changeFrequency: "monthly" as const, priority: 0.7 })),
