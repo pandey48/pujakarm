@@ -783,8 +783,17 @@ body {
 .booking-form-heading p { margin: 4px 0 0; color: #75685d; font-size: 12px; line-height: 1.5; }
 .booking-form .form-field small { display: block; margin-top: 6px; color: #79695e; font-size: 11px; line-height: 1.5; }
 .booking-optional { color: #79695e; font-size: 11px; font-weight: 400; }
+.booking-optional-details { padding: 0 14px; border: 1px solid #e9dfd1; border-radius: 10px; background: #faf7f1; }
+.booking-optional-details > summary { display: flex; min-height: 50px; align-items: center; justify-content: space-between; color: #493027; font-size: 13px; font-weight: 700; cursor: pointer; list-style: none; }
+.booking-optional-details > summary::-webkit-details-marker { display: none; }
+.booking-optional-details > summary::after { color: #a34a1d; content: "+"; font-size: 20px; font-weight: 400; }
+.booking-optional-details[open] > summary::after { content: "−"; }
+.booking-optional-details > summary span { margin-left: 4px; color: #79695e; font-size: 11px; font-weight: 400; }
+.booking-optional-details > p { margin: 0 0 14px; color: #75685d; font-size: 12px; }
+.booking-optional-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding-bottom: 16px; }
+.booking-optional-message { grid-column: 1 / -1; }
 .booking-form button:disabled { cursor: wait; opacity: .72; }
-@media (max-width: 640px) { .booking-form { gap: 15px 12px; } .booking-form-heading span { font-size: 17px; } }
+@media (max-width: 640px) { .booking-form { gap: 15px 12px; } .booking-form-heading span { font-size: 17px; } .booking-optional-grid { grid-template-columns: 1fr; } }
 .city-language-bar { position: relative; z-index: 20; border-bottom: 1px solid #e9ddce; background: linear-gradient(110deg, #fffaf3, #f7eee2); }
 .city-language-inner { display: grid; max-width: 1440px; min-height: 72px; grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr); align-items: center; gap: 22px; margin-inline: auto; padding: 10px clamp(16px, 4vw, 44px); }
 .city-bar-search, .city-bar-formats { display: flex; min-width: 0; align-items: center; gap: 12px; }
