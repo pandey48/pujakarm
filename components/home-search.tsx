@@ -1,10 +1,10 @@
 "use client";
 
-import { useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, MapPin, Search } from "lucide-react";
 import { mantras } from "@/data/mantras";
-import { cities } from "@/data/cities";
+import { cities, preferredLanguages } from "@/data/cities";
 import { pujas } from "@/data/pujas";
 import { getLocationSearchResults } from "@/lib/location-seo";
 
@@ -41,9 +41,19 @@ export function HomeSearch({ placeholderPuja = "" }: { placeholderPuja?: string 
   const [locationQuery, setLocationQuery] = useState("");
   const [city, setCity] = useState("");
   const [format, setFormat] = useState("");
+  const [language, setLanguage] = useState("");
+  const [languagePromptIndex, setLanguagePromptIndex] = useState(0);
   const [focused, setFocused] = useState(false);
   const [locationFocused, setLocationFocused] = useState(false);
   const router = useRouter();
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const rotation = window.setInterval(() => {
+      setLanguagePromptIndex((index) => (index + 1) % preferredLanguages.length);
+    }, 2200);
+    return () => window.clearInterval(rotation);
+  }, []);
+
   const suggestions = useMemo(() => {
     if (!query.trim()) return [];
     return searchItems
@@ -74,14 +84,15 @@ export function HomeSearch({ placeholderPuja = "" }: { placeholderPuja?: string 
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (locationQuery.trim()) {
+    if (locationQuery.trim() || language) {
       const matchedItem = suggestions[0];
       const selectedPuja = pujas.find((puja) => normalizeSearchText(puja.name) === normalizeSearchText(query)) ||
         (matchedItem?.type === "Puja" ? pujas.find((puja) => puja.name === matchedItem.name) : undefined);
       const params = new URLSearchParams();
       if (selectedPuja) params.set("puja", selectedPuja.slug);
-      params.set("location", locationQuery.trim());
+      if (locationQuery.trim()) params.set("location", locationQuery.trim());
       if (format) params.set("format", format === "home" ? "At Home" : "Online");
+      if (language) params.set("language", language);
       if (!selectedPuja && query.trim()) {
         const ritualDetails = query.trim().slice(0, 120);
         const formatPreference = format ? `Preferred format: ${format === "home" ? "At Home" : "Online"}` : "";
@@ -104,7 +115,27 @@ export function HomeSearch({ placeholderPuja = "" }: { placeholderPuja?: string 
     <div className="pp-search-wrap pp-home-discovery">
       <form className="home-finder-form" onSubmit={submit} role="search">
         <div className="home-form-field home-puja-field">
-          <label htmlFor="home-search">Puja or ritual</label>
+          <div className="home-puja-header">
+            <label htmlFor="home-search">Puja or ritual</label>
+            <fieldset className="home-format-field">
+              <legend className="sr-only">Preferred format</legend>
+              <div className="home-format-options">
+                {[["home", "At home"], ["online", "Online"]].map(([value, label]) => (
+                  <label className="home-format-option" key={value}>
+                    <input
+                      className="sr-only"
+                      type="radio"
+                      name="home-format"
+                      value={value}
+                      checked={format === value}
+                      onChange={(event) => setFormat(event.target.value)}
+                    />
+                    <span>{label}</span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+          </div>
           <div className="home-form-input-wrap">
             <Search size={18} aria-hidden="true" />
             <input id="home-search" role="combobox" value={query} onChange={(event) => setQuery(event.target.value)} onFocus={() => setFocused(true)} onBlur={() => window.setTimeout(() => setFocused(false), 120)} placeholder={placeholderPuja ? `Search ${placeholderPuja} or another puja` : "Search a puja or occasion"} autoComplete="off" aria-autocomplete="list" aria-haspopup="listbox" aria-controls="home-search-results" aria-expanded={focused && Boolean(query.trim())} />
@@ -126,24 +157,13 @@ export function HomeSearch({ placeholderPuja = "" }: { placeholderPuja?: string 
             </div>}
           </div>
 
-          <fieldset className="home-format-field">
-            <legend>Format</legend>
-            <div className="home-format-options">
-              {[["", "Any"], ["home", "At home"], ["online", "Online"]].map(([value, label]) => (
-                <label className="home-format-option" key={value || "any"}>
-                  <input
-                    className="sr-only"
-                    type="radio"
-                    name="home-format"
-                    value={value}
-                    checked={format === value}
-                    onChange={(event) => setFormat(event.target.value)}
-                  />
-                  <span>{label}</span>
-                </label>
-              ))}
-            </div>
-          </fieldset>
+          <div className="home-form-field home-pandit-language-field">
+            <label htmlFor="home-pandit-language">Pandit language</label>
+            <select id="home-pandit-language" className="home-language-select" value={language} onChange={(event) => setLanguage(event.target.value)}>
+              <option value="">Choose a {preferredLanguages[languagePromptIndex]}-speaking Pandit</option>
+              {preferredLanguages.map((item) => <option key={item} value={item}>{item}-speaking Pandit</option>)}
+            </select>
+          </div>
         </div>
 
         <button className="home-finder-submit" type="submit">Find My Puja <ArrowRight size={17} aria-hidden="true" /></button>

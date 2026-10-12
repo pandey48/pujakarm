@@ -8,7 +8,7 @@ import { pujas } from "@/data/pujas";
 import { submitWebsiteEnquiry } from "@/components/enquiry-client";
 import { whatsappUrl } from "@/lib/constants";
 
-export function BookingForm({ presetPuja = "", presetRequirement = "", presetLocation = "", presetDate = "", presetFormat = "", idPrefix = "booking" }: { presetPuja?: string; presetRequirement?: string; presetLocation?: string; presetDate?: string; presetFormat?: string; idPrefix?: string }) {
+export function BookingForm({ presetPuja = "", presetRequirement = "", presetLocation = "", presetDate = "", presetFormat = "", presetLanguage = "", idPrefix = "booking" }: { presetPuja?: string; presetRequirement?: string; presetLocation?: string; presetDate?: string; presetFormat?: string; presetLanguage?: string; idPrefix?: string }) {
   const locationParts = presetLocation.split(",").map((part) => part.trim()).filter(Boolean);
   const presetCity = [...locationParts].reverse().find((part) => findBookingCity(part)) || "";
   const initialCity = presetCity || (locationParts.length === 1 ? locationParts[0] : "");
@@ -21,12 +21,13 @@ export function BookingForm({ presetPuja = "", presetRequirement = "", presetLoc
   const initialAreaOption = initialCityData?.areas.find((area) => area.toLowerCase() === initialArea.toLowerCase()) || "";
   const selectedPuja = pujas.find((puja) => puja.slug === presetPuja);
   const initialPuja = selectedPuja?.name || (presetPuja === "online-astrologer" ? "Online Astrologer Consultant" : "");
+  const initialLanguage = preferredLanguages.find((item) => item.toLowerCase() === presetLanguage.toLowerCase()) || "";
   const [pujaChoice, setPujaChoice] = useState(initialPuja);
   const [otherPuja, setOtherPuja] = useState("");
   const [city, setCity] = useState(initialCity);
   const [areaChoice, setAreaChoice] = useState(initialAreaOption || (initialArea ? "Other Area" : ""));
   const [otherArea, setOtherArea] = useState(initialAreaOption ? "" : initialArea);
-  const [language, setLanguage] = useState("");
+  const [language, setLanguage] = useState(initialLanguage);
   const [submitting, setSubmitting] = useState(false);
   const submitLock = useRef(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -150,7 +151,7 @@ export function BookingForm({ presetPuja = "", presetRequirement = "", presetLoc
     {pujaChoice.trim().toLowerCase() === "other" && <div className="form-field"><label htmlFor={fieldId("other-puja")}>Please specify *</label><input id={fieldId("other-puja")} name="otherPuja" value={otherPuja} onChange={(event) => setOtherPuja(event.target.value)} maxLength={120} required /></div>}
     <div className="form-field"><label htmlFor={fieldId("city")}>City *</label><input id={fieldId("city")} name="city" list={listId("city")} autoComplete="address-level2" placeholder="Choose or enter your city" value={city} onChange={(event) => { setCity(event.target.value); setAreaChoice(""); setOtherArea(""); }} maxLength={120} required /><datalist id={listId("city")}>{bookingCities.map((item) => <option key={item.name} value={item.name} />)}</datalist></div>
     {selectedCity ? <div className="form-field"><label htmlFor={fieldId("area")}>Area / locality *</label><select id={fieldId("area")} name="area" value={areaChoice} onChange={(event) => { setAreaChoice(event.target.value); if (event.target.value !== "Other Area") setOtherArea(""); }} required><option value="">Choose an area</option>{selectedCity.areas.map((area) => <option key={area} value={area}>{area}</option>)}<option value="Other Area">Other Area</option></select>{areaChoice === "Other Area" && <input aria-label="Enter your area or locality" name="otherArea" value={otherArea} onChange={(event) => setOtherArea(event.target.value)} placeholder="Enter your area or locality" maxLength={120} required />}</div> : <div className="form-field"><label htmlFor={fieldId("area")}>Area / locality *</label><input id={fieldId("area")} name="area" autoComplete="address-level3" placeholder={city.trim() ? "Enter your area or locality" : "Choose or enter a city first"} value={otherArea} onChange={(event) => setOtherArea(event.target.value)} maxLength={120} required disabled={!city.trim()} /></div>}
-    <details className="booking-optional-details form-span" open={Boolean(presetDate || requestedFormat || presetRequirement)}>
+    <details className="booking-optional-details form-span" open={Boolean(presetDate || requestedFormat || presetRequirement || initialLanguage)}>
       <summary>More details <span>(optional)</span></summary>
       <p>Add preferences if you have them. You can also discuss everything with our team later.</p>
       <div className="booking-optional-grid">

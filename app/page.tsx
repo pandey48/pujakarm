@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { ArrowRight, MessageCircle } from "lucide-react";
 import { OrganizationSchema, WebsiteSchema } from "@/app/schema";
 import { HeroDiscovery } from "@/components/hero-discovery";
+import { RotatingPujaName } from "@/components/rotating-puja-name";
 import { HomeCatalog } from "@/components/home-catalog";
 import { MantraCard } from "@/components/mantra-card";
 import { AstrologersAcharyas } from "@/components/astrologers-acharyas";
@@ -58,7 +59,7 @@ export default function HomePage() {
         <div className="home-shell home-hero-grid">
           <div className="home-hero-copy">
             <span className="home-eyebrow"><span aria-hidden="true">ॐ</span> PujaPath · Rituals, with care</span>
-            <h1 id="home-hero-title">Find the Right Pandit for Your Puja</h1>
+            <h1 id="home-hero-title"><span className="home-hero-heading-prefix">Find the Right Pandit for</span><RotatingPujaName names={popularSearchPujas.map((puja) => puja.name)} /></h1>
             <p>Request a Pandit for puja at home or enquire about online rituals. Explore puja details, samagri guidance and dakshina before you decide.</p>
             <div className="home-search-panel"><HeroDiscovery /></div>
             <nav className="home-popular-searches" aria-label="Popular puja searches">
