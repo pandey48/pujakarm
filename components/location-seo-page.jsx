@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, BookOpen, House, MapPin, Video } from "lucide-react";
 import { Breadcrumbs, SectionHeading } from "@/components/shared";
-import { BreadcrumbSchema, FaqSchema } from "@/app/schema";
+import { BreadcrumbSchema } from "@/app/schema";
 import { BRAND_NAME, SITE_URL } from "@/lib/constants";
 
 function JsonLd({ value }) {
@@ -106,7 +106,6 @@ export function LocationSeoPage({ page, areaLinks = [], nearbyAreaLinks = [], se
   return (
     <>
       <BreadcrumbSchema items={breadcrumbItems} />
-      <FaqSchema items={faqs} />
       {hasVerifiedService && <LocationServiceSchema
         name={service ? service.name : area ? `Puja and Pandit enquiries in ${area.name}` : `Puja and Pandit enquiries in ${city.name}`}
         description={getIntro(page)}

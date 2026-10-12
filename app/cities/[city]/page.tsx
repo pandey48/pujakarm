@@ -6,7 +6,7 @@ import { Breadcrumbs, CityCard, FAQList, PujaGrid, SectionHeading } from "@/comp
 import { BookingForm } from "@/components/booking-form";
 import { cities } from "@/data/cities";
 import { pujas } from "@/data/pujas";
-import { BreadcrumbSchema, FaqSchema, ServiceSchema } from "@/app/schema";
+import { BreadcrumbSchema, ServiceSchema } from "@/app/schema";
 import { mumbaiSeoPages } from "@/data/mumbai-seo";
 import { slugify } from "@/lib/utils";
 
@@ -66,7 +66,6 @@ export default async function CityDetailPage({ params }: PageProps<"/cities/[cit
 
   return <>
     {city.serviceAvailability === "verified" && city.availablePujas?.length ? <ServiceSchema city={city.name} /> : null}
-    <FaqSchema items={faqs} />
     <BreadcrumbSchema items={[{ label: "Home", href: "/" }, { label: "Cities", href: "/cities" }, { label: city.name, href: `/cities/${city.slug}` }]} />
     <section className="page-intro">
       <div className="content-wrap">

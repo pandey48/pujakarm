@@ -1986,6 +1986,70 @@ body {
   font-size: 13px;
 }
 
+.home-format-field {
+  display: grid;
+  min-width: 0;
+  gap: 5px;
+  padding: 0;
+  border: 0;
+  margin: 0;
+}
+
+.home-format-field legend {
+  padding: 0;
+  color: #57443a;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.home-format-options {
+  display: grid;
+  min-height: 46px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid #d9cabb;
+  border-radius: 6px;
+  background: #f7f2ea;
+}
+
+.home-format-option {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  min-height: 36px;
+  place-items: center;
+  cursor: pointer;
+}
+
+.home-format-option > span {
+  display: grid;
+  width: 100%;
+  min-height: 36px;
+  place-items: center;
+  padding-inline: 5px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: #645448;
+  font-size: 11px;
+  font-weight: 650;
+  text-align: center;
+  transition: background-color .18s, color .18s, box-shadow .18s;
+}
+
+.home-format-option input:checked + span {
+  border-color: #e8ded2;
+  background: #fffefa;
+  box-shadow: 0 1px 3px rgba(58, 38, 27, .08);
+  color: var(--home-wine);
+}
+
+.home-format-option input:focus-visible + span {
+  outline: 2px solid var(--home-saffron);
+  outline-offset: 1px;
+}
+
 .home-combobox-results {
   position: absolute;
   z-index: 5;
@@ -2097,6 +2161,45 @@ body {
 .home-whatsapp-link:hover {
   color: var(--home-wine);
   text-decoration: underline;
+}
+
+.home-popular-searches {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  margin-top: 11px;
+}
+
+.home-popular-searches > span {
+  margin-right: 2px;
+  color: var(--home-muted);
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.home-popular-searches a {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  padding: 0 10px;
+  border: 1px solid #e4d7c7;
+  border-radius: 999px;
+  background: rgba(255, 253, 248, .75);
+  color: var(--home-wine);
+  font-size: 10px;
+  font-weight: 600;
+  transition: border-color .18s, background-color .18s;
+}
+
+.home-popular-searches a:hover {
+  border-color: #c7a47b;
+  background: #fffaf2;
+}
+
+.home-popular-searches a:focus-visible {
+  outline: 2px solid var(--home-saffron);
+  outline-offset: 3px;
 }
 
 .home-hero-image {
@@ -2581,12 +2684,12 @@ body {
   }
 
   .home-hero {
-    padding-block: 20px 22px;
+    padding-block: 16px 18px;
   }
 
   .home-hero-grid {
     grid-template-columns: 1fr;
-    gap: 15px;
+    gap: 12px;
   }
 
   .home-hero-copy {
@@ -2594,53 +2697,75 @@ body {
   }
 
   .home-hero h1 {
-    max-width: 17ch;
-    margin: 10px 0 8px;
-    font-size: clamp(30px, 8.2vw, 36px);
-    line-height: 1.1;
+    max-width: 15ch;
+    margin: 8px 0 7px;
+    font-size: clamp(30px, 8vw, 34px);
+    line-height: 1.06;
+    letter-spacing: -.025em;
   }
 
   .home-hero-copy > p {
-    margin-bottom: 12px;
-    font-size: 14px;
-    line-height: 1.55;
+    max-width: 42ch;
+    margin-bottom: 10px;
+    font-size: 13px;
+    line-height: 1.5;
   }
 
   .home-search-panel {
-    padding: 10px;
-    box-shadow: 0 5px 15px rgba(58, 38, 27, .06);
+    padding: 12px;
+    border-color: #e4d8c8;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(58, 38, 27, .07);
   }
 
   .home-finder-form {
-    gap: 8px;
+    gap: 10px;
   }
 
   .home-finder-secondary-fields {
     grid-template-columns: 1fr;
-    gap: 8px;
+    gap: 10px;
   }
 
   .home-form-field > label {
-    font-size: 11px;
+    font-size: 10px;
+    letter-spacing: .01em;
   }
 
   .home-form-input-wrap,
-  .home-format-field select {
-    min-height: 46px;
+  .home-form-input-wrap input {
+    min-height: 48px;
   }
 
-  .home-form-input-wrap input,
-  .home-format-field select {
+  .home-format-field legend {
+    font-size: 10px;
+  }
+
+  .home-format-options {
+    min-height: 48px;
+    gap: 5px;
+    padding: 4px;
+    border-radius: 7px;
+  }
+
+  .home-format-option,
+  .home-format-option > span {
+    min-height: 38px;
+  }
+
+  .home-format-option > span {
     font-size: 13px;
   }
 
   .home-finder-submit {
-    min-height: 48px;
+    min-height: 50px;
+    border-radius: 7px;
     font-size: 14px;
   }
 
   .home-finder-note {
     font-size: 10px;
+    text-align: center;
   }
 
   .home-hero-actions {
@@ -2653,10 +2778,7 @@ body {
   }
 
   .home-hero-image {
-    width: 100%;
-    max-height: none;
-    aspect-ratio: 2.05;
-    border-radius: 6px;
+    display: none;
   }
 
   .home-trust .trust-row {
@@ -2692,7 +2814,7 @@ body {
   }
 
   .home-hero {
-    padding-block: 17px 19px;
+    padding-block: 13px 16px;
   }
 
   .home-eyebrow,
@@ -2701,26 +2823,73 @@ body {
   }
 
   .home-hero h1 {
-    margin: 8px 0 7px;
-    font-size: clamp(30px, 8.3vw, 34px);
-    line-height: 1.1;
+    max-width: 15ch;
+    margin: 7px 0 6px;
+    font-size: clamp(30px, 8.4vw, 33px);
+    line-height: 1.06;
   }
 
   .home-hero-copy > p {
-    margin-bottom: 11px;
+    margin-bottom: 9px;
     font-size: 13px;
   }
 
   .home-search-panel {
-    padding: 9px;
+    padding: 11px;
+    border-radius: 11px;
+  }
+
+  .home-finder-form {
+    gap: 9px;
+  }
+
+  .home-form-input-wrap {
+    gap: 9px;
+    padding-inline: 12px;
+    border-radius: 7px;
+  }
+
+  .home-form-input-wrap input {
+    font-size: 14px;
+  }
+
+  .home-popular-searches {
+    flex-wrap: nowrap;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 2px 1px 5px;
+    margin-top: 8px;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+  }
+
+  .home-popular-searches::-webkit-scrollbar {
+    display: none;
+  }
+
+  .home-popular-searches > span {
+    position: sticky;
+    left: 0;
+    flex: 0 0 auto;
+    padding-right: 3px;
+    background: #faf7f1;
+    font-size: 10px;
+  }
+
+  .home-popular-searches a {
+    min-height: 36px;
+    flex: 0 0 auto;
+    padding-inline: 11px;
+    background: #fffefa;
   }
 
   .home-hero-actions {
     margin-top: 2px;
   }
 
-  .home-hero-image {
-    aspect-ratio: 2.1;
+  .home-whatsapp-link {
+    min-height: 40px;
+    font-size: 12px;
   }
 
   .home-trust .trust-row {

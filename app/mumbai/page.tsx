@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, MapPin } from "lucide-react";
-import { BreadcrumbSchema, FaqSchema } from "@/app/schema";
+import { BreadcrumbSchema } from "@/app/schema";
 import { Breadcrumbs } from "@/components/shared";
 import { mumbaiSeoPages } from "@/data/mumbai-seo";
 import { cities } from "@/data/cities";
@@ -25,7 +25,6 @@ export default function MumbaiLandingPage() {
   const breadcrumbs = [{ label: "Home", href: "/" }, { label: "Mumbai guides", href: "/mumbai" }];
   return <>
     <BreadcrumbSchema items={breadcrumbs} />
-    <FaqSchema items={faqs} />
     <section className="page-intro mumbai-seo-hero"><div className="content-wrap"><Breadcrumbs items={[{ label: "Mumbai guides" }]} /><span className="eyebrow">Explore Mumbai services</span><h1>Mumbai Puja &amp; Booking Guides</h1><p>Compare PujaPath’s Mumbai guides for Pandit enquiries, puja at home, online participation and individual ceremonies. Each guide explains what to share and what the team needs to confirm.</p><div className="mumbai-seo-actions"><Link className="button" href="/cities/mumbai">Mumbai enquiry page <ArrowRight size={16} /></Link><Link className="text-link" href="/booking">Send an enquiry</Link></div></div></section>
     <section className="section"><div className="content-wrap"><div className="section-heading"><div><span className="eyebrow">Find the right guide</span><h2>Mumbai puja and booking guides</h2><p>Read about a ceremony or service before sending an enquiry.</p></div></div><div className="mumbai-seo-grid">{mumbaiSeoPages.map((page) => <Link className="mumbai-seo-card" key={page.slug} href={`/${page.slug}`}><span>{page.h1}</span><ArrowRight size={17} /><p>{page.description}</p></Link>)}</div></div></section>
     <section className="section section-tint"><div className="content-wrap mumbai-localities"><div><span className="eyebrow">Locality details help</span><h2>Include your Mumbai area in the request</h2><p>The existing Mumbai enquiry guide lists these areas as examples to help you describe where the puja would take place. They are not a promise of service coverage; PujaPath checks each request individually.</p><div className="mumbai-area-list">{city.areas.map((area) => <span key={area}><MapPin size={14} />{area}</span>)}</div><p className="mumbai-area-note">For areas not listed, enter your exact locality in the booking form.</p></div><Link className="button" href="/booking">Ask about availability <ArrowRight size={16} /></Link></div></section>

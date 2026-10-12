@@ -18,13 +18,13 @@ import { pujas } from "@/data/pujas";
 import { whatsappUrl } from "@/lib/constants";
 
 export const metadata: Metadata = {
-  title: "Find a Pandit for Puja at Home or Online",
-  description: "Explore Hindu pujas, share your city, preferred date and ritual details, and ask PujaPath about a suitable Pandit. Availability is confirmed before booking.",
+  title: "Pandit Booking Online | Puja at Home & Online Puja",
+  description: "Find a Pandit for puja at home or enquire about online puja. Explore ritual details, samagri guidance and dakshina before you decide.",
   keywords: ["book online puja", "online puja services", "book a Pandit", "Pandit for puja", "Hindu puja booking", "home puja", "online rituals"],
   alternates: { canonical: "/" },
   openGraph: {
-    title: "Find a Pandit for Puja at Home or Online | PujaPath",
-    description: "Explore Hindu pujas, share your city, preferred date and ritual details, and ask PujaPath about a suitable Pandit. Availability is confirmed before booking.",
+    title: "Pandit Booking Online | Puja at Home & Online Puja | PujaPath",
+    description: "Find a Pandit for puja at home or enquire about online puja. Explore ritual details, samagri guidance and dakshina before you decide.",
     siteName: "PujaPath",
     type: "website",
     url: "/",
@@ -33,6 +33,10 @@ export const metadata: Metadata = {
 };
 
 const heroPuja = pujas.find((puja) => puja.slug === "griha-pravesh-puja")!;
+const popularSearchSlugs = ["griha-pravesh-puja", "satyanarayan-puja", "rudrabhishek-puja", "ganesh-puja"];
+const popularSearchPujas = popularSearchSlugs
+  .map((slug) => pujas.find((puja) => puja.slug === slug))
+  .filter((puja) => puja !== undefined);
 const featuredCitySlugs = ["mumbai", "bengaluru", "hyderabad", "ahmedabad", "pune", "bhopal", "indore", "varanasi", "prayagraj"];
 const featuredCities = featuredCitySlugs.map((slug) => cities.find((city) => city.slug === slug)).filter((city) => city !== undefined);
 const homeFaqs = [
@@ -41,6 +45,7 @@ const homeFaqs = [
   faqs[2],
   faqs[3],
   faqs[4],
+  faqs[5],
   { question: "How is availability confirmed?", answer: "Share your preferred date and location in an enquiry. The PujaPath team will check availability and discuss arrangements with you; sending a request does not confirm a booking." },
 ];
 
@@ -54,14 +59,18 @@ export default function HomePage() {
           <div className="home-hero-copy">
             <span className="home-eyebrow"><span aria-hidden="true">ॐ</span> PujaPath · Rituals, with care</span>
             <h1 id="home-hero-title">Find the Right Pandit for Your Puja</h1>
-            <p>Plan your puja with personal guidance. Share your ritual, location, and preferred date to enquire about Pandit availability.</p>
+            <p>Request a Pandit for puja at home or enquire about online rituals. Explore puja details, samagri guidance and dakshina before you decide.</p>
             <div className="home-search-panel"><HeroDiscovery /></div>
+            <nav className="home-popular-searches" aria-label="Popular puja searches">
+              <span>Popular searches</span>
+              {popularSearchPujas.map((puja) => <Link href={`/pujas/${puja.slug}`} key={puja.id}>{puja.name}</Link>)}
+            </nav>
             <div className="home-hero-actions">
-              <a className="home-whatsapp-link" href={whatsappUrl("Namaste PujaPath, I would like help choosing a puja and checking availability.")} target="_blank" rel="noreferrer"><MessageCircle size={16} aria-hidden="true" /> Prefer WhatsApp? Send an enquiry</a>
+              <a className="home-whatsapp-link" href={whatsappUrl("Namaste PujaPath, I would like help choosing a puja and checking availability.")} target="_blank" rel="noreferrer"><MessageCircle size={16} aria-hidden="true" /> Need help choosing? Ask us on WhatsApp</a>
             </div>
           </div>
           <div className="home-hero-image">
-            <Image src={heroPuja.image} alt="Traditional puja preparations for a Griha Pravesh ceremony" fill priority sizes="(max-width: 767px) 100vw, (max-width: 1023px) 40vw, 46vw" className="cover-image" />
+            <Image src={heroPuja.image} alt="Traditional puja preparations for a Griha Pravesh ceremony" fill sizes="(max-width: 767px) 100vw, (max-width: 1023px) 40vw, 46vw" className="cover-image" />
           </div>
         </div>
       </section>

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
-import { BreadcrumbSchema, FaqSchema } from "@/app/schema";
+import { BreadcrumbSchema } from "@/app/schema";
 import { Breadcrumbs, FAQList } from "@/components/shared";
 import { mumbaiSeoPages, mumbaiSeoSlugs, onlinePujaSlugs } from "@/data/mumbai-seo";
 import { pujas } from "@/data/pujas";
@@ -35,7 +35,6 @@ export default async function MumbaiServicePage({ params }: PageProps<"/[slug]">
 
   return <>
     <BreadcrumbSchema items={breadcrumbs} />
-    <FaqSchema items={page.faqs} />
     <section className="page-intro mumbai-seo-hero">
       <div className="content-wrap">
         <Breadcrumbs items={[{ label: "Mumbai", href: "/mumbai" }, { label: page.h1 }]} />

@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <body><Navbar /><CityLanguageBar /><main className="main-content">{children}</main><Footer /><FixedBookingBar /></body>
     </html>
   );

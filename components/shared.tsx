@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, Clock3, House, Languages, ShieldCheck, Sparkles, Video, Check, MapPin, Flame, HeartHandshake } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Clock3, House, ShieldCheck, Sparkles, Video, Check, MapPin, Flame, HeartHandshake } from "lucide-react";
 import type { City, Puja } from "@/lib/types";
 import { SOCIAL_LINKS, whatsappUrl } from "@/lib/constants";
 import { cities } from "@/data/cities";
@@ -58,11 +58,9 @@ export function TrustSection() {
 }
 
 export function HowItWorks() {
-  const steps = [[SearchGlyph, "Choose your puja", "Explore ceremonies and find the right fit."], [MapPin, "Share your details", "Tell us your city, preferred date and requirements."], [Languages, "Discuss arrangements", "Our team checks Pandit and format availability with you."], [Sparkles, "Confirm before proceeding", "Agree on the ritual details before the ceremony."]] as const;
+  const steps = [[Flame, "Choose your puja", "Explore ceremonies and find the right fit."], [MapPin, "Share your requirements", "Tell us your city, preferred date and ritual preferences."], [HeartHandshake, "Confirm details with the team", "Discuss availability, dakshina and arrangements before booking."]] as const;
   return <div className="steps-grid">{steps.map(([Icon, title, detail], index) => <div className="step-item" key={title}><div className="step-number">0{index + 1}</div><span className="step-icon"><Icon size={22} strokeWidth={1.65} /></span><h3>{title}</h3><p>{detail}</p></div>)}</div>;
 }
-
-function SearchGlyph({ size = 20 }: { size?: number }) { return <MapPin size={size} strokeWidth={1.65} />; }
 
 export function Footer() {
   const popularPujas = pujas.filter((puja) => puja.isPopular).slice(0, 8);

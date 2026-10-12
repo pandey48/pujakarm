@@ -3,6 +3,7 @@ export const faqs = [
   { question: "Can I book a Pandit for my home?", answer: "Choose At Home and share your city and locality. The team will confirm whether a Pandit is available for your ritual and date." },
   { question: "Can I book an online puja?", answer: "Some listed pujas support online participation. Select Online in your enquiry and the team will confirm the format and joining details." },
   { question: "What is included in the puja?", answer: "Ritual details and samagri arrangements vary. Ask about the specific puja in your enquiry; the team will confirm what is included before you decide." },
+  { question: "How can I find out the dakshina?", answer: "Dakshina and other arrangements depend on the puja and location. Ask the team during your enquiry and confirm the details before booking." },
   { question: "Can I choose a language?", answer: "Yes. Add your language preference to the enquiry. The team can confirm whether a suitable Pandit is available." },
   { question: "How do I select a date?", answer: "Choose a preferred date in the form. The team will confirm availability before the booking is finalized." },
   { question: "Can I enquire before booking?", answer: "Yes. Sending a WhatsApp enquiry does not book or charge you. Discuss the ritual, location, timing and quote with the team before confirming." },

@@ -110,7 +110,7 @@ export function HomeSearch({ placeholderPuja = "" }: { placeholderPuja?: string 
             <input id="home-search" role="combobox" value={query} onChange={(event) => setQuery(event.target.value)} onFocus={() => setFocused(true)} onBlur={() => window.setTimeout(() => setFocused(false), 120)} placeholder={placeholderPuja ? `Search ${placeholderPuja} or another puja` : "Search a puja or occasion"} autoComplete="off" aria-autocomplete="list" aria-haspopup="listbox" aria-controls="home-search-results" aria-expanded={focused && Boolean(query.trim())} />
           </div>
           {focused && query.trim() && <div className="home-combobox-results" id="home-search-results" role="listbox" aria-label="Matching pujas and searches">
-            {suggestions.length > 0 ? suggestions.map((item) => <button key={`${item.type}-${item.name}`} type="button" role="option" aria-selected="false" onMouseDown={(event) => event.preventDefault()} onClick={() => { setQuery(item.name); setFocused(false); search(item); }}><span>{item.name}</span><small>{item.type}</small><ArrowRight size={15} aria-hidden="true" /></button>) : <p>No matching puja. You can still send this as an enquiry.</p>}
+            {suggestions.length > 0 ? suggestions.map((item) => <button key={`${item.type}-${item.name}`} type="button" role="option" aria-selected="false" onMouseDown={(event) => event.preventDefault()} onClick={() => { setQuery(item.searchTerm || item.name); setFocused(false); }}><span>{item.name}</span><small>{item.type}</small><ArrowRight size={15} aria-hidden="true" /></button>) : <p>No matching puja. You can still send this as an enquiry.</p>}
           </div>}
         </div>
 
@@ -126,17 +126,27 @@ export function HomeSearch({ placeholderPuja = "" }: { placeholderPuja?: string 
             </div>}
           </div>
 
-          <div className="home-form-field home-format-field">
-            <label htmlFor="home-format">Preferred format</label>
-            <select id="home-format" value={format} onChange={(event) => setFormat(event.target.value)}>
-              <option value="">Any format</option>
-              <option value="home">At Home</option>
-              <option value="online">Online</option>
-            </select>
-          </div>
+          <fieldset className="home-format-field">
+            <legend>Format</legend>
+            <div className="home-format-options">
+              {[["", "Any"], ["home", "At home"], ["online", "Online"]].map(([value, label]) => (
+                <label className="home-format-option" key={value || "any"}>
+                  <input
+                    className="sr-only"
+                    type="radio"
+                    name="home-format"
+                    value={value}
+                    checked={format === value}
+                    onChange={(event) => setFormat(event.target.value)}
+                  />
+                  <span>{label}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
         </div>
 
-        <button className="home-finder-submit" type="submit">Find a Pandit <ArrowRight size={17} aria-hidden="true" /></button>
+        <button className="home-finder-submit" type="submit">Find My Puja <ArrowRight size={17} aria-hidden="true" /></button>
         <p className="home-finder-note">Enquiries only. Our team confirms availability before booking.</p>
       </form>
     </div>
