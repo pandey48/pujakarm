@@ -30,6 +30,13 @@ export interface City {
   availablePujas?: string[];
   supportedLanguages?: string[];
   cityGuideIndexable?: boolean;
+  seoTitle?: string;
+  seoDescription?: string;
+  pageHeading?: string;
+  localGuide?: {
+    heading: string;
+    paragraphs: string[];
+  };
   indexableLocalities?: Record<string, { title: string; description: string; content: string }>;
   legacyLocationSeo?: {
     enquiryServices: string[];

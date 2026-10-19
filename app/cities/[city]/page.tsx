@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, MessageCircle } from "lucide-react";
 import { Breadcrumbs, CityCard, FAQList, PujaGrid, SectionHeading } from "@/components/shared";
 import { BookingForm } from "@/components/booking-form";
 import { cities } from "@/data/cities";
@@ -9,12 +9,19 @@ import { pujas } from "@/data/pujas";
 import { BreadcrumbSchema, ServiceSchema } from "@/app/schema";
 import { mumbaiSeoPages } from "@/data/mumbai-seo";
 import { slugify } from "@/lib/utils";
+import { whatsappUrl } from "@/lib/constants";
 
 const mumbaiFaqs = [
   { question: "How can I enquire about a Pandit in Mumbai?", answer: "Choose a puja and submit your preferred date, Mumbai locality and contact details. PujaPath will follow up to discuss whether a suitable Pandit and format can be arranged." },
   { question: "Can I request a puja at home in Mumbai?", answer: "You can request an at-home puja for your locality. The team checks the specific ceremony, date and location before confirming availability." },
   { question: "Can I join a puja online from Mumbai?", answer: "Some listed pujas support online participation. Open the puja details and enquire so the team can confirm whether that format is available for your request." },
   { question: "Which areas of Mumbai are served?", answer: "You can share your exact locality, including areas such as Andheri, Borivali, Powai, Dadar, Thane or Navi Mumbai. These examples are enquiry locations, not a guarantee of service coverage." },
+];
+
+const hyderabadFaqs = [
+  { question: "Which pujas can I explore for Hyderabad?", answer: "The catalogue includes Griha Pravesh Puja, Satyanarayan Puja and Rudrabhishek. A listing is not a guarantee of local availability; share your date and locality so the team can discuss your request." },
+  { question: "Can I mention a Telugu language preference?", answer: "Yes. Include Telugu or another language preference and any family tradition in your enquiry. The team will confirm what can be arranged for your request." },
+  { question: "Which Hyderabad localities can I include?", answer: "You can share an exact area such as Gachibowli, Madhapur, Kondapur, Kukatpally or Secunderabad. These are examples to describe your location, not confirmed service zones." },
 ];
 
 function findCity(slug: string) {
@@ -26,6 +33,7 @@ function findCity(slug: string) {
 
 function getCityFaqs(city: (typeof cities)[number]) {
   if (city.slug === "mumbai") return mumbaiFaqs;
+  if (city.slug === "hyderabad") return hyderabadFaqs;
   const localityText = city.areas.length
     ? `You can include your exact area, such as ${city.areas.slice(0, 3).join(", ")}. These are examples for your enquiry, not confirmed service zones.`
     : "Include your exact neighbourhood in the enquiry so the team can discuss the location with you.";
@@ -42,8 +50,8 @@ export async function generateMetadata({ params }: PageProps<"/cities/[city]">):
   const { city: slug } = await params;
   const city = findCity(slug);
   if (!city) return { title: "City not found", robots: { index: false, follow: true } };
-  const title = `Puja Enquiry Guide for ${city.name}`;
-  const description = `${city.description} Share your locality, ceremony and preferred date. This guide is for enquiries; arrangements and availability are confirmed individually.`;
+  const title = city.seoTitle || `Puja Services and Pandit Enquiries in ${city.name}`;
+  const description = city.seoDescription || `${city.description} Arrangements and availability are confirmed individually for each enquiry.`;
   return {
     title,
     description,
@@ -73,9 +81,13 @@ export default async function CityDetailPage({ params }: PageProps<"/cities/[cit
         <span className="eyebrow">Puja and Pandit enquiry guide{city.region ? ` · ${city.region}` : ""}</span>
         <div className="city-hero">
           <div>
-            <h1>{isMumbai ? "Mumbai Puja and Pandit Enquiry Guide" : `Puja and Pandit Enquiries in ${city.name}`}</h1>
+            <h1>{city.pageHeading || `Puja and Pandit Enquiries in ${city.name}`}</h1>
             <p>{city.description} These city details are enquiry guidance, not a live availability calendar; the team confirms options individually.</p>
             {city.aliases && <p className="city-aliases">Also searched as: {city.aliases.join(", ")}</p>}
+            <div className="city-hero-actions">
+              <Link className="button" href={`/booking?location=${encodeURIComponent(city.name)}`}>Send a booking enquiry <ArrowRight size={16} /></Link>
+              <a className="city-whatsapp-cta" href={whatsappUrl(`Namaste PujaPath, I would like to enquire about a puja in ${city.name}.`)} target="_blank" rel="noreferrer"><MessageCircle size={16} aria-hidden="true" />Ask on WhatsApp</a>
+            </div>
           </div>
           <div className="city-hero-stat">
             <strong>{city.region ? `Explore puja enquiries in ${city.region}` : "Enquiry location"}</strong>
@@ -84,6 +96,7 @@ export default async function CityDetailPage({ params }: PageProps<"/cities/[cit
         </div>
       </div>
     </section>
+    {city.localGuide && <section className="section section-tint"><div className="content-wrap city-local-guide"><SectionHeading eyebrow={`Local planning · ${city.name}`} title={city.localGuide.heading} />{city.localGuide.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div></section>}
     {isMumbai && <section className="section section-tint"><div className="content-wrap"><SectionHeading eyebrow="Mumbai puja enquiries" title="Choose the kind of help you need" text="These guides explain the enquiry process for different services. A request does not guarantee a Pandit, date or location." /><div className="mumbai-seo-grid">{mumbaiSeoPages.filter((page) => ["pandit-booking-mumbai", "puja-at-home-mumbai", "online-puja-mumbai"].includes(page.slug)).map((page) => <Link className="mumbai-seo-card" href={`/${page.slug}`} key={page.slug}><span>{page.h1}</span><ArrowRight size={16} /><p>{page.intro}</p></Link>)}</div></div></section>}
     <section className="section">
       <div className="content-wrap">

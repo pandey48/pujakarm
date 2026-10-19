@@ -36,23 +36,29 @@ function getMetadataContent(page) {
   return { title, description };
 }
 
+function getCanonicalFallback(page) {
+  if (page.kind === "service" && page.service.catalogSlug) {
+    return `/pujas/${page.service.catalogSlug}`;
+  }
+  return `/cities/${page.city.slug}`;
+}
+
 export async function generateMetadata({ params }) {
   const { city: citySlug, segments = [] } = await params;
   const page = resolveLocationPage(citySlug, segments);
   if (!page) return { title: "Puja location not found", robots: { index: false, follow: true } };
   if (page.kind === "city") permanentRedirect(`/cities/${page.city.slug}`);
+  if (!isIndexableLocationPage(page)) permanentRedirect(getCanonicalFallback(page));
   const path = `/puja/${page.city.slug}${page.area ? `/${page.area.slug}` : ""}${page.service ? `/${page.service.slug}` : ""}`;
   const { title, description } = getMetadataContent(page);
   const brandedTitle = `${title} | ${BRAND_NAME}`;
-  const canonicalPath = page.kind === "city" ? `/cities/${page.city.slug}` : path;
-  const indexable = isIndexableLocationPage(page);
   return {
     title,
     description,
-    alternates: { canonical: canonicalPath },
-    openGraph: { title: brandedTitle, description, siteName: BRAND_NAME, type: "website", url: canonicalPath, images: [{ url: `${SITE_URL}/opengraph-image`, alt: brandedTitle }] },
+    alternates: { canonical: path },
+    openGraph: { title: brandedTitle, description, siteName: BRAND_NAME, type: "website", url: path, images: [{ url: `${SITE_URL}/opengraph-image`, alt: brandedTitle }] },
     twitter: { card: "summary_large_image", title: brandedTitle, description, images: [`${SITE_URL}/opengraph-image`] },
-    robots: { index: indexable, follow: true },
+    robots: { index: true, follow: true },
   };
 }
 
@@ -61,6 +67,7 @@ export default async function LocationSeoRoute({ params }) {
   const page = resolveLocationPage(citySlug, segments);
   if (!page) notFound();
   if (page.kind === "city") permanentRedirect(`/cities/${page.city.slug}`);
+  if (!isIndexableLocationPage(page)) permanentRedirect(getCanonicalFallback(page));
 
   const city = page.city;
   const serviceLinks = page.kind === "city"

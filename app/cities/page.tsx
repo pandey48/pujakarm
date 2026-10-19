@@ -5,8 +5,8 @@ import { BreadcrumbSchema } from "@/app/schema";
 import { createPageMetadata } from "@/lib/page-metadata";
 
 export const metadata = createPageMetadata({
-  title: "Find a Pandit and Puja by City",
-  description: `Explore puja and Pandit enquiry guides for ${cities.slice(0, 5).map((city) => city.name).join(", ")} and more. Search by city, locality or puja; availability is confirmed individually.`,
+  title: "Puja Services and Pandit Enquiries by City",
+  description: "Browse puja guides for Hyderabad, Mumbai and other cities. Explore rituals and locality examples, then send a booking enquiry; availability is confirmed individually.",
   path: "/cities",
 });
 
@@ -17,8 +17,8 @@ export default function CitiesPage() {
       <div className="content-wrap">
         <Breadcrumbs items={[{ label: "Cities" }]} />
         <span className="eyebrow">PujaPath city guides</span>
-        <h1>Find a Pandit or Puja Near You</h1>
-        <p>Search by city, locality, region or puja to explore a local guide and send an enquiry. These guides are not a live availability calendar; the team confirms options individually.</p>
+        <h1>Find Puja Services and a Pandit Near You</h1>
+        <p>Browse city guides for puja services, Pandit enquiries and locality examples. Choose your city and share a ceremony and preferred date; these guides are not a live availability calendar, and arrangements are confirmed individually.</p>
       </div>
     </section>
     <section className="section">

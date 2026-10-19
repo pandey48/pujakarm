@@ -19,13 +19,13 @@ import { pujas } from "@/data/pujas";
 import { whatsappUrl } from "@/lib/constants";
 
 export const metadata: Metadata = {
-  title: "Pandit Booking Online | Puja at Home & Online Puja",
-  description: "Find a Pandit for puja at home or enquire about online puja. Explore ritual details, samagri guidance and dakshina before you decide.",
+  title: "PujaPath | Pandit Booking, Puja at Home & Online",
+  description: "Explore PujaPath puja services and ritual details. Send a Pandit enquiry for a home ceremony or online puja; share your date and location for an availability check.",
   keywords: ["book online puja", "online puja services", "book a Pandit", "Pandit for puja", "Hindu puja booking", "home puja", "online rituals"],
   alternates: { canonical: "/" },
   openGraph: {
-    title: "Pandit Booking Online | Puja at Home & Online Puja | PujaPath",
-    description: "Find a Pandit for puja at home or enquire about online puja. Explore ritual details, samagri guidance and dakshina before you decide.",
+    title: "PujaPath | Pandit Booking, Puja at Home & Online",
+    description: "Explore PujaPath puja services and ritual details. Send a Pandit enquiry for a home ceremony or online puja; share your date and location for an availability check.",
     siteName: "PujaPath",
     type: "website",
     url: "/",

@@ -15,8 +15,8 @@ export async function generateMetadata({ params }: PageProps<"/pujas/[slug]">): 
   const { slug } = await params;
   const puja = pujas.find((item) => item.slug === slug);
   if (!puja) return { title: "Puja not found" };
-  const title = `${puja.name} | Pandit & Puja Service`;
-  const description = `${puja.shortDescription} Learn about the ritual and enquire with your preferred date, city, locality and language. Arrangements are confirmed individually.`;
+  const title = `${puja.name} | Puja Details & Booking Enquiry`;
+  const description = `${puja.shortDescription} Explore the ritual and enquire with your city, locality and preferred date. Availability is confirmed individually.`;
   return { title, description, alternates: { canonical: `/pujas/${puja.slug}` }, openGraph: { title, description, siteName: "PujaPath", type: "website", url: `/pujas/${puja.slug}`, images: [{ url: puja.image, alt: `${puja.name} puja ceremony` }] }, twitter: { card: "summary_large_image", title, description, images: [puja.image] }, robots: { index: puja.isIndexable !== false, follow: true } };
 }
 
