@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, Check, Clock3, House, Languages, ShieldCheck, Users, Video } from "lucide-react";
 import { Breadcrumbs, FAQList, PujaGrid, SectionHeading, WhatsAppButton } from "@/components/shared";
 import { pujas } from "@/data/pujas";
+import { cities } from "@/data/cities";
 import { BookingForm } from "@/components/booking-form";
 import { PujaQuestionForm } from "@/components/interactions";
 import { BreadcrumbSchema, ServiceSchema } from "@/app/schema";
@@ -26,6 +27,7 @@ export default async function PujaDetailPage({ params }: PageProps<"/pujas/[slug
   if (!puja) notFound();
   const related = pujas.filter((item) => item.id !== puja.id && item.category === puja.category).slice(0, 4);
   const relatedPujas = related.length ? related : pujas.filter((item) => item.id !== puja.id).slice(0, 4);
+  const relatedCityGuides = cities.filter((city) => city.cityGuideIndexable !== false && city.popularPujas.includes(puja.name));
   const hasHome = puja.type === "Home" || puja.type === "Home & Online";
   const hasOnline = puja.type === "Online" || puja.type === "Home & Online";
   const message = `Namaste PujaPath, I would like to enquire about ${puja.name}.\nPuja/Service: ${puja.name}\nCity: \nArea/Locality: \nPreferred language: \nPreferred date: \nThis is an enquiry only; the booking is not confirmed.`;
@@ -39,7 +41,7 @@ export default async function PujaDetailPage({ params }: PageProps<"/pujas/[slug
     <section className="detail-section"><h2>Who is this puja for?</h2><p>{puja.shortDescription} Families can share their occasion and preferences so the Pandit can confirm the suitable ritual details.</p><ul className="check-list">{puja.benefits.map((benefit) => <li key={benefit}><Check size={16} />{benefit}</li>)}</ul></section>
     <section className="detail-section"><h2>What to share in your enquiry</h2><p>Tell us which service you are enquiring about, your city and area or locality, a preferred language and any date preference. Add any family customs or questions that may help the team discuss the right arrangements. Submitting a request does not confirm a booking.</p></section>
     <section className="detail-section"><h2>Samagri & preparation</h2><p>These are common items to discuss with the Pandit. The final list depends on your family tradition and what is arranged for your location.</p><ul className="check-list">{puja.samagri.map((item) => <li key={item}><Check size={16} />{item}</li>)}</ul></section>
-    <section className="detail-section"><h2>Location and availability</h2><p>Share your city and locality in the enquiry. City choices are request options, not live service coverage; the team confirms availability individually.</p><p className="detail-city-list">{puja.cities.join(" · ")}</p></section>
+    <section className="detail-section"><h2>Location and availability</h2><p>Share your city and locality in the enquiry. City choices are request options, not live service coverage; the team confirms availability individually.</p><p className="detail-city-list">{puja.cities.join(" · ")}</p>{relatedCityGuides.length > 0 && <div className="puja-related-city-guides"><span>Related city guides</span>{relatedCityGuides.map((city) => <Link href={`/cities/${city.slug}`} key={city.slug}>{city.name}</Link>)}</div>}</section>
     <section className="detail-section"><h2>Common questions</h2><FAQList items={puja.faqs} /></section>
     </article><aside className="detail-aside" id="service-enquiry"><h2>Enquire about this puja</h2><p>Share a preferred date and city. Your request is not a confirmed booking.</p><BookingForm presetPuja={puja.slug} /><WhatsAppButton message={message} label="Ask on WhatsApp" className="detail-whatsapp" /><details className="puja-question-disclosure"><summary>Ask a question or contact Pandit Ji</summary><p>Questions are saved to your enquiry list; our team can coordinate a Pandit Ji response.</p><PujaQuestionForm pujaName={puja.name} /></details><div className="detail-aside-note"><ShieldCheck size={16} />Availability and arrangements are confirmed with you before booking.</div></aside></div>
     <div className="section-tight"><SectionHeading eyebrow="Continue exploring" title="Related pujas" link={{ label: "All pujas", href: "/pujas" }} /><PujaGrid items={relatedPujas} /></div></div></section></>;

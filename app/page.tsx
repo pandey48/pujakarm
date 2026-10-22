@@ -38,7 +38,7 @@ const popularSearchSlugs = ["griha-pravesh-puja", "satyanarayan-puja", "rudrabhi
 const popularSearchPujas = popularSearchSlugs
   .map((slug) => pujas.find((puja) => puja.slug === slug))
   .filter((puja) => puja !== undefined);
-const featuredCitySlugs = ["mumbai", "bengaluru", "hyderabad", "ahmedabad", "pune", "bhopal", "indore", "varanasi", "prayagraj"];
+const featuredCitySlugs = ["mumbai", "bengaluru", "hyderabad", "pune", "ahmedabad", "bhopal"];
 const featuredCities = featuredCitySlugs.map((slug) => cities.find((city) => city.slug === slug)).filter((city) => city !== undefined);
 const homeFaqs = [
   faqs[0],
@@ -95,8 +95,15 @@ export default function HomePage() {
 
       <section className="home-cities" aria-labelledby="home-cities-title">
         <div className="home-shell">
-          <div className="home-section-heading"><div><span className="home-section-kicker">Explore by location</span><h2 id="home-cities-title">Puja Enquiries by City</h2><p>Choose a city guide and share your preferred locality. Service availability is confirmed individually.</p></div><Link href="/cities" className="home-text-link">Explore all cities <ArrowRight size={15} /></Link></div>
-          <div className="home-city-grid">{featuredCities.map((city) => <CityCard city={city} key={city.id} />)}</div>
+          <div className="home-section-heading"><div><span className="home-section-kicker">Explore by location</span><h2 id="home-cities-title">Find Puja Guides in Your City</h2><p>Start with a city guide, then share your locality and preferred date. The team checks arrangements individually.</p></div><Link href="/cities" className="home-text-link">Browse all cities <ArrowRight size={15} /></Link></div>
+          <div className="home-city-grid">{featuredCities.map((city) => <article className="home-city-feature" key={city.id}>
+            {city.region && <span className="home-city-region">{city.region}</span>}
+            <CityCard city={city} />
+            {city.areas.length > 0 && <div className="home-city-areas">
+              <span>Locality examples</span>
+              <div>{city.areas.slice(0, 2).map((area) => <span key={area}>{area}</span>)}</div>
+            </div>}
+          </article>)}</div>
         </div>
       </section>
 

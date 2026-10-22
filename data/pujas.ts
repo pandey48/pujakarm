@@ -117,6 +117,14 @@ const canonicalKey = (value: string) => {
   return slug;
 };
 
+const indexableCatalogSlugs = new Set([
+  "krishna-puja",
+  "durga-saptashati-path",
+  "akhand-ramayan-path",
+  "saraswati-homam",
+  "vahan-vehicle-puja",
+]);
+
 const knownPujas = new Set(corePujas.map((puja) => canonicalKey(puja.name)));
 const catalogPujas: Puja[] = pujaCatalog.flatMap(({ name, category }) => {
   const key = canonicalKey(name);
@@ -138,7 +146,7 @@ const catalogPujas: Puja[] = pujaCatalog.flatMap(({ name, category }) => {
     cities,
     image: imageForPuja(name, category),
     faqs: ritualFaqs,
-    isIndexable: false,
+    isIndexable: indexableCatalogSlugs.has(slug),
   }];
 });
 

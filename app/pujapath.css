@@ -374,8 +374,8 @@ body{background:#fbf7ef;color:#3c2a23}
 @media(max-width:640px){.puja-image-link{height:122px}.puja-card-content{padding:9px 9px 10px}.puja-card h3{font-size:15px;line-height:1.2}.puja-card p{font-size:9px}.puja-card-facts{gap:5px;margin-top:8px}.puja-card-facts span{font-size:8px}.puja-card-actions{flex-wrap:wrap}.puja-card-actions .button-card{flex:1 1 100%;min-height:32px}}
 
 /* Shared page alignment refinements */
-/* Keep quick contact actions visible as a floating bottom pill. */
-.fixed-booking-bar{display:grid;opacity:1;visibility:visible;transform:translateX(-50%)}
+/* Keep quick contact actions available after the main content is in view. */
+.fixed-booking-bar{display:grid}
 .fixed-booking-bar.is-visible{opacity:1;visibility:visible;transform:translateX(-50%)}
 @media(prefers-reduced-motion:reduce){.fixed-booking-bar{transition:none}}
 @media(min-width:821px){
