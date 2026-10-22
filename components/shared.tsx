@@ -53,7 +53,7 @@ export function CityCard({ city }: { city: City }) {
 }
 
 export function TrustSection() {
-  const items = [[HeartHandshake, "Personal coordination", "Discuss your ritual and preferences"], [House, "Home & online", "Options depend on the puja"], [Flame, "Preparation guidance", "Discuss ritual and samagri"], [Check, "Availability confirmed", "Our team checks before booking"]] as const;
+  const items = [[HeartHandshake, "Personal coordination", "Discuss your ritual and preferences"], [House, "Home & online", "Options depend on the puja"], [Flame, "Preparation guidance", "Discuss ritual and samagri"], [Check, "100% money-back promise", "If you're not satisfied with your puja"]] as const;
   return <div className="trust-row">{items.map(([Icon, title, detail]) => <div className="trust-item" key={title}><span className="trust-icon"><Icon size={21} strokeWidth={1.7} /></span><div><strong>{title}</strong><span>{detail}</span></div></div>)}</div>;
 }
 

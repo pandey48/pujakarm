@@ -3979,3 +3979,35 @@ body {
     transform: none;
   }
 }
+
+.booking-refund-promise {
+  display: inline-block;
+  padding: 10px 13px;
+  border: 1px solid #e5d1b7;
+  border-radius: 10px;
+  margin-top: 12px !important;
+  background: #fffaf1;
+  color: #613a25;
+  font-size: 13px !important;
+  line-height: 1.55 !important;
+}
+
+.booking-refund-promise strong {
+  color: #8f401c;
+}
+
+@media (max-width: 640px) {
+  body:has(.booking-page) .fixed-booking-bar {
+    display: grid;
+  }
+
+  body:has(.booking-page) .booking-page + .section {
+    padding-bottom: 110px;
+  }
+
+  .booking-refund-promise {
+    display: block;
+    padding: 10px 12px;
+    font-size: 12px !important;
+  }
+}
